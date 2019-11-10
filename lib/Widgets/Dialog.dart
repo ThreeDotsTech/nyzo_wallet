@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
+import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 
 class AddContactDialog {
@@ -96,11 +97,18 @@ class AddContactDialog {
               controller: addressController,
               maxLines: 3,
               maxLength: 67,
-              validator: (String val) => (val.contains(RegExp(r'[g-z]')) ||
-                          !(val.length == 67 || val.length == 64)) ||
-                      val == ''
-                  ? AppLocalizations.of(context).translate("String70")
-                  : null,
+              validator: (String val){
+                              if (val.length != 56) {
+                                return AppLocalizations.of(context)
+                                    .translate("String70");
+                              }
+                              try {
+                                NyzoStringEncoder.decode(val);
+                              } catch (e) {
+                                return e.errMsg();
+                              }
+                              return null;
+                            },
               
               decoration: InputDecoration(
                 hasFloatingPlaceholder: false,
