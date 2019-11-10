@@ -1,0 +1,91 @@
+name: nyzo_wallet
+description: A new Flutter project.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# Read more about versioning at semver.org.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+  flutter_statusbarcolor: ^0.2.0
+  flutter_secure_storage: ^3.2.1+1
+  shared_preferences: ^0.5.3+4
+  flutter_string_encryption: ^0.3.1
+  local_auth: ^0.6.0+1
+  intl: ^0.15.8
+  http: ^0.12.0+2
+  ed25519_hd_key: ^1.0.1
+  flutter_sodium: ^0.0.11
+  html: ^0.14.0+2
+  crypto: ^2.0.6
+  html_unescape: ^1.0.1+2
+  tweetnacl: ^0.3.1
+  vector_math: ^2.0.8
+  titled_navigation_bar: ^3.0.1
+  shimmer: ^1.0.0
+  liquid_pull_to_refresh: ^1.1.0
+  flutter_slidable: "^0.5.3"
+  expandable:
+    path: packages/expandable-3.0.0+1
+  reorderables: ^0.2.12
+  qr_flutter:
+    git:
+      url: git://github.com/lukef/qr.flutter.git
+  qr_mobile_vision: ^0.2.2
+  unicorndial:
+    path: packages/unicorndial-1.1.5
+  flutter_picker: ^1.0.13
+  flutter_localizations:
+    sdk: flutter
+  auto_size_text: ^2.1.0
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+  fonts:
+    - family: WaletFont
+      fonts:
+        - asset: fonts/WalletFont.ttf
+
+  assets:
+    - images/Logo.png
+    - images/noTransactions.png
+    - images/noContacts.png
+    - images/noVerifiers.png
+    - images/qr.png
+    - images/communicationProblem.png
+    - images/normal.png
+    - images/NotProducing.png
+    - images/trackingProblem.png
+    - images/cycle.png
+    - lang/en.json
+    - lang/zh.json
+    - lang/es.json
+    - lang/nl.json
+    - lang/de.json
+    
