@@ -279,7 +279,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      "Beta v0.1",
+                      "Beta v0.4",
                       style: TextStyle(
                           color: ColorTheme.of(context).secondaryColor,
                           fontWeight: FontWeight.w700,
