@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
+import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Data/watchedAddress.dart';
+import "package:hex/hex.dart";
+
 
 class AddVerifierDialog {
   static final TextEditingController nameController = TextEditingController();
@@ -41,7 +44,7 @@ class AddVerifierDialog {
                       val == '' ? 	AppLocalizations.of(context).translate("String67") : null,
                   key: nameFormKey,
                   controller: nameController, 
-                  maxLength: isVerifier ? 9 : 67,
+                  maxLength: isVerifier ? 9 : 56,
                   decoration: InputDecoration(
 
                               focusedErrorBorder: OutlineInputBorder(
@@ -89,7 +92,7 @@ class AddVerifierDialog {
                     nameController.text = '';
                   }):addWatchAddress(
                       WatchedAddress.fromAddress(
-                        nameController.text.split("-").join(),
+                        HEX.encode(NyzoStringEncoder.decode(nameController.text).getBytes()),
                       )).then((s) {
                     onClose();
                     Navigator.pop(context);

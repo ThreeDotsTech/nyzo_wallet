@@ -444,18 +444,20 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                               .account_balance_wallet,color: ColorTheme.of(context).secondaryColor,),
                                                               trailing: Text(ColorTheme.of(context).addressesToWatch[i].balance,style: TextStyle(color: ColorTheme.of(context).secondaryColor),),
                                                           title: Text(
-                                                              ColorTheme.of(context).addressesToWatch[
+                                                            nyzoStringFromPublicIdentifier(ColorTheme.of(context).addressesToWatch[
                                                                           i]
-                                                                      .address
+                                                                      .address)
                                                                       .substring(
                                                                           0,
                                                                           4) +
                                                                   "..." +
-                                                                  ColorTheme.of(context).addressesToWatch[
+                                                                  nyzoStringFromPublicIdentifier(ColorTheme.of(context).addressesToWatch[
                                                                           i]
-                                                                      .address
+                                                                      .address)
                                                                       .substring(
-                                                                          ColorTheme.of(context).addressesToWatch[i].address.length -
+                                                                          nyzoStringFromPublicIdentifier(ColorTheme.of(context).addressesToWatch[
+                                                                          i]
+                                                                      .address).length -
                                                                               4),
                                                               style: ColorTheme.of(context).addressesToWatch[
                                                                               i]
