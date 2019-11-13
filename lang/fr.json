@@ -35,7 +35,7 @@
     "String34":"Non! Annuler",
     "String35":"OUI SUPPRIMER MON WALLET",
     "String36":"Supprimer le Wallet",
-    "String37":"Regarder les sentinelles",
+    "String37":"Regarder les verifieurs",
     "String38":"Mode Nuit",
     "String39":"Réalisé avec",
     "String40":"pour la communauté.",
@@ -64,7 +64,7 @@
     "String63":"Il n'y a rien à afficher dans votre Watch List!",
     "String64":"Ajoutez quelque chose à votre Watch List avec le bouton ci-dessous.",
     "String65":"Créer un nouveau Wallet",
-    "string66":"Importer un Wallet existant",
+    "String66":"Importer un Wallet existant",
     "String67":"Ce champ ne peut être vide.",
     "String68":"Nom",
     "String69":"Ajouter un contact",
@@ -92,8 +92,4 @@
     "String97":"Ajouter à la Watch List",
     "String98":"Ajouter une adresse",
     "String99":"depuis"
-
-
-
-
 }
