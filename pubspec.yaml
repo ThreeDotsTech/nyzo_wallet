@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.4.4+6
+version: 0.5.0+7
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -21,13 +21,12 @@ dependencies:
   flutter_secure_storage: ^3.2.1+1
   shared_preferences: ^0.5.3+4
   flutter_string_encryption: ^0.3.1
-  local_auth: ^0.6.0+1
-  intl: ^0.15.8
+  local_auth: any
+  intl: ^0.16.0
   http: ^0.12.0+2
   ed25519_hd_key: ^1.0.1
-  flutter_sodium: ^0.0.11
   html: ^0.14.0+2
-  crypto: ^2.0.6
+  crypto: any
   html_unescape: ^1.0.1+2
   tweetnacl: ^0.3.1
   vector_math: ^2.0.8
@@ -41,7 +40,7 @@ dependencies:
   qr_flutter:
     git:
       url: git://github.com/lukef/qr.flutter.git
-  qr_mobile_vision: ^0.2.2
+  qr_mobile_vision: ^0.3.1
   unicorndial:
     path: packages/unicorndial-1.1.5
   flutter_picker: ^1.0.13
