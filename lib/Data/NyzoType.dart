@@ -27,23 +27,23 @@ class NyzoStringType {
     return _prefixBytes;
   }
 
-  static String forPrefix(String prefix) {
-    String result;
+  static NyzoStringType forPrefix(String prefix) {
+    NyzoStringType  result;
     switch (prefix) {
       case NyzoStringType.Micropay:
-        result = NyzoStringType.Micropay;
+        result = NyzoStringType(NyzoStringType.Micropay);
         break;
       case NyzoStringType.PrefilledData:
-        result = NyzoStringType.PrefilledData;
+        result = NyzoStringType(NyzoStringType.PrefilledData);
         break;
       case NyzoStringType.PrivateSeed:
-        result = NyzoStringType.PrivateSeed;
+        result = NyzoStringType(NyzoStringType.PrivateSeed);
         break;
       case NyzoStringType.PublicIdentifier:
-        result = NyzoStringType.PublicIdentifier;
+        result = NyzoStringType(NyzoStringType.PublicIdentifier);
         break;
       case NyzoStringType.Transaction:
-        result = NyzoStringType.Transaction;
+        result = NyzoStringType(NyzoStringType.Transaction);
         break;
       default:
     }

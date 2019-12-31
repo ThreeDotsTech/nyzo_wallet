@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
+import 'package:nyzo_wallet/Data/NyzoType.dart';
+
 class NyzoString {
   // Common ancestor
 
-  String _type;
+  NyzoStringType _type;
   Uint8List _bytes;
 
   NyzoString(_type, _bytes) {
@@ -11,11 +13,11 @@ class NyzoString {
     this._bytes = _bytes;
   }
 
-  getType() {
+  NyzoStringType getType() {
     return this._type;
   }
 
-  getBytes() {
+  Uint8List getBytes() {
     return this._bytes;
   }
 

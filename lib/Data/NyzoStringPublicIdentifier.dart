@@ -16,8 +16,8 @@ class NyzoStringPublicIdentifier implements NyzoString {
     }
 
     @override
-     String getType() {
-        return NyzoStringType.PublicIdentifier;
+     NyzoStringType getType() {
+        return NyzoStringType(NyzoStringType.PublicIdentifier);
     }
 
     @override

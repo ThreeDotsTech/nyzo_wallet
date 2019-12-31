@@ -54,11 +54,12 @@ class NyzoStringEncoder {
 
     // Compute the checks um and add the appropriate number of bytes to the end of the array.
     Uint8List checksum =
-        doubleSha256(expandedArray.sublist(0, 4 + contentBytes.length - 1));
+        doubleSha256(expandedArray.sublist(0, 4 + contentBytes.length));
 
-    for (int eachInt in checksum) {
-      expandedArray[i++] = eachInt;
+    for (var j = 0; j < checksumLength; j++) {
+      expandedArray[i++] = checksum[j];
     }
+    
 
     // Build and return the encoded string from the expanded array.
     return encodedStringForByteArray(expandedArray);
@@ -78,7 +79,7 @@ class NyzoStringEncoder {
     encodedString = encodedString.replaceAll('l', '1').replaceAll('O', '0');
 
     // Get the type from the prefix.
-    String type = NyzoStringType.forPrefix(encodedString.substring(0, 4));
+    var type = NyzoStringType.forPrefix(encodedString.substring(0, 4));
 
     // If the type is valid, continue.
     if (type != null) {
@@ -106,10 +107,10 @@ class NyzoStringEncoder {
               headerLength, expandedArray.length - checksumLength);
 
           // Make the object from the content array.
-          switch (type) {
+          switch (type.getPrefix()) {
             case NyzoStringType.PrefilledData:
               result = NyzoStringPrefilledData(contentBytes.sublist(0, 32),
-                  contentBytes.sublist(33, contentBytes.length));
+              contentBytes.sublist(33, contentBytes.length));
               break;
             case NyzoStringType.PrivateSeed:
               result = NyzoStringPrivateSeed(contentBytes);

@@ -17,8 +17,8 @@ class NyzoStringPrivateSeed implements NyzoString {
     }
 
     @override
-    String getType() {
-        return NyzoStringType.PrivateSeed;
+    NyzoStringType getType() {
+        return NyzoStringType(NyzoStringType.PrivateSeed);
     }
 
     @override
