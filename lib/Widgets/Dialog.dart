@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
+import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
+import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 
 class AddContactDialog {
-
   static final TextEditingController addressController =
       new TextEditingController();
   static final TextEditingController nameController =
@@ -21,7 +24,6 @@ class AddContactDialog {
         context: context2,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          
           return AlertDialog(
             title: Text(
               title,
@@ -29,8 +31,9 @@ class AddContactDialog {
             ),
             content: Container(
                 child: TextFormField(
-              validator: (String val) =>
-                  val == '' ? AppLocalizations.of(context).translate("String67") : null,
+              validator: (String val) => val == ''
+                  ? AppLocalizations.of(context).translate("String67")
+                  : null,
               key: nameFormKey,
               controller: nameController,
               maxLength: 24,
@@ -38,24 +41,21 @@ class AddContactDialog {
                 hasFloatingPlaceholder: false,
                 labelText: AppLocalizations.of(context).translate("String68"),
                 labelStyle: TextStyle(
-                  
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.red)),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.red)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Color(0x55666666))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Color(0x55666666))),
               ),
             )),
             actions: <Widget>[
@@ -71,7 +71,10 @@ class AddContactDialog {
                 onPressed: () {
                   if (nameFormKey.currentState.validate()) {
                     Navigator.pop(context);
-                    address(context2, AppLocalizations.of(context).translate("String69"), contactList,
+                    address(
+                        context2,
+                        AppLocalizations.of(context).translate("String69"),
+                        contactList,
                         onClose: onClose);
                   }
                 },
@@ -96,41 +99,57 @@ class AddContactDialog {
               key: addressFormKey,
               controller: addressController,
               maxLines: 3,
-              maxLength: 67,
-              validator: (String val){
-                              if (val.length != 56) {
-                                return AppLocalizations.of(context)
-                                    .translate("String70");
-                              }
-                              try {
-                                NyzoStringEncoder.decode(val);
-                              } catch (e) {
-                                return e.errMsg();
-                              }
-                              return null;
-                            },
-              
+              validator: (String val) {
+                if (val.length != 56) {}
+                try {
+                  NyzoStringEncoder.decode(val);
+                } catch (e) {
+                  return AppLocalizations.of(context).translate("String70");
+                }
+
+                try {
+                  NyzoStringEncoder.decode(val);
+                  if (NyzoStringEncoder.decode(val).getType().getPrefix() ==
+                      'pre_') {
+                    NyzoStringPrefilledData pre =
+                        NyzoStringPrefilledData.fromByteBuffer(
+                            NyzoStringEncoder.decode(val).getBytes().buffer);
+                    //setState(() {
+                    addressController.text = NyzoStringEncoder.encode(
+                        NyzoStringPublicIdentifier(
+                            pre.getReceiverIdentifier()));
+                    print(NyzoStringEncoder.encode(NyzoStringPublicIdentifier(
+                        pre.getReceiverIdentifier())));
+                    dataController.text = utf8.decode(pre.getSenderData());
+                    print(utf8.decode(pre.getSenderData()));
+                    //});
+                  }
+                } catch (e) {
+                  if (e.runtimeType == InvalisNyzoString) {
+                    return e.errMsg();
+                  }
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 hasFloatingPlaceholder: false,
                 labelText: AppLocalizations.of(context).translate("String9"),
                 labelStyle: TextStyle(
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.red)),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.red)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Color(0x55666666))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Color(0x55666666))),
               ),
             ),
             actions: <Widget>[
@@ -147,8 +166,24 @@ class AddContactDialog {
                 onPressed: () {
                   var addressForm = addressFormKey.currentState;
                   if (addressForm.validate()) {
+                    if (dataController.text != '') {
+                      addContact(
+                          contactList,
+                          new Contact(addressController.text,
+                              nameController.text, dataController.text))
+                      .then((s) {
+                    onClose();
                     Navigator.pop(context);
-                    data(context2, AppLocalizations.of(context).translate("String69"), contactList,
+                    nameController.text = '';
+                    addressController.text = '';
+                    dataController.text = '';
+                  });
+                    }
+                    Navigator.pop(context);
+                    data(
+                        context2,
+                        AppLocalizations.of(context).translate("String69"),
+                        contactList,
                         onClose: onClose);
                   }
                 },
@@ -173,29 +208,25 @@ class AddContactDialog {
               key: dataFormKey,
               controller: dataController,
               maxLength: 32,
-              
-              
               decoration: InputDecoration(
                 hasFloatingPlaceholder: false,
-                labelText: 	AppLocalizations.of(context).translate("String11"),
+                labelText: AppLocalizations.of(context).translate("String11"),
                 labelStyle: TextStyle(
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
+                    color: Color(0xFF555555),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.red)),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Colors.red)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Color(0x55666666))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100),
+                    borderSide: BorderSide(color: Color(0x55666666))),
               ),
             ),
             actions: <Widget>[

@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nyzo_wallet/Activities/QRCamera.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
+import 'package:nyzo_wallet/Data/NyzoMessage.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
+import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
+import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -400,18 +405,39 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                           ),
                           child: TextFormField(
                             keyboardType: TextInputType.text,
+                            autovalidate: true,
                             focusNode: focusNodeAddress,
                             key: walletWindowState.addressFormKey,
                             controller: walletWindowState.textControllerAddress,
                             validator: (String val) {
-                              if (val.length != 56) {
-                                return AppLocalizations.of(context)
-                                    .translate("String70");
-                              }
                               try {
                                 NyzoStringEncoder.decode(val);
+                                if (NyzoStringEncoder.decode(val)
+                                        .getType()
+                                        .getPrefix() ==
+                                    'pre_') {
+                                  NyzoStringPrefilledData pre =
+                                      NyzoStringPrefilledData.fromByteBuffer(
+                                          NyzoStringEncoder.decode(val)
+                                              .getBytes()
+                                              .buffer);
+                                  //setState(() {
+                                    walletWindowState.textControllerAddress.text =
+                                      NyzoStringEncoder.encode(
+                                          NyzoStringPublicIdentifier(
+                                              pre.getReceiverIdentifier()));
+                                              print(NyzoStringEncoder.encode(
+                                          NyzoStringPublicIdentifier(
+                                              pre.getReceiverIdentifier())));
+                                  walletWindowState.textControllerData.text =
+                                      utf8.decode( pre.getSenderData());
+                                      print(utf8.decode( pre.getSenderData()));
+                                  //});
+                                }
                               } catch (e) {
-                                return e.errMsg();
+                                if (e.runtimeType == InvalisNyzoString) {
+                                  return e.errMsg();
+                                }
                               }
                               return null;
                             },
@@ -555,6 +581,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         .amountFormKey.currentState;
                                     if (addressForm.validate() &&
                                         amountForm.validate()) {
+                                      
                                       var address = walletWindowState
                                           .textControllerAddress.text;
                                       send(
