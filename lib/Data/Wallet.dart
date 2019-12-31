@@ -19,7 +19,6 @@ import 'dart:typed_data';
 import 'TransactionMessage.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:tweetnacl/tweetnacl.dart';
-import 'package:flutter_sodium/flutter_sodium.dart' as sodium;
 import 'package:nyzo_wallet/Data/Contact.dart';
 
 final _storage = new FlutterSecureStorage();
@@ -43,8 +42,10 @@ Future createNewWallet(String password) async {
       .getInstance(); //Create a Shared Preferences instance to save balance
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
-  final privKey = await sodium.RandomBytes.buffer(
-      32); //Generates a 64 bytes array to usa as SEED (Crypto Secure)
+  final privKey = Uint8List.fromList(List<int>.generate(
+      32,
+      (i) => Random.secure().nextInt(
+          256))); //Generates a 64 bytes array to usa as SEED (Crypto Secure)
   //print("Private Key as Sodium: " + privKey.toString());
   KeyPair keyPair = Signature.keyPair_fromSeed(
       privKey); //Creates a KeyPair from the generated Seed
@@ -67,10 +68,8 @@ Future createNewWallet(String password) async {
   setWatchSentinels(false);
   addContact(
       [],
-      Contact(
-          "id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I",
-          "Donate",
-          "Help the development of this wallet."));
+      Contact("id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I",
+          "Donate", "Help the development of this wallet."));
   return [HEX.encode(privKey), HEX.encode(pubKey)];
 }
 
@@ -117,10 +116,8 @@ Future<bool> importWallet(String nyzoString, String password) async {
   await _storage.write(key: "Password", value: password);
   addContact(
       [],
-      Contact(
-          "id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I",
-          "Donate",
-          "Help the development of this wallet."));
+      Contact("id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I",
+          "Donate", "Help the development of this wallet."));
 
   return true;
 }
@@ -212,11 +209,16 @@ Future<List> getTransactions(String address) async {
             .split("(")[0]
             .split("∩")[0]
             .substring(0, 111);
-            transaction.block = transactionSlice[2]
+        transaction.block = transactionSlice[2]
             .toString()
-            .split("(")[0].split("∩")[0].substring(transactionSlice[2]
-            .toString()
-            .split("(")[0].split("∩")[0].length-7);
+            .split("(")[0]
+            .split("∩")[0]
+            .substring(transactionSlice[2]
+                    .toString()
+                    .split("(")[0]
+                    .split("∩")[0]
+                    .length -
+                7);
         List balanceSlice = eachTransaction.text.toString().split("∩");
         transaction.amount = double.parse(
             balanceSlice[1].toString().split(".")[0] +
@@ -333,7 +335,7 @@ nyzoStringFromPublicIdentifier(byteArray) {
 Future<String> send(String password, String nyzoStringPiblicId, int amount,
     int balance, String data) async {
   String account =
-  HEX.encode(NyzoStringEncoder.decode(nyzoStringPiblicId).getBytes());
+      HEX.encode(NyzoStringEncoder.decode(nyzoStringPiblicId).getBytes());
   http.Client client = new http.Client();
   String encryptedprivKey = await _storage.read(key: "privKey");
   String salt = await _storage.read(key: "salt");
@@ -425,16 +427,16 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
         result.content.height == null ||
         result.content.hash == null) {
       //print('There was a problem getting a recent block hash from the server. Your transaction was not ' +
-        //      'sent, so it is safe to try to send it again.');
+      //      'sent, so it is safe to try to send it again.');
     } else {
       if (result.content.height > 10000000000) {
         /* unsigned; a bad value is actually -1 */
-      //  print(
+        //  print(
         //    'The recent block hash sent by the server was invalid. Your transaction was not sent, so ' +
-          //      'it is safe to try to send it again.');
+        //      'it is safe to try to send it again.');
       } else {
-       // print('previous hash height is ' + result.content.height.toString());
-      //  print('previous block hash is ' + HEX.encode(result.content.hash));
+        // print('previous hash height is ' + result.content.height.toString());
+        //  print('previous block hash is ' + HEX.encode(result.content.hash));
         NyzoMessage result2 = await submitTransaction(
             result.timestamp + 7000,
             walletPrivateSeed,
@@ -705,7 +707,7 @@ Future<Verifier> getVerifierStatus(Verifier verifier) async {
 
     for (Element eachAttribute in attributeElementList) {
       for (String eachAttribute in eachAttribute.innerHtml.split("<br>")) {
-       // print(eachAttribute + "\n");
+        // print(eachAttribute + "\n");
         List<String> tempAttributeList = eachAttribute.split(":");
         if (tempAttributeList.length == 2) {
           verifierMap[tempAttributeList[0]] = tempAttributeList[1];
