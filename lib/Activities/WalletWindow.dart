@@ -84,8 +84,9 @@ class WalletWindowState extends State<WalletWindow> {
       setState(() {
         _address = address;
         //NyzoString _string = NyzoStringEncoder.decode(_address);
-        
-        sendWindowInstance = new SendWindow(password, nyzoStringFromPublicIdentifier(_address));
+
+        sendWindowInstance =
+            new SendWindow(password, nyzoStringFromPublicIdentifier(_address));
 
         getBalance(_address).then((_balance) {
           //get the balance value from the network
@@ -125,42 +126,47 @@ class WalletWindowState extends State<WalletWindow> {
     var childButtons = List<UnicornButton>();
 
     childButtons.add(UnicornButton(
-        hasLabel: true,
-        labelText: 	AppLocalizations.of(context).translate("String96"),
+        hasLabel: false,
+        //labelText: 	AppLocalizations.of(context).translate("String96"),
+        labelText: "",
         currentButton: FloatingActionButton(
           heroTag: "verifier",
-          backgroundColor: ColorTheme.of(context).baseColor,
+          backgroundColor: Colors.white,
           mini: true,
           child: Container(
               margin: EdgeInsets.all(8),
               child: Image.asset(
                 "images/normal.png",
-                color: ColorTheme.of(context).secondaryColor,
+                color: Colors.black,
               )),
           onPressed: () {
-            floatingdialog.information(context, 	AppLocalizations.of(context).translate("String97"), true,
-                onClose: () {
+            floatingdialog.information(
+                context,
+                AppLocalizations.of(context).translate("String97"),
+                true, onClose: () {
               ColorTheme.of(context).updateVerifiers();
-              
             });
           },
         )));
 
     childButtons.add(UnicornButton(
-        hasLabel: true,
-        labelText: 	AppLocalizations.of(context).translate("String98"),
+        hasLabel: false,
+        //labelText: 	AppLocalizations.of(context).translate("String98"),
+
         currentButton: FloatingActionButton(
           heroTag: "address",
-          backgroundColor: ColorTheme.of(context).baseColor,
+          backgroundColor: Colors.white,
           mini: true,
           child: Icon(
             Icons.account_balance_wallet,
-            color: ColorTheme.of(context).secondaryColor,
+            color: Colors.black,
           ),
           onPressed: () {
             setState(() {
-              floatingdialog.information(context, 	AppLocalizations.of(context).translate("String97"), false,
-                  onClose: () {
+              floatingdialog.information(
+                  context,
+                  AppLocalizations.of(context).translate("String97"),
+                  false, onClose: () {
                 ColorTheme.of(context).updateAddressesToWatch();
               });
             });
@@ -176,17 +182,17 @@ class WalletWindowState extends State<WalletWindow> {
                 ? UnicornDialer(
                     parentHeroTag: "ParenTagg",
                     childButtons: childButtons,
-                    parentButtonBackground: ColorTheme.of(context).baseColor,
+                    parentButtonBackground: Colors.white,
                     backgroundColor: Colors.black12,
                     finalButtonIcon: Icon(
                       Icons.close,
-                      color: ColorTheme.of(context).secondaryColor,
+                      color: Colors.black,
                     ),
                     parentButton: Container(
                         margin: EdgeInsets.all(15),
                         child: Icon(
                           Icons.add,
-                          color: ColorTheme.of(context).secondaryColor,
+                          color: Colors.black,
                         )),
                   )
                 : null
@@ -212,23 +218,28 @@ class WalletWindowState extends State<WalletWindow> {
                 ? [
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 	AppLocalizations.of(context).translate("String72"),
+                        title:
+                            AppLocalizations.of(context).translate("String72"),
                         icon: Icons.history),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 	AppLocalizations.of(context).translate("String8"),
+                        title:
+                            AppLocalizations.of(context).translate("String8"),
                         icon: Icons.contacts),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 	AppLocalizations.of(context).translate("String21"),
+                        title:
+                            AppLocalizations.of(context).translate("String21"),
                         icon: Icons.send),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 	AppLocalizations.of(context).translate("String94"),
+                        title:
+                            AppLocalizations.of(context).translate("String94"),
                         icon: Icons.remove_red_eye),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 	AppLocalizations.of(context).translate("String30"),
+                        title:
+                            AppLocalizations.of(context).translate("String30"),
                         icon: Icons.settings),
                   ]
                 : [
