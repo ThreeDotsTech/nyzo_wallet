@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Transaction.dart';
@@ -26,16 +28,14 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
   List<Contact> _contactsList;
   WalletWindowState walletWindowState;
   int balance = 0;
-  
+  final SlidableController slidableController = SlidableController();
+
   @override
   void initState() {
-    getSavedBalance().then((double _balance){
+    getSavedBalance().then((double _balance) {
       setState(() {
-        
-      balance = _balance.floor();  
-      
+        balance = _balance.floor();
       });
-      
     });
 
     walletWindowState =
@@ -86,8 +86,10 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
             child: Text(
               AppLocalizations.of(context).translate("String72"),
               style: TextStyle(
-                color: ColorTheme.of(context).secondaryColor,
-                  fontWeight: FontWeight.w600, letterSpacing: 0, fontSize: 35),
+                  color: ColorTheme.of(context).secondaryColor,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0,
+                  fontSize: 35),
             ),
           ),
           Expanded(
@@ -107,7 +109,9 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                     ),
                     RichText(
                       text: TextSpan(
-                        text: walletWindowState.balance == 0 ? balance.toString() : (walletWindowState.balance/1000000).toString(),
+                        text: walletWindowState.balance == 0
+                            ? balance.toString()
+                            : (walletWindowState.balance / 1000000).toString(),
                         style: TextStyle(
                             color: ColorTheme.of(context).secondaryColor,
                             fontWeight: FontWeight.w600,
@@ -116,8 +120,9 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                           TextSpan(
                             text: ' ∩',
                             style: TextStyle(
-                              color: ColorTheme.of(context).secondaryColor,
-                                fontWeight: FontWeight.w600, fontSize: 20),
+                                color: ColorTheme.of(context).secondaryColor,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20),
                           )
                         ],
                       ),
@@ -157,13 +162,27 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                   //width: walletWindowState.screenHeight / 5 * 0.9,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text(AppLocalizations.of(context).translate("String78"),style:TextStyle(color: ColorTheme.of(context).secondaryColor, fontWeight: FontWeight.w600,fontSize: 15)),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate("String78"),
+                                      style: TextStyle(
+                                          color: ColorTheme.of(context)
+                                              .secondaryColor,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(0.0),
-                                  
-                                  child: Text(AppLocalizations.of(context).translate("String79"),textAlign: TextAlign.center,style:TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.w400,fontSize: 15)),
+                                  child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate("String79"),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Color(0xFF666666),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 15)),
                                 ),
                               ],
                             ),
@@ -180,55 +199,28 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                             itemCount: _transactions?.length,
                             itemBuilder: (context, i) => Padding(
                                   padding: EdgeInsets.symmetric(vertical: 5),
-                                  child: ExpandablePanel(
-                                    collapsed: ListTile(
-                                    leading: Container(
-                                      decoration: new BoxDecoration(
-                                        borderRadius:
-                                            new BorderRadius.circular(25.0),
-                                        border: new Border.all(
-                                          width: 1.0,
-                                          color: Color(0xFF555555),
-                                        ),
-                                      ),
-                                      child: _transactions[i].type == 	"from"
-                                          ? Icon(
-                                              Icons.add,
-                                              color: Color(0xFF555555),
-                                            )
-                                          : Icon(
-                                              Icons.remove,
-                                              color: Color(0xFF555555),
-                                            ),
-                                    ),
-                                    title: Text(
-                                            _transactions[i]
-                                                    .address
-                                                    .substring(0, 8) +
-                                                "..." +
-                                                _transactions[i]
-                                                    .address
-                                                    .substring(_transactions[i]
-                                                            .address
-                                                            .length -
-                                                        7),
-                                            style: TextStyle(
-                                              color: ColorTheme.of(context).secondaryColor,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15),
-                                          ),
-                                    trailing: Text(
-                                      _transactions[i].amount.toString()+" ∩",
-                                      style: TextStyle(
-                                        color: ColorTheme.of(context).secondaryColor,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20),
-                                    ),
-                                  ),
-                                  expanded: Column(
-                                    
-                                    children: <Widget>[
-                                      ListTile(
+                                  child: Slidable(
+                                    controller: slidableController,
+                                    actionPane: SlidableDrawerActionPane(),
+                                    actions: <Widget>[
+                                      IconSlideAction(
+                                        caption: 'Send',
+                                        color: ColorTheme.of(context).baseColor,
+                                        icon: Icons.send,
+                                        onTap: () {
+                                          walletWindowState
+                                              .textControllerAddress
+                                              .text = _transactions[i].address;
+                                          walletWindowState.setState(() {
+                                            walletWindowState.pageIndex = 2;
+                                          });
+                                        },
+                                      )
+                                    ],
+                                    child: ExpandablePanel(
+                                      iconColor:
+                                          ColorTheme.of(context).secondaryColor,
+                                      collapsed: ListTile(
                                         leading: Container(
                                           decoration: new BoxDecoration(
                                             borderRadius:
@@ -238,44 +230,158 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                               color: Color(0xFF555555),
                                             ),
                                           ),
-                                          child: _transactions[i].type == 	"from"
+                                          child: _transactions[i].type == "from"
                                               ? Icon(
                                                   Icons.add,
-                                                  color: Colors.green[200],
+                                                  color: Color(0xFF555555),
                                                 )
                                               : Icon(
                                                   Icons.remove,
-                                                  color: Colors.red[200],
+                                                  color: Color(0xFF555555),
                                                 ),
                                         ),
-                                        title: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                                    _transactions[i]
-                                                            .address,
-                                                    style: TextStyle(
-                                                      color: ColorTheme.of(context).secondaryColor,
-                                                        fontWeight: FontWeight.w700,
-                                                        fontSize: 15),
-                                                  ),
-                                                   Padding(
-                                                     padding: const EdgeInsets.symmetric(vertical:4.0),
-                                                     child: AutoSizeText(("Block: " + _transactions[i].block),maxLines: 1,textAlign: TextAlign.start,),
-                                                   )
-                                          ],
+                                        title: InkWell(
+                                          onTap: () {
+                                            Clipboard.setData(new ClipboardData(
+                                                text:
+                                                    _transactions[i].address));
+                                            final snackbar = SnackBar(
+                                                content: Text(
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            "String25")));
+                                            Scaffold.of(context)
+                                                .showSnackBar(snackbar);
+                                          },
+                                          child: Text(
+                                            _contactsList.any((Contact contact){
+                                                      return contact.address==_transactions[i].address;
+                                              
+                                                    }) ? _contactsList.firstWhere((Contact contact){
+                                                      return contact.address==_transactions[i].address;
+                                              
+                                                    }).name:
+                                            _transactions[i]
+                                                    .address
+                                                    .substring(0, 4) +
+                                                "..." +
+                                                _transactions[i]
+                                                    .address
+                                                    .substring(_transactions[i]
+                                                            .address
+                                                            .length -
+                                                        4),
+                                            style: TextStyle(
+                                                color: ColorTheme.of(context)
+                                                    .secondaryColor,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 15),
+                                          ),
                                         ),
                                         trailing: Text(
-                                          _transactions[i].amount.toStringAsFixed(_transactions[i].amount.truncateToDouble() == _transactions[i].amount ? 0 : 2) +" ∩",
+                                          _transactions[i].amount.toString() +
+                                              " ∩",
                                           style: TextStyle(
-                                            color: ColorTheme.of(context).secondaryColor,
+                                              color: ColorTheme.of(context)
+                                                  .secondaryColor,
                                               fontWeight: FontWeight.w700,
                                               fontSize: 20),
                                         ),
                                       ),
-                                     
-                                    ],
-                                  ),
+                                      expanded: Column(
+                                        children: <Widget>[
+                                          ListTile(
+                                            leading: Container(
+                                              decoration: new BoxDecoration(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        25.0),
+                                                border: new Border.all(
+                                                  width: 1.0,
+                                                  color: Color(0xFF555555),
+                                                ),
+                                              ),
+                                              child: _transactions[i].type ==
+                                                      "from"
+                                                  ? Icon(
+                                                      Icons.add,
+                                                      color: Colors.green[200],
+                                                    )
+                                                  : Icon(
+                                                      Icons.remove,
+                                                      color: Colors.red[200],
+                                                    ),
+                                            ),
+                                            title: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                InkWell(
+                                                  onTap: () {
+                                                    Clipboard.setData(
+                                                        new ClipboardData(
+                                                            text:
+                                                                _transactions[i]
+                                                                    .address));
+                                                    final snackbar = SnackBar(
+                                                        content: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .translate(
+                                                                    "String25")));
+                                                    Scaffold.of(context)
+                                                        .showSnackBar(snackbar);
+                                                  },
+                                                  child: Text(
+                                                    _transactions[i].address,
+                                                    style: TextStyle(
+                                                        color: ColorTheme.of(
+                                                                context)
+                                                            .secondaryColor,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 15),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 4.0),
+                                                  child: AutoSizeText(
+                                                    ("Block: " +
+                                                        _transactions[i].block),
+                                                    maxLines: 1,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                        color: ColorTheme.of(
+                                                                context)
+                                                            .secondaryColor),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            trailing: Text(
+                                              _transactions[i]
+                                                      .amount
+                                                      .toStringAsFixed(
+                                                          _transactions[i]
+                                                                      .amount
+                                                                      .truncateToDouble() ==
+                                                                  _transactions[
+                                                                          i]
+                                                                      .amount
+                                                              ? 0
+                                                              : 2) +
+                                                  " ∩",
+                                              style: TextStyle(
+                                                  color: ColorTheme.of(context)
+                                                      .secondaryColor,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 )),
                         onRefresh: () {
@@ -286,13 +392,14 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                     padding: EdgeInsets.all(0.0),
                     itemCount: 8,
                     itemBuilder: (context, i) => Card(
-                      color: ColorTheme.of(context).baseColor,
-                            child: SizedBox(
+                        color: ColorTheme.of(context).baseColor,
+                        child: SizedBox(
                           width: 200.0,
                           height: 60.0,
                           child: Shimmer.fromColors(
                             baseColor: ColorTheme.of(context).transparentColor,
-                            highlightColor: ColorTheme.of(context).highLigthColor,
+                            highlightColor:
+                                ColorTheme.of(context).highLigthColor,
                             child: Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: ListTile(
