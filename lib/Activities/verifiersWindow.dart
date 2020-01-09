@@ -172,7 +172,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                               
                                                   ):Container(
                                                     child: ListTile(
-                                                      leading: Image.asset("images/communicationProblem.png"),
+                                                      leading: Image.asset("images/communicationProblem.png",color: ColorTheme.of(context).secondaryColor),
                                                       title: Text(ColorTheme.of(context).verifiersList[
                                                                           i]
                                                                       .id,style: ColorTheme.of(context).verifiersList[
@@ -443,22 +443,15 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                           leading: Icon(Icons
                                                               .account_balance_wallet,color: ColorTheme.of(context).secondaryColor,),
                                                               trailing: Text(ColorTheme.of(context).addressesToWatch[i].balance,style: TextStyle(color: ColorTheme.of(context).secondaryColor),),
-                                                          title: Text(
-                                                            nyzoStringFromPublicIdentifier(ColorTheme.of(context).addressesToWatch[
-                                                                          i]
-                                                                      .address)
-                                                                      .substring(
-                                                                          0,
-                                                                          4) +
-                                                                  "..." +
-                                                                  nyzoStringFromPublicIdentifier(ColorTheme.of(context).addressesToWatch[
-                                                                          i]
-                                                                      .address)
-                                                                      .substring(
-                                                                          nyzoStringFromPublicIdentifier(ColorTheme.of(context).addressesToWatch[
-                                                                          i]
-                                                                      .address).length -
-                                                                              4),
+                                                          title: TextFormField(
+                                                          onFieldSubmitted: (String nickname){
+                                                            ColorTheme.of(context).addressesToWatch[i].nickname=nickname;
+                                                          setState(() {
+                                                            saveWatchAddress(
+                                                                ColorTheme.of(context).addressesToWatch);
+                                                          });
+                                                          },
+                                                            initialValue: ColorTheme.of(context).addressesToWatch[i].nickname,
                                                               style: ColorTheme.of(context).addressesToWatch[
                                                                               i]
                                                                           .balance !=
@@ -473,7 +466,14 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                           .red,
                                                                       fontSize:
                                                                           20.0,
-                                                                    )),
+                                                                    ),
+                                                            decoration: InputDecoration(focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+                                                              border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+                                                              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent))
+                                                            )
+                                                            ,
+                                                          ),
+                                                          
                                                         )),
                                                     secondaryActions: <Widget>[
                                                       IconSlideAction(
