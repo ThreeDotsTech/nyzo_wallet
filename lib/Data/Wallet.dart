@@ -192,9 +192,9 @@ Future<List> getTransactions(String address) async {
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
     });
     var html = await json.decode(response.body)["creditsAndDebits"];
-    var document = parse(html, encoding: "utf-16");
-    List transactionElementList = document.getElementsByTagName("tr");
+    var document = parse(html);
 
+    List<Element> transactionElementList = document.getElementsByTagName("tr");
     for (Element eachTransaction in transactionElementList) {
       if (eachTransaction.text != 'typeblockamountbalance') {
         Transaction transaction = new Transaction();
@@ -204,11 +204,10 @@ Future<List> getTransactions(String address) async {
           transaction.type = "to";
         }
         List transactionSlice = eachTransaction.text.toString().split(" ");
-        transaction.address = transactionSlice[2]
-            .toString()
-            .split("(")[0]
-            .split("∩")[0]
-            .substring(0, 111);
+        transaction.address = eachTransaction.children[0].children[0].attributes
+            .values
+            .toList()[0]
+            .substring(11); 
         transaction.block = transactionSlice[2]
             .toString()
             .split("(")[0]
