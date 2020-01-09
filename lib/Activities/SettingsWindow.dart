@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Activities/BackupSeed.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
+import 'package:nyzo_wallet/Data/Utils.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/homePage.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -16,8 +17,12 @@ class SettingsWindowState extends State<SettingsWindow> {
 
   bool _switchValue = false;
   bool _nigthMode = false;
+  String version = "";
   @override
   void initState() {
+     Utils.getVersion().then((String onValue){
+       version = onValue;
+     });
     walletWindowState =
         context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
     watchSentinels().then((bool val) {
@@ -279,7 +284,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      "Beta v0.4.4",
+                      "Beta v"+version,
                       style: TextStyle(
                           color: ColorTheme.of(context).secondaryColor,
                           fontWeight: FontWeight.w700,
