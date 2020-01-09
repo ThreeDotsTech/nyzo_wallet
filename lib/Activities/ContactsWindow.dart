@@ -49,8 +49,10 @@ class ContactsWindowState extends State<ContactsWindow> {
           child: Text(
             AppLocalizations.of(context).translate("String8"),
             style: TextStyle(
-              color: ColorTheme.of(context).secondaryColor,
-                fontWeight: FontWeight.w600, letterSpacing: 0, fontSize: 35),
+                color: ColorTheme.of(context).secondaryColor,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0,
+                fontSize: 35),
           ),
         ),
         Expanded(
@@ -69,16 +71,16 @@ class ContactsWindowState extends State<ContactsWindow> {
                                     controller: slidableController,
                                     actionPane: SlidableDrawerActionPane(),
                                     child: ExpandablePanel(
-                                      
                                       header: ListTile(
                                         leading: Icon(
-                                          
                                           Icons.person,
-                                          color: ColorTheme.of(context).secondaryColor,
+                                          color: ColorTheme.of(context)
+                                              .secondaryColor,
                                         ),
                                         title: Text(contactsList[i].name,
                                             style: TextStyle(
-                                              color: ColorTheme.of(context).secondaryColor,
+                                              color: ColorTheme.of(context)
+                                                  .secondaryColor,
                                               fontSize: 20.0,
                                             )),
                                       ),
@@ -100,7 +102,8 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                     CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Text(
-                                                    AppLocalizations.of(context).translate("String9"),
+                                                    AppLocalizations.of(context)
+                                                        .translate("String9"),
                                                     style: TextStyle(
                                                         color:
                                                             Color(0xFF555555),
@@ -121,15 +124,19 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                                               i]
                                                                           .address));
                                                               final snackBar = SnackBar(
-                                                                  content: Text(
-                                                                      AppLocalizations.of(context).translate("String10")));
+                                                                  content: Text(AppLocalizations.of(
+                                                                          context)
+                                                                      .translate(
+                                                                          "String10")));
                                                               Scaffold.of(
                                                                       context)
                                                                   .showSnackBar(
                                                                       snackBar);
                                                             },
                                                       style: TextStyle(
-                                                          color: ColorTheme.of(context).secondaryColor),
+                                                          color: ColorTheme.of(
+                                                                  context)
+                                                              .secondaryColor),
                                                       text: contactsList[i]
                                                           .address,
                                                     ),
@@ -138,7 +145,10 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                     padding: const EdgeInsets
                                                         .fromLTRB(0, 15, 0, 0),
                                                     child: Text(
-                                                      AppLocalizations.of(context).translate("String11"),
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate(
+                                                              "String11"),
                                                       style: TextStyle(
                                                           color:
                                                               Color(0xFF555555),
@@ -146,24 +156,48 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                     ),
                                                   ),
                                                   TextFormField(
-                                                    decoration: InputDecoration(focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),),
+                                                    decoration: InputDecoration(
+                                                      focusedErrorBorder:
+                                                          OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100),
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                      color: Colors
+                                                                          .red)),
+                                                      errorBorder:
+                                                          OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          100),
+                                                              borderSide:
+                                                                  BorderSide(
+                                                                      color: Colors
+                                                                          .red)),
+                                                      enabledBorder: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0x55666666))),
+                                                      focusedBorder: OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0x55666666))),
+                                                    ),
                                                     style: TextStyle(
-                                                          
-                                                          color: ColorTheme.of(context).secondaryColor),
-                                                          
+                                                        color: ColorTheme.of(
+                                                                context)
+                                                            .secondaryColor),
                                                     initialValue:
                                                         contactsList[i].notes,
                                                     textAlign: TextAlign.center,
@@ -195,7 +229,9 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                         IconButton(
                                                           icon: Icon(
                                                             Icons.delete,
-                                                            color:  ColorTheme.of(context).secondaryColor,
+                                                            color: ColorTheme
+                                                                    .of(context)
+                                                                .secondaryColor,
                                                           ),
                                                           onPressed: () {
                                                             contactsList
@@ -216,7 +252,9 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                         IconButton(
                                                           icon: Icon(
                                                             Icons.send,
-                                                            color:  ColorTheme.of(context).secondaryColor,
+                                                            color: ColorTheme
+                                                                    .of(context)
+                                                                .secondaryColor,
                                                           ),
                                                           onPressed: () {
                                                             walletWindowState
@@ -247,7 +285,8 @@ class ContactsWindowState extends State<ContactsWindow> {
                                       ),
                                       tapHeaderToExpand: true,
                                       hasIcon: true,
-                                      iconColor: ColorTheme.of(context).secondaryColor,
+                                      iconColor:
+                                          ColorTheme.of(context).secondaryColor,
                                     ),
                                     actions: <Widget>[
                                       IconSlideAction(
@@ -289,14 +328,17 @@ class ContactsWindowState extends State<ContactsWindow> {
                                   ),
                                   Image.asset(
                                     "images/noContacts.png",
-                                    color: ColorTheme.of(context).secondaryColor,
+                                    color:
+                                        ColorTheme.of(context).secondaryColor,
                                     height: walletWindowState.screenHeight / 6,
                                     //width: walletWindowState.screenHeight / 5 * 0.9,
                                   ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                    child: Text(AppLocalizations.of(context).translate("String12"),
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .translate("String12"),
                                         style: TextStyle(
                                             color: Color(0xFF555555),
                                             fontWeight: FontWeight.w600,
@@ -305,7 +347,8 @@ class ContactsWindowState extends State<ContactsWindow> {
                                   Padding(
                                     padding: const EdgeInsets.all(0.0),
                                     child: Text(
-                                        AppLocalizations.of(context).translate("String13"),
+                                        AppLocalizations.of(context)
+                                            .translate("String13"),
                                         style: TextStyle(
                                             color: Color(0xFF666666),
                                             fontWeight: FontWeight.w400,
@@ -326,8 +369,10 @@ class ContactsWindowState extends State<ContactsWindow> {
                                 width: 200.0,
                                 height: 60.0,
                                 child: Shimmer.fromColors(
-                                  baseColor: ColorTheme.of(context).transparentColor,
-                                  highlightColor: ColorTheme.of(context).highLigthColor,
+                                  baseColor:
+                                      ColorTheme.of(context).transparentColor,
+                                  highlightColor:
+                                      ColorTheme.of(context).highLigthColor,
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: ListTile(
@@ -353,7 +398,9 @@ class ContactsWindowState extends State<ContactsWindow> {
                       foregroundColor: ColorTheme.of(context).secondaryColor,
                       onPressed: () {
                         floatingdialog.information(
-                            context, 	AppLocalizations.of(context).translate("String69"), contactsList, onClose: () {
+                            context,
+                            AppLocalizations.of(context).translate("String69"),
+                            contactsList, onClose: () {
                           getContacts().then((List<Contact> _contactList) {
                             setState(() {
                               contactsList = _contactList;
