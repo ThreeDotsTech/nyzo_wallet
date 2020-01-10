@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:nyzo_wallet/Activities/ImportWallet2.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
+import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class ImportWalletScreen extends StatefulWidget {
   @override
@@ -63,7 +64,8 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
               new Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
-                      child: new Text(AppLocalizations.of(context).translate("String14"),
+                      child: new Text(
+                          AppLocalizations.of(context).translate("String14"),
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -77,19 +79,20 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                 controller: privKeytextController,
                 style: TextStyle(color: Colors.black),
                 decoration: new InputDecoration(
-                  labelText: 	AppLocalizations.of(context).translate("String82"),
+                  filled: true,
+                  fillColor: ColorTheme.of(context).dephtColor,
+                  labelText: AppLocalizations.of(context).translate("String82"),
                 ),
-                validator: (String val){
-                 if (val.length!=56) {
+                validator: (String val) {
+                  if (val.length != 56) {
                     return AppLocalizations.of(context).translate("String70");
-                  } 
+                  }
                   try {
-                   NyzoStringEncoder.decode(val); 
+                    NyzoStringEncoder.decode(val);
                   } catch (e) {
                     return e.errMsg();
                   }
                   return null;
-                  
                 },
               ),
               new SizedBox(
@@ -101,7 +104,8 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                           valueColor:
                               new AlwaysStoppedAnimation(Color(0XFFFFFFFF))))
                   : Center(
-                      child: new RaisedButton(color: Colors.black87,
+                      child: new RaisedButton(
+                        color: Colors.black87,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)),
                         onPressed: () {
@@ -110,7 +114,9 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                             _performWalletCreation();
                           }
                         },
-                        child: new Text(AppLocalizations.of(context).translate("String15"),style: TextStyle(color: Colors.white)),
+                        child: new Text(
+                            AppLocalizations.of(context).translate("String15"),
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
             ],

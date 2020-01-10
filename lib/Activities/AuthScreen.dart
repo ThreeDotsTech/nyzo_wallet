@@ -161,6 +161,8 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(
                             color: ColorTheme.of(context).secondaryColor),
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: ColorTheme.of(context).dephtColor,
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
                               borderSide: BorderSide(color: Colors.red)),
@@ -214,7 +216,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           child: new Text(
                               AppLocalizations.of(context).translate("String3"),
                               style: TextStyle(
-                                  color: ColorTheme.of(context).baseColor)),
+                                  color: ColorTheme.of(context).secondaryColor)),
                         ),
                       ),
                       new Expanded(

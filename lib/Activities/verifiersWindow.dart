@@ -35,7 +35,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
     return updateFuture;
   }
 
-  SliverPersistentHeader makeHeader(String headerText,var color) {
+  SliverPersistentHeader makeHeader(String headerText,var color,Color textColor) {
     return SliverPersistentHeader(
       pinned: true,
       delegate: _SliverAppBarDelegate(
@@ -52,7 +52,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                   child: Text(
                     headerText,
                     style: TextStyle(
-                        color: color == Colors.black ? Colors.white:Colors.black,
+                        color: textColor,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0,
                         fontSize: 18),
@@ -99,7 +99,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                               child: CustomScrollView(
                                 slivers: <Widget>[
                                   (ColorTheme.of(context).verifiersList?.length != 0)
-                                      ? makeHeader(	AppLocalizations.of(context).translate("String94"),ColorTheme.of(context).baseColor):SliverList(
+                                      ? makeHeader(	AppLocalizations.of(context).translate("String94"),ColorTheme.of(context).baseColor,ColorTheme.of(context).secondaryColor):SliverList(
                                           delegate: SliverChildListDelegate(
                                               [Container()])),
                                   SliverList(
@@ -420,7 +420,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                         childCount: ColorTheme.of(context).verifiersList?.length),
                                   ),
                                   (ColorTheme.of(context).addressesToWatch?.length != 0)
-                                      ? makeHeader(	AppLocalizations.of(context).translate("String95"),ColorTheme.of(context).baseColor)
+                                      ? makeHeader(	AppLocalizations.of(context).translate("String95"),ColorTheme.of(context).baseColor,ColorTheme.of(context).secondaryColor)
                                       : SliverList(
                                           delegate: SliverChildListDelegate(
                                               [Container()]),
@@ -467,7 +467,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                       fontSize:
                                                                           20.0,
                                                                     ),
-                                                            decoration: InputDecoration(focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+                                                            decoration: InputDecoration(filled: false,
+                              fillColor: ColorTheme.of(context).dephtColor,focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
                                                               border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
                                                               enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent))
                                                             )

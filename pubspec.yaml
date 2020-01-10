@@ -48,6 +48,8 @@ dependencies:
     sdk: flutter
   auto_size_text: ^2.1.0
   package_info: ^0.4.0+13
+  direct_select_flutter: ^1.0.5
+
 
 
 

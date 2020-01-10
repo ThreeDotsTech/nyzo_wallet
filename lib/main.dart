@@ -17,8 +17,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool lightTheme = false;
-  Color baseColor = Colors.white;
-  Color secondaryColor = Colors.black;
+  Color baseColor = Color(0xFFF5F5F5);
+  Color secondaryColor = Color(0xFF121212);
+  Color dephtColor = Colors.white;
   Color extraColor = Colors.black87;
   Color transparentColor = Colors.grey[300];
   Color highLightColor = Colors.grey[100];
@@ -39,16 +40,18 @@ class _MyAppState extends State<MyApp> {
         value??=false;
         lightTheme = value;
         if (!lightTheme) {
-          baseColor = Colors.white;
-          secondaryColor = Colors.black;
+          baseColor = Color(0xFFF5F5F5);
+          dephtColor = Colors.white;
+          secondaryColor =  Color(0xFF121212);
           extraColor = Colors.black87;
           transparentColor = Colors.grey[300];
           highLightColor = Colors.grey[100];
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
         } else {
-          baseColor = Colors.black;
-          secondaryColor = Colors.white;
-          extraColor = Colors.white;
+          baseColor = Color(0xFF15151a);
+          secondaryColor = Color(0xFFF5F5F5);
+          dephtColor = Color(0xFF1b1c20);
+          extraColor = Colors.black;
           transparentColor = Colors.white30;
           highLightColor = Colors.white10;
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
@@ -67,6 +70,7 @@ class _MyAppState extends State<MyApp> {
       baseColor: baseColor,
       secondaryColor: secondaryColor,
       extraColor: extraColor,
+      dephtColor: dephtColor,
       transparentColor: transparentColor,
       highLigthColor: highLightColor,
       verifiersList: verifiersList,

@@ -4,6 +4,7 @@ import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Activities/BackupSeed.dart';
+import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class NewWalletScreen extends StatefulWidget {
   @override
@@ -37,7 +38,6 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
       _isLoading = true;
     });
     createNewWallet(textController1.text).then((onValue) {
-
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -62,7 +62,7 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
           elevation: 0.0,
           backgroundColor: Colors.white,
           leading: new IconButton(
-            color:  Colors.black,
+            color: Colors.black,
             onPressed: () {
               Navigator.pop(context);
             },
@@ -77,7 +77,8 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
               new Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
-                      child: new Text(AppLocalizations.of(context).translate("String18"),
+                      child: new Text(
+                          AppLocalizations.of(context).translate("String18"),
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -93,7 +94,10 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                     controller: textController1,
                     style: TextStyle(color: Colors.black),
                     decoration: new InputDecoration(
-                      labelText: 	AppLocalizations.of(context).translate("String81"),
+                      filled: true,
+                      fillColor: ColorTheme.of(context).dephtColor,
+                      labelText:
+                          AppLocalizations.of(context).translate("String81"),
                     ),
                   ),
                   new TextFormField(
@@ -102,11 +106,16 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                     controller: textController2,
                     obscureText: true,
                     style: TextStyle(color: Colors.black),
-                    decoration:
-                        new InputDecoration(labelText: 	AppLocalizations.of(context).translate("String84")),
+                    decoration: new InputDecoration(
+                        filled: true,
+                        fillColor: ColorTheme.of(context).dephtColor,
+                        labelText:
+                            AppLocalizations.of(context).translate("String84")),
                     validator: (val) => val != textController1.text
-                        ? 	AppLocalizations.of(context).translate("String85")
-                        : val == '' ? 	AppLocalizations.of(context).translate("String86"):null,
+                        ? AppLocalizations.of(context).translate("String85")
+                        : val == ''
+                            ? AppLocalizations.of(context).translate("String86")
+                            : null,
                   ),
                   new SizedBox(
                     height: 50.0,
@@ -127,7 +136,10 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                                 _performWalletCreation();
                               }
                             },
-                            child: new Text(AppLocalizations.of(context).translate("String19"),style: TextStyle(color: Colors.white)),
+                            child: new Text(
+                                AppLocalizations.of(context)
+                                    .translate("String19"),
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
                 ],

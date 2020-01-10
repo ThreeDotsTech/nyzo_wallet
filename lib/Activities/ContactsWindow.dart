@@ -157,6 +157,10 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                   ),
                                                   TextFormField(
                                                     decoration: InputDecoration(
+                                                      filled: true,
+                                                      fillColor:
+                                                          ColorTheme.of(context)
+                                                              .dephtColor,
                                                       focusedErrorBorder:
                                                           OutlineInputBorder(
                                                               borderRadius:

@@ -199,178 +199,89 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                             itemCount: _transactions?.length,
                             itemBuilder: (context, i) => Padding(
                                   padding: EdgeInsets.symmetric(vertical: 5),
-                                  child: Slidable(
-                                    controller: slidableController,
-                                    actionPane: SlidableDrawerActionPane(),
-                                    actions: <Widget>[
-                                      IconSlideAction(
-                                        caption: 'Send',
-                                        color: ColorTheme.of(context).baseColor,
-                                        icon: Icons.send,
-                                        onTap: () {
-                                          walletWindowState
-                                              .textControllerAddress
-                                              .text = _transactions[i].address;
-                                          walletWindowState.setState(() {
-                                            walletWindowState.pageIndex = 2;
-                                          });
-                                        },
-                                      )
-                                    ],
-                                    child: ExpandablePanel(
-                                      iconColor:
-                                          ColorTheme.of(context).secondaryColor,
-                                      collapsed: ListTile(
-                                        leading: Container(
-                                          decoration: new BoxDecoration(
-                                            borderRadius:
-                                                new BorderRadius.circular(25.0),
-                                            border: new Border.all(
-                                              width: 1.0,
-                                              color: Color(0xFF555555),
-                                            ),
-                                          ),
-                                          child: _transactions[i].type == "from"
-                                              ? Icon(
-                                                  Icons.add,
-                                                  color: Color(0xFF555555),
-                                                )
-                                              : Icon(
-                                                  Icons.remove,
-                                                  color: Color(0xFF555555),
-                                                ),
-                                        ),
-                                        title: InkWell(
-                                          onTap: () {
-                                            Clipboard.setData(new ClipboardData(
-                                                text:
-                                                    _transactions[i].address));
-                                            final snackbar = SnackBar(
-                                                content: Text(
-                                                    AppLocalizations.of(context)
-                                                        .translate(
-                                                            "String25")));
-                                            Scaffold.of(context)
-                                                .showSnackBar(snackbar);
-                                          },
-                                          child: Text(
-                                            _contactsList.any((Contact contact){
-                                                      return contact.address==_transactions[i].address;
-                                              
-                                                    }) ? _contactsList.firstWhere((Contact contact){
-                                                      return contact.address==_transactions[i].address;
-                                              
-                                                    }).name:
-                                            _transactions[i]
-                                                    .address
-                                                    .substring(0, 4) +
-                                                "..." +
-                                                _transactions[i]
-                                                    .address
-                                                    .substring(_transactions[i]
-                                                            .address
-                                                            .length -
-                                                        4),
-                                            style: TextStyle(
-                                                color: ColorTheme.of(context)
-                                                    .secondaryColor,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15),
-                                          ),
-                                        ),
-                                        trailing: Text(
-                                          _transactions[i].amount.toString() +
-                                              " ∩",
-                                          style: TextStyle(
-                                              color: ColorTheme.of(context)
-                                                  .secondaryColor,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 20),
-                                        ),
-                                      ),
-                                      expanded: Column(
-                                        children: <Widget>[
-                                          ListTile(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Slidable(
+                                        controller: slidableController,
+                                        actionPane: SlidableDrawerActionPane(),
+                                        actions: <Widget>[
+                                          IconSlideAction(
+                                            caption: 'Send',
+                                            color: ColorTheme.of(context).baseColor,
+                                            icon: Icons.send,
+                                            onTap: () {
+                                              walletWindowState
+                                                  .textControllerAddress
+                                                  .text = _transactions[i].address;
+                                              walletWindowState.setState(() {
+                                                walletWindowState.pageIndex = 2;
+                                              });
+                                            },
+                                          )
+                                        ],
+                                        child: ExpandablePanel(
+                                          iconColor:
+                                              ColorTheme.of(context).secondaryColor,
+                                          collapsed: ListTile(
                                             leading: Container(
                                               decoration: new BoxDecoration(
                                                 borderRadius:
-                                                    new BorderRadius.circular(
-                                                        25.0),
+                                                    new BorderRadius.circular(25.0),
                                                 border: new Border.all(
                                                   width: 1.0,
                                                   color: Color(0xFF555555),
                                                 ),
                                               ),
-                                              child: _transactions[i].type ==
-                                                      "from"
+                                              child: _transactions[i].type == "from"
                                                   ? Icon(
                                                       Icons.add,
-                                                      color: Colors.green[200],
+                                                      color: Color(0xFF555555),
                                                     )
                                                   : Icon(
                                                       Icons.remove,
-                                                      color: Colors.red[200],
+                                                      color: Color(0xFF555555),
                                                     ),
                                             ),
-                                            title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                InkWell(
-                                                  onTap: () {
-                                                    Clipboard.setData(
-                                                        new ClipboardData(
-                                                            text:
-                                                                _transactions[i]
-                                                                    .address));
-                                                    final snackbar = SnackBar(
-                                                        content: Text(
-                                                            AppLocalizations.of(
-                                                                    context)
-                                                                .translate(
-                                                                    "String25")));
-                                                    Scaffold.of(context)
-                                                        .showSnackBar(snackbar);
-                                                  },
-                                                  child: Text(
-                                                    _transactions[i].address,
-                                                    style: TextStyle(
-                                                        color: ColorTheme.of(
-                                                                context)
-                                                            .secondaryColor,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 15),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 4.0),
-                                                  child: AutoSizeText(
-                                                    ("Block: " +
-                                                        _transactions[i].block),
-                                                    maxLines: 1,
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                        color: ColorTheme.of(
-                                                                context)
-                                                            .secondaryColor),
-                                                  ),
-                                                )
-                                              ],
+                                            title: InkWell(
+                                              onTap: () {
+                                                Clipboard.setData(new ClipboardData(
+                                                    text:
+                                                        _transactions[i].address));
+                                                final snackbar = SnackBar(
+                                                    content: Text(
+                                                        AppLocalizations.of(context)
+                                                            .translate(
+                                                                "String25")));
+                                                Scaffold.of(context)
+                                                    .showSnackBar(snackbar);
+                                              },
+                                              child: Text(
+                                                _contactsList.any((Contact contact){
+                                                          return contact.address==_transactions[i].address;
+                                                  
+                                                        }) ? _contactsList.firstWhere((Contact contact){
+                                                          return contact.address==_transactions[i].address;
+                                                  
+                                                        }).name:
+                                                _transactions[i]
+                                                        .address
+                                                        .substring(0, 4) +
+                                                    "..." +
+                                                    _transactions[i]
+                                                        .address
+                                                        .substring(_transactions[i]
+                                                                .address
+                                                                .length -
+                                                            4),
+                                                style: TextStyle(
+                                                    color: ColorTheme.of(context)
+                                                        .secondaryColor,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 15),
+                                              ),
                                             ),
                                             trailing: Text(
-                                              _transactions[i]
-                                                      .amount
-                                                      .toStringAsFixed(
-                                                          _transactions[i]
-                                                                      .amount
-                                                                      .truncateToDouble() ==
-                                                                  _transactions[
-                                                                          i]
-                                                                      .amount
-                                                              ? 0
-                                                              : 2) +
+                                              _transactions[i].amount.toString() +
                                                   " ∩",
                                               style: TextStyle(
                                                   color: ColorTheme.of(context)
@@ -379,9 +290,107 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                   fontSize: 20),
                                             ),
                                           ),
-                                        ],
+                                          expanded: Column(
+                                            children: <Widget>[
+                                              ListTile(
+                                                leading: Container(
+                                                  decoration: new BoxDecoration(
+                                                    borderRadius:
+                                                        new BorderRadius.circular(
+                                                            25.0),
+                                                    border: new Border.all(
+                                                      width: 1.0,
+                                                      color: Color(0xFF555555),
+                                                    ),
+                                                  ),
+                                                  child: _transactions[i].type ==
+                                                          "from"
+                                                      ? Icon(
+                                                          Icons.add,
+                                                          color: Colors.green[200],
+                                                        )
+                                                      : Icon(
+                                                          Icons.remove,
+                                                          color: Colors.red[200],
+                                                        ),
+                                                ),
+                                                title: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Clipboard.setData(
+                                                            new ClipboardData(
+                                                                text:
+                                                                    _transactions[i]
+                                                                        .address));
+                                                        final snackbar = SnackBar(
+                                                            content: Text(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .translate(
+                                                                        "String25")));
+                                                        Scaffold.of(context)
+                                                            .showSnackBar(snackbar);
+                                                      },
+                                                      child: Text(
+                                                        _transactions[i].address,
+                                                        style: TextStyle(
+                                                            color: ColorTheme.of(
+                                                                    context)
+                                                                .secondaryColor,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 15),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(vertical: 4.0),
+                                                      child: AutoSizeText(
+                                                        ("Block: " +
+                                                            _transactions[i].block),
+                                                        maxLines: 1,
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(
+                                                            color: ColorTheme.of(
+                                                                    context)
+                                                                .secondaryColor),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                trailing: Text(
+                                                  _transactions[i]
+                                                          .amount
+                                                          .toStringAsFixed(
+                                                              _transactions[i]
+                                                                          .amount
+                                                                          .truncateToDouble() ==
+                                                                      _transactions[
+                                                                              i]
+                                                                          .amount
+                                                                  ? 0
+                                                                  : 2) +
+                                                      " ∩",
+                                                  style: TextStyle(
+                                                      color: ColorTheme.of(context)
+                                                          .secondaryColor,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize: 20),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    Divider(
+                                      color: ColorTheme.of(context).highLigthColor,
+                                      indent: 0,
+                                      height: 0,
+                                    )
+                                    ],
                                   ),
                                 )),
                         onRefresh: () {

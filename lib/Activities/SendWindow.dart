@@ -260,7 +260,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     shape: new RoundedRectangleBorder(
                                         borderRadius:
                                             new BorderRadius.circular(30.0)),
-                                    color: ColorTheme.of(context).extraColor,
+                                    color: ColorTheme.of(context).secondaryColor,
                                     onPressed: () {
                                       Clipboard.setData(
                                           new ClipboardData(text: address));
@@ -356,6 +356,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                             style: TextStyle(
                                 color: ColorTheme.of(context).secondaryColor),
                             decoration: InputDecoration(
+                              filled: true,
+                              fillColor: ColorTheme.of(context).dephtColor,
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(color: Colors.red)),
@@ -422,16 +424,16 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               .getBytes()
                                               .buffer);
                                   //setState(() {
-                                    walletWindowState.textControllerAddress.text =
+                                  walletWindowState.textControllerAddress.text =
                                       NyzoStringEncoder.encode(
                                           NyzoStringPublicIdentifier(
                                               pre.getReceiverIdentifier()));
-                                              print(NyzoStringEncoder.encode(
-                                          NyzoStringPublicIdentifier(
-                                              pre.getReceiverIdentifier())));
+                                  print(NyzoStringEncoder.encode(
+                                      NyzoStringPublicIdentifier(
+                                          pre.getReceiverIdentifier())));
                                   walletWindowState.textControllerData.text =
-                                      utf8.decode( pre.getSenderData());
-                                      print(utf8.decode( pre.getSenderData()));
+                                      utf8.decode(pre.getSenderData());
+                                  print(utf8.decode(pre.getSenderData()));
                                   //});
                                 }
                               } catch (e) {
@@ -444,6 +446,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                             style: TextStyle(
                                 color: ColorTheme.of(context).secondaryColor),
                             decoration: InputDecoration(
+                              filled: true,
+                              fillColor: ColorTheme.of(context).dephtColor,
                               contentPadding: EdgeInsets.all(10),
                               suffixIcon: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -536,6 +540,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                             style: TextStyle(
                                 color: ColorTheme.of(context).secondaryColor),
                             decoration: InputDecoration(
+                              filled: true,
+                              fillColor: ColorTheme.of(context).dephtColor,
                               contentPadding: EdgeInsets.all(10),
                               hasFloatingPlaceholder: false,
                               labelText: AppLocalizations.of(context)
@@ -565,72 +571,74 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   right:
                                       MediaQuery.of(context).size.width * 0.15,
                                 ),
-                                child: RaisedButton(
-                                  shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(30.0)),
-                                  color: ColorTheme.of(context).extraColor,
-                                  textColor: ColorTheme.of(context).baseColor,
-                                  child: Text(AppLocalizations.of(context)
-                                      .translate("String22")),
-                                  onPressed: () {
-                                    //var dataForm = dataFormKey.currentState;
-                                    var addressForm = walletWindowState
-                                        .addressFormKey.currentState;
-                                    var amountForm = walletWindowState
-                                        .amountFormKey.currentState;
-                                    if (addressForm.validate() &&
-                                        amountForm.validate()) {
-                                      
-                                      var address = walletWindowState
-                                          .textControllerAddress.text;
-                                      send(
-                                              password,
-                                              address,
-                                              (double.parse(walletWindowState
-                                                          .textControllerAmount
-                                                          .text) *
-                                                      1000000)
-                                                  .toInt(),
-                                              walletWindowState.balance,
-                                              walletWindowState
-                                                  .textControllerData.text)
-                                          .then((String result) {
-                                        return showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                AppLocalizations.of(context)
-                                                    .translate("String28"),
-                                                style: TextStyle(
-                                                    color:
-                                                        ColorTheme.of(context)
-                                                            .secondaryColor),
-                                              ),
-                                              content: Text(result),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  child: Text(AppLocalizations
-                                                          .of(context)
-                                                      .translate("String29")),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                )
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      });
-                                      walletWindowState.textControllerAddress
-                                          .clear();
-                                      walletWindowState.textControllerAmount
-                                          .clear();
-                                      walletWindowState.textControllerData
-                                          .clear();
-                                    }
-                                  },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: RaisedButton(
+                                    shape: new RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(30.0)),
+                                    color: ColorTheme.of(context).secondaryColor,
+                                    textColor: ColorTheme.of(context).baseColor,
+                                    child: Text(AppLocalizations.of(context)
+                                        .translate("String22")),
+                                    onPressed: () {
+                                      //var dataForm = dataFormKey.currentState;
+                                      var addressForm = walletWindowState
+                                          .addressFormKey.currentState;
+                                      var amountForm = walletWindowState
+                                          .amountFormKey.currentState;
+                                      if (addressForm.validate() &&
+                                          amountForm.validate()) {
+                                        var address = walletWindowState
+                                            .textControllerAddress.text;
+                                        send(
+                                                password,
+                                                address,
+                                                (double.parse(walletWindowState
+                                                            .textControllerAmount
+                                                            .text) *
+                                                        1000000)
+                                                    .toInt(),
+                                                walletWindowState.balance,
+                                                walletWindowState
+                                                    .textControllerData.text)
+                                            .then((String result) {
+                                          return showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  AppLocalizations.of(context)
+                                                      .translate("String28"),
+                                                  style: TextStyle(
+                                                      color:
+                                                          ColorTheme.of(context)
+                                                              .secondaryColor),
+                                                ),
+                                                content: Text(result),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text(AppLocalizations
+                                                            .of(context)
+                                                        .translate("String29")),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        });
+                                        walletWindowState.textControllerAddress
+                                            .clear();
+                                        walletWindowState.textControllerAmount
+                                            .clear();
+                                        walletWindowState.textControllerData
+                                            .clear();
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
