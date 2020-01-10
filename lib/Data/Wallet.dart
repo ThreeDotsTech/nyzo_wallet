@@ -7,6 +7,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:http/http.dart' as http;
 import "package:hex/hex.dart";
+import 'package:nyzo_wallet/Data/CycleTransaction.dart';
+import 'package:nyzo_wallet/Data/CycleTransactionSignature.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/watchedAddress.dart';
@@ -24,7 +26,8 @@ import 'package:nyzo_wallet/Data/Contact.dart';
 final _storage = new FlutterSecureStorage();
 final crypto = new PlatformStringCryptor();
 final r = new Random.secure();
-
+const CycleTransactionSignature47 = 47;
+const CycleTransactionSignatureResponse48 = 48;
 Future<bool> checkWallet() async {
   final prefs = await SharedPreferences.getInstance();
   bool flag;
@@ -204,10 +207,10 @@ Future<List> getTransactions(String address) async {
           transaction.type = "to";
         }
         List transactionSlice = eachTransaction.text.toString().split(" ");
-        transaction.address = eachTransaction.children[0].children[0].attributes
-            .values
+        transaction.address = eachTransaction
+            .children[0].children[0].attributes.values
             .toList()[0]
-            .substring(11); 
+            .substring(11);
         transaction.block = transactionSlice[2]
             .toString()
             .split("(")[0]
@@ -329,6 +332,14 @@ nyzoStringFromPrivateKey(byteArray) {
 nyzoStringFromPublicIdentifier(byteArray) {
   Uint8List bytes = hexStringAsUint8Array(byteArray);
   return encodeNyzoString('id__', bytes);
+}
+
+Future<String> _getPrivKey(String password)async{
+  String encryptedprivKey = await _storage.read(key: "privKey");
+  String salt = await _storage.read(key: "salt");
+  final String key = await crypto.generateKeyFromPassword(password, salt);
+  final String privKey = await crypto.decrypt(encryptedprivKey, key);
+  return privKey;
 }
 
 Future<String> send(String password, String nyzoStringPiblicId, int amount,
@@ -464,6 +475,57 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   }
   client.close();
   return "Something went wrong";
+}
+
+Uint8List signBytes(bytes, key) {
+  //print('key is ' + key);
+  KeyPair keyPair = Signature.keyPair_fromSeed(key);
+  Signature s1 = Signature(null, keyPair.secretKey);
+
+  return s1.detached(bytes);
+}
+
+ sendMessage(NyzoMessage message) async {
+  //Send NyzoMessage for the cycle transaction.
+  http.Client client = new http.Client();
+  http.Response response =
+      await client.post("https://nyzo.co/messageCycleTransactionSignature",
+          headers: {
+            "Content-Type": "application/octet-stream",
+          },
+          body: message.getBytes(true));
+  print(response.body);
+  dynamic list = json.decode(response.body);
+  return list;
+}
+
+ Future<dynamic> signTransaction(String password, String initiatorSignature,
+    String initiatorIdentifier, String transactionBytes) async {
+  var walletPrivateSeed = await _getPrivKey(password);
+  print('need to sign transaction');
+  print('initiator signature: ' + initiatorSignature);
+  print('private key: ' + walletPrivateSeed);
+  KeyPair keyPair = walletPrivateSeed.length == 64
+      ? Signature.keyPair_fromSeed(hexStringAsUint8Array(walletPrivateSeed))
+      : null;
+  if (keyPair == null) {
+    print('cannot continue with null key pair');
+  } else {
+    var signature = new CycleTransactionSignature();
+    signature
+        .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier));
+    signature.setIdentifier(keyPair.publicKey);
+    signature.setSignature(signBytes(hexStringAsUint8Array(transactionBytes),
+        keyPair.secretKey.sublist(0, 32)));
+
+    var message = new NyzoMessage();
+    message.setType(CycleTransactionSignature47);
+    message.setContent(signature);
+    message.sign(keyPair.secretKey.sublist(0, 32));
+    print('need to send message ' + message.content.toString());
+
+    return sendMessage(message);
+  }
 }
 
 Future<List<Contact>> getContacts() async {
@@ -630,6 +692,72 @@ Future<bool> setNightModeValue(bool value) async {
 void setWatchSentinels(bool val) async {
   final _prefs = await SharedPreferences.getInstance();
   _prefs.setBool('sentinel', val);
+}
+
+Future<List<CycleTransaction>> getCycleTransactions() async {
+  String url = "https://nyzo.co/cycleTransactions";
+  List<CycleTransaction> transactions = [];
+  try {
+    http.Response response = await http.get(url);
+    Document document = parse(response.body, encoding: "utf-8");
+    
+    for (var eachTransaction
+        in document.getElementsByClassName("transaction-table")) {
+      //for each transaction
+      if (eachTransaction
+              .getElementsByClassName(
+                  "transaction-table-cell transaction-table-cell-right")
+              .length ==
+          9) {
+        var transaction = CycleTransaction();
+        List valuesList = eachTransaction.getElementsByClassName(
+            "transaction-table-cell transaction-table-cell-right");
+            transaction.initiatorNickname = valuesList[0].text;
+            transaction.initiatorId = valuesList[1].text;
+            transaction.heigth = valuesList[2].text;
+            transaction.ammount = valuesList[3].text;
+            transaction.receiverNickname = valuesList[4].text;
+            transaction.receiverId = valuesList[5].text;
+            transaction.senderData = valuesList[6].text;
+            transaction.initiatorSignature = valuesList[7].text;
+            transaction.signatures = valuesList[8].text;
+            print(transaction.toString());
+            url = "https://nyzo.co/cycleTransactionSign?s="+transaction.initiatorSignature;
+            http.Response response = await http.get(url);
+            Document document = parse(response.body, encoding: "utf-8");
+            transaction.bytes = document.body.children[1].children[1].getElementsByTagName('script')[0].text.split("'")[5];
+            transactions.add(transaction);
+      } else if (eachTransaction
+              .getElementsByClassName(
+                  "transaction-table-cell transaction-table-cell-right")
+              .length ==
+          8) {
+        var transaction = CycleTransaction();
+        List valuesList = eachTransaction.getElementsByClassName(
+            "transaction-table-cell transaction-table-cell-right");
+            transaction.initiatorNickname = valuesList[0].text;
+            transaction.initiatorId = valuesList[1].text;
+            transaction.heigth = valuesList[2].text;
+            transaction.ammount = valuesList[3].text;
+            //transaction.receiverNickname = valuesList[4].text;
+            transaction.receiverId = valuesList[4].text;
+            transaction.senderData = valuesList[5].text;
+            transaction.initiatorSignature = valuesList[6].text;
+            transaction.signatures = valuesList[7].text;
+            transactions.add(transaction);
+                        print(transaction.toString());
+
+      }
+    }
+    document
+        .getElementsByClassName("transaction-table")[0]
+        .getElementsByClassName(
+            "transaction-table-cell transaction-table-cell-right")[1]
+        .text;
+  return transactions;
+  } catch (e) {
+    return null;
+  }
 }
 
 Future<Verifier> getVerifierStatus(Verifier verifier) async {
