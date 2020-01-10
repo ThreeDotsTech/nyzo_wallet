@@ -81,7 +81,7 @@ class _BackUpSeedState extends State<BackUpSeed> {
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
                     child: Text(
                       AppLocalizations.of(context).translate("String6"),
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(color: ColorTheme.of(context).secondaryColor, fontSize: 15),
                     ),
                   ),
                   RaisedButton(

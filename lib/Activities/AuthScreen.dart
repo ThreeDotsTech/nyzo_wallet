@@ -216,7 +216,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           child: new Text(
                               AppLocalizations.of(context).translate("String3"),
                               style: TextStyle(
-                                  color: ColorTheme.of(context).secondaryColor)),
+                                  color: ColorTheme.of(context).baseColor)),
                         ),
                       ),
                       new Expanded(

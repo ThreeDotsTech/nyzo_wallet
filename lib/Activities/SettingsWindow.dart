@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nyzo_wallet/Activities/CycleTransactions.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Activities/BackupSeed.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
@@ -272,6 +273,40 @@ class SettingsWindowState extends State<SettingsWindow> {
                   )),
             ),
           ),
+          InkWell(
+            onTap: () {
+              WalletWindowState foldingCellState =
+                  context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+              print(foldingCellState.toString());
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CycleTxScreen(foldingCellState.password)),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: ColorTheme.of(context).baseColor,
+                        borderRadius: BorderRadius.circular(5000),
+                        border: Border.all(color: Color(0xFF666666))),
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        "Cycle TXs",
+                        style: TextStyle(
+                            color: ColorTheme.of(context).secondaryColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 15),
+                      ),
+                    )),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -293,6 +328,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                   )),
             ),
           ),
+          
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: new Row(

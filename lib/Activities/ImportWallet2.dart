@@ -93,12 +93,32 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     obscureText: true,
                     controller: textController1,
                     style: TextStyle(color: Colors.black),
-                    decoration: new InputDecoration(
-                      filled: true,
-                      fillColor: ColorTheme.of(context).dephtColor,
-                      labelText:
-                          AppLocalizations.of(context).translate("String81"),
-                    ),
+                    decoration: InputDecoration(
+                              filled: true,
+                              fillColor: ColorTheme.of(context).dephtColor,
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(color: Colors.red)),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(color: Colors.red)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide:
+                                      BorderSide(color: Color(0x55666666))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide:
+                                      BorderSide(color: Color(0x55666666))),
+                              contentPadding: EdgeInsets.all(10),
+                              hasFloatingPlaceholder: false,
+                              labelText: AppLocalizations.of(context)
+                                  .translate("String91"),
+                              labelStyle: TextStyle(
+                                  color: Color(0xFF555555),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15),
+                            ) ,
                   ),
                   new TextFormField(
                     key: formKey,
