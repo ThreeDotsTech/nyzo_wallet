@@ -47,7 +47,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
         //resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           elevation: 0.0,
-          backgroundColor: Colors.white,
+          backgroundColor:  Colors.transparent,
           leading: new IconButton(
             color: Colors.black,
             onPressed: () {

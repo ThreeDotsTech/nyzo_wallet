@@ -71,8 +71,8 @@ Future createNewWallet(String password) async {
   setWatchSentinels(false);
   addContact(
       [],
-      Contact("id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I",
-          "Donate", "Help the development of this wallet."));
+      Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
+          "Donate", "Help us develop this wallet."));
   return [HEX.encode(privKey), HEX.encode(pubKey)];
 }
 
@@ -119,8 +119,8 @@ Future<bool> importWallet(String nyzoString, String password) async {
   await _storage.write(key: "Password", value: password);
   addContact(
       [],
-      Contact("id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I",
-          "Donate", "Help the development of this wallet."));
+      Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
+          "Donate", "Help us develop this wallet."));
 
   return true;
 }
