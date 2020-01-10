@@ -188,7 +188,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: RaisedButton(
-                          color: ColorTheme.of(context).extraColor,
+                          color: ColorTheme.of(context).secondaryColor,
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0)),
                           onPressed: () {
