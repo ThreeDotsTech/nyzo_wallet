@@ -143,12 +143,19 @@ class SettingsWindowState extends State<SettingsWindow> {
                             ),
                             onPressed: () {
                               Navigator.pop(context);
+                              setNightModeValue(false);
+                              setState(() {
+                                _nigthMode = false;
+                              });
                               deleteWallet();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => HomePage()),
                               );
+                               ColorTheme.of(context).update();
+                               ColorTheme.of(context).updateAddressesToWatch();
+                               ColorTheme.of(context).updateVerifiers();
                             },
                           ),
                         ],
