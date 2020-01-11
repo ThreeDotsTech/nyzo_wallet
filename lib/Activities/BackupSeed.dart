@@ -85,7 +85,7 @@ class _BackUpSeedState extends State<BackUpSeed> {
                     ),
                   ),
                   RaisedButton(
-                    color: ColorTheme.of(context).extraColor,
+                    color: ColorTheme.of(context).secondaryColor,
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30.0)),
                     onPressed: () {
