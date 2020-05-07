@@ -1,10 +1,8 @@
 import 'dart:typed_data';
 import 'dart:math';
 import 'ByteBuffer.dart';
-import 'package:crypto/crypto.dart';
-import 'package:tweetnacl/tweetnacl.dart';
+import 'package:cryptography/cryptography.dart';
 import "package:hex/hex.dart";
-
 
 class TransactionMessage {
   int timestamp;
@@ -65,17 +63,16 @@ class TransactionMessage {
     }
   }
 
-  sign(List<int> privKey) {
-    KeyPair keyPair = Signature.keyPair_fromSeed(privKey);
-    Uint8List pubKey = keyPair.publicKey;
+  sign(PrivateKey privateKey) {
+    KeyPair keyPair = ed25519.newKeyPairFromSeedSync(privateKey);
+    PublicKey publicKey = keyPair.publicKey;
     for (var i = 0; i < 32; i++) {
-      this.senderIdentifier[i] = pubKey[i];
+      this.senderIdentifier[i] = publicKey.bytes[i];
     }
-    print(this.senderIdentifier.toString());
-    Signature s1 = Signature(null, keyPair.secretKey);
-    Uint8List signature = s1.detached(this.getBytes(false));
+    Signature signature = ed25519.signSync(this.getBytes(false), keyPair);
+
     for (var i = 0; i < this.signature.length; i++) {
-      this.signature[i] = signature[i];
+      this.signature[i] = signature.bytes[i];
     }
   }
 
@@ -112,16 +109,17 @@ class TransactionMessage {
 }
 
 Uint8List hexStringAsUint8Array(String identifier) {
-    identifier = identifier.split('-').join('');
-    var array = new Uint8List((identifier.length / 2).floor());
-    for (var i = 0; i < array.length; i++) {
-      array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
-    }
-    return array;
+  identifier = identifier.split('-').join('');
+  var array = new Uint8List((identifier.length / 2).floor());
+  for (var i = 0; i < array.length; i++) {
+    array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
   }
+  return array;
+}
 
 Uint8List sha256Uint8(array) {
-  return sha256.convert(array).bytes;
+  Hash hash = sha256.hashSync(array);
+  return hash.bytes;
 }
 
 Uint8List doubleSha256(Uint8List array) {

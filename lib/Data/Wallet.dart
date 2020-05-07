@@ -19,8 +19,7 @@ import 'Transaction.dart';
 import 'NyzoMessage.dart';
 import 'dart:typed_data';
 import 'TransactionMessage.dart';
-import 'package:html_unescape/html_unescape.dart';
-import 'package:tweetnacl/tweetnacl.dart';
+import 'package:cryptography/cryptography.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 
 final _storage = new FlutterSecureStorage();
@@ -28,6 +27,7 @@ final crypto = new PlatformStringCryptor();
 final r = new Random.secure();
 const CycleTransactionSignature47 = 47;
 const CycleTransactionSignatureResponse48 = 48;
+
 Future<bool> checkWallet() async {
   final prefs = await SharedPreferences.getInstance();
   bool flag;
@@ -45,27 +45,30 @@ Future createNewWallet(String password) async {
       .getInstance(); //Create a Shared Preferences instance to save balance
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
-  final privKey = Uint8List.fromList(List<int>.generate(
-      32,
-      (i) => Random.secure().nextInt(
-          256))); //Generates a 64 bytes array to usa as SEED (Crypto Secure)
-  //print("Private Key as Sodium: " + privKey.toString());
-  KeyPair keyPair = Signature.keyPair_fromSeed(
-      privKey); //Creates a KeyPair from the generated Seed
-  Uint8List pubKey = keyPair.publicKey; //Set the Public Key
+  PrivateKey privKey;
+  KeyPair keyPair;
+  PublicKey pubKey;
+  //Generates a 32 bytes array to usa as SEED (Crypto Secure)
+  privKey = PrivateKey.randomBytes(32);
+  //Creates a KeyPair from the generated Seed
+  keyPair = ed25519.newKeyPairFromSeedSync(privKey);
+  //Set the Public Key
+  pubKey = keyPair.publicKey;
+
   /*here we Store our keys in the device, Secure_storage encrypts adn decrypts the content when reading and saving 
   so we dont need to take care of security, anyhow, Private key is encrypted again using user's password
   */
   final String salt = await crypto.generateSalt(); //Generate the Salt value
   final String key = await crypto.generateKeyFromPassword(
       password, salt); //Get the key to encrypt our Nyzo Private key
-  final String encryptedPrivKey = await crypto.encrypt(HEX.encode(privKey),
+  final String encryptedPrivKey = await crypto.encrypt(
+      HEX.encode(await privKey.extract()),
       key); // We encrypt the private key using password and salt
   //Now we store the values in the device using secure_storage
   await _storage.write(key: "salt", value: salt);
   await _storage.write(key: "privKey", value: encryptedPrivKey);
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
-  prefs.setString('pubKey', HEX.encode(pubKey));
+  prefs.setString('pubKey', HEX.encode(pubKey.bytes));
   await _storage.write(key: "Password", value: password);
   setNightModeValue(false);
   setWatchSentinels(false);
@@ -73,7 +76,7 @@ Future createNewWallet(String password) async {
       [],
       Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
           "Donate", "Help us develop this wallet."));
-  return [HEX.encode(privKey), HEX.encode(pubKey)];
+  return [HEX.encode(await privKey.extract()), HEX.encode(pubKey.bytes)];
 }
 
 Future<bool> importWallet(String nyzoString, String password) async {
@@ -86,9 +89,8 @@ Future<bool> importWallet(String nyzoString, String password) async {
     return array;
   }
 
-  //print(nyzoStringFromPrivateKey(privKey));
-  String privKey = HEX.encode(NyzoStringEncoder.decode(nyzoString).getBytes());
-  //print(HEX.encode(NyzoStringEncoder.decode(nyzoStringFromPrivateKey(privKey)).getBytes()));
+  String privateKeyAsString =
+      HEX.encode(NyzoStringEncoder.decode(nyzoString).getBytes());
 
   final prefs = await SharedPreferences
       .getInstance(); //Create a Shared Preferences instance to save balance and pubKey
@@ -96,11 +98,10 @@ Future<bool> importWallet(String nyzoString, String password) async {
   setWatchSentinels(false);
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
-  KeyPair keyPair = Signature.keyPair_fromSeed(hexStringAsUint8Array(
-      privKey)); //Creates a KeyPair from the generated Seed
-  Uint8List pubKey = keyPair.publicKey; //Set the Public Key
-  //print("Public Key TweetNaCl: " + HEX.encode(pubKey));
-  //print("Private Key TweetNaCl: " + HEX.encode(keyPair.secretKey.sublist(0, 32)));
+  PrivateKey privateKey = PrivateKey(hexStringAsUint8Array(privateKeyAsString));
+  KeyPair keyPair = ed25519.newKeyPairFromSeedSync(
+      privateKey); //Creates a KeyPair from the generated Seed
+  PublicKey pubKey = keyPair.publicKey; //Set the Public Key
 
   /*here we Store our keys in the device, Secure_storage encrypts adn decrypts the content when reading and saving 
   so we dont need to take care of security, anyhow, Private key is encrypted again using user's password
@@ -109,13 +110,13 @@ Future<bool> importWallet(String nyzoString, String password) async {
   final String key = await crypto.generateKeyFromPassword(
       password, salt); //Get the key to encrypt our Nyzo Private key
   final String encryptedPrivKey = await crypto.encrypt(
-      HEX.encode(hexStringAsUint8Array(privKey)),
+      HEX.encode(await privateKey.extract()),
       key); // We encrypt the private key using password and salt
   //Now we store the values in the device using secure_storage
   await _storage.write(key: "salt", value: salt);
   await _storage.write(key: "privKey", value: encryptedPrivKey);
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
-  prefs.setString('pubKey', HEX.encode(pubKey));
+  prefs.setString('pubKey', HEX.encode(pubKey.bytes));
   await _storage.write(key: "Password", value: password);
   addContact(
       [],
@@ -162,7 +163,7 @@ Future getBalance(String address) async {
     _balance = double.parse(lmao.toString());
     return lmao;
   } catch (e) {
-    //print(e.toString());
+//TODO: Correct error handling
   }
   return _balance;
 }
@@ -334,7 +335,7 @@ nyzoStringFromPublicIdentifier(byteArray) {
   return encodeNyzoString('id__', bytes);
 }
 
-Future<String> _getPrivKey(String password)async{
+Future<String> _getPrivKey(String password) async {
   String encryptedprivKey = await _storage.read(key: "privKey");
   String salt = await _storage.read(key: "salt");
   final String key = await crypto.generateKeyFromPassword(password, salt);
@@ -358,10 +359,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   String senderData = data;
 
   bool specifiedTransactionIsValid() {
-    //print("Private Seed length: "+walletPrivateSeed.length.toString());
-    //print("recipier Identifier length: "+recipientIdentifier.length.toString());
-    //print("micronyzosToSend: "+micronyzosToSend.toString());
-    //print("balanceMycronyzos: "+balanceMicronyzos.toString());
     return walletPrivateSeed.length == 64 &&
         recipientIdentifier.length == 64 &&
         micronyzosToSend > 0 &&
@@ -370,8 +367,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
 
   Uint8List hexStringAsUint8Array(String identifier) {
     identifier = identifier.split('-').join('');
-    //print('identifier after split/join is ' + identifier);
-
     var array = new Uint8List((identifier.length / 2).floor());
     for (var i = 0; i < array.length; i++) {
       array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
@@ -383,21 +378,10 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   Future<NyzoMessage> fetchPreviousHash(senderPrivateSeed) async {
     var message = new NyzoMessage();
     message.setType(NyzoMessage.PreviousHashRequest7);
-    message.sign(hexStringAsUint8Array(senderPrivateSeed));
-    NyzoMessage result = await message.send(privKey, client);
-    //print('got result: ' + result.content.toString());
+    message.sign(PrivateKey(hexStringAsUint8Array(senderPrivateSeed)));
+    NyzoMessage result =
+        await message.send(PrivateKey(hexStringAsUint8Array(privKey)), client);
     return result;
-  }
-
-  Uint8List stringAsUint8Array(string) {
-    var unescape = new HtmlUnescape();
-    String encodedString = unescape.convert(Uri.encodeComponent(string));
-    Uint8List array = new Uint8List(encodedString.length);
-    for (int i = 0; i < encodedString.length; i++) {
-      array[i] = encodedString.codeUnitAt(i);
-    }
-
-    return array;
   }
 
   Future<NyzoMessage> submitTransaction(
@@ -408,8 +392,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
       recipientIdentifier,
       micronyzosToSend,
       senderData) async {
-    //print('need to send transaction');
-
     var transaction = new TransactionMessage();
     transaction.setTimestamp(timestamp);
     transaction.setAmount(micronyzosToSend);
@@ -418,17 +400,15 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     transaction.setPreviousHashHeight(previousHashHeight);
     transaction.setPreviousBlockHash(previousBlockHash);
     transaction.setSenderData(senderData);
-    transaction.sign(hexStringAsUint8Array(senderPrivateSeed));
+    transaction.sign(PrivateKey(hexStringAsUint8Array(senderPrivateSeed)));
     var message = new NyzoMessage();
     message.setType(NyzoMessage.Transaction5);
     message.setContent(transaction);
-    message.sign(hexStringAsUint8Array(senderPrivateSeed));
-    NyzoMessage result = await message.send(privKey, client);
-    //print('got result: ' + result.content.message);
+    message.sign(PrivateKey(hexStringAsUint8Array(senderPrivateSeed)));
+    NyzoMessage result =
+        await message.send(PrivateKey(hexStringAsUint8Array(privKey)), client);
     return result;
   }
-
-  //print("byte array is: " + stringAsUint8Array(senderData).toString());
 
   if (specifiedTransactionIsValid()) {
     NyzoMessage result = await fetchPreviousHash(walletPrivateSeed);
@@ -436,17 +416,9 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
         result.content == null ||
         result.content.height == null ||
         result.content.hash == null) {
-      //print('There was a problem getting a recent block hash from the server. Your transaction was not ' +
-      //      'sent, so it is safe to try to send it again.');
     } else {
       if (result.content.height > 10000000000) {
-        /* unsigned; a bad value is actually -1 */
-        //  print(
-        //    'The recent block hash sent by the server was invalid. Your transaction was not sent, so ' +
-        //      'it is safe to try to send it again.');
       } else {
-        // print('previous hash height is ' + result.content.height.toString());
-        //  print('previous block hash is ' + HEX.encode(result.content.hash));
         NyzoMessage result2 = await submitTransaction(
             result.timestamp + 7000,
             walletPrivateSeed,
@@ -465,8 +437,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
           client.close();
           return result2.content.message;
         }
-        /* to ensure that the pending item is fetched */
-
       }
     }
   } else {
@@ -477,15 +447,14 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   return "Something went wrong";
 }
 
-Uint8List signBytes(bytes, key) {
-  //print('key is ' + key);
-  KeyPair keyPair = Signature.keyPair_fromSeed(key);
-  Signature s1 = Signature(null, keyPair.secretKey);
+Uint8List signBytes(List<int> bytes, PrivateKey key) {
+  KeyPair keyPair = ed25519.newKeyPairFromSeedSync(key);
+  Signature signature = ed25519.signSync(bytes, keyPair);
 
-  return s1.detached(bytes);
+  return signature.bytes;
 }
 
- sendMessage(NyzoMessage message) async {
+sendMessage(NyzoMessage message) async {
   //Send NyzoMessage for the cycle transaction.
   http.Client client = new http.Client();
   http.Response response =
@@ -494,35 +463,34 @@ Uint8List signBytes(bytes, key) {
             "Content-Type": "application/octet-stream",
           },
           body: message.getBytes(true));
-  print(response.body);
   dynamic list = json.decode(response.body);
   return list;
 }
 
- Future<dynamic> signTransaction(String password, String initiatorSignature,
-    String initiatorIdentifier, String transactionBytes) async {
-  var walletPrivateSeed = await _getPrivKey(password);
-  print('need to sign transaction');
-  print('initiator signature: ' + initiatorSignature);
-  print('private key: ' + walletPrivateSeed);
+Future<dynamic> signTransaction(String initiatorSignature,
+    String initiatorIdentifier, String transactionBytes,
+    {String password, String walletPrivateSeed}) async {
+  if (walletPrivateSeed == null) {
+    walletPrivateSeed = await _getPrivKey(password);
+  }
+
   KeyPair keyPair = walletPrivateSeed.length == 64
-      ? Signature.keyPair_fromSeed(hexStringAsUint8Array(walletPrivateSeed))
+      ? ed25519.newKeyPairFromSeedSync(
+          PrivateKey(hexStringAsUint8Array(walletPrivateSeed)))
       : null;
   if (keyPair == null) {
-    print('cannot continue with null key pair');
   } else {
     var signature = new CycleTransactionSignature();
     signature
         .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier));
     signature.setIdentifier(keyPair.publicKey);
-    signature.setSignature(signBytes(hexStringAsUint8Array(transactionBytes),
-        keyPair.secretKey.sublist(0, 32)));
+    signature.setSignature(
+        signBytes(hexStringAsUint8Array(transactionBytes), keyPair.privateKey));
 
     var message = new NyzoMessage();
     message.setType(CycleTransactionSignature47);
     message.setContent(signature);
-    message.sign(keyPair.secretKey.sublist(0, 32));
-    print('need to send message ' + message.content.toString());
+    message.sign(keyPair.privateKey);
 
     return sendMessage(message);
   }
@@ -700,61 +668,34 @@ Future<List<CycleTransaction>> getCycleTransactions() async {
   try {
     http.Response response = await http.get(url);
     Document document = parse(response.body, encoding: "utf-8");
-    
+
     for (var eachTransaction
         in document.getElementsByClassName("transaction-table")) {
       //for each transaction
-      if (eachTransaction
-              .getElementsByClassName(
-                  "transaction-table-cell transaction-table-cell-right")
-              .length ==
-          9) {
-        var transaction = CycleTransaction();
-        List valuesList = eachTransaction.getElementsByClassName(
-            "transaction-table-cell transaction-table-cell-right");
-            transaction.initiatorNickname = valuesList[0].text;
-            transaction.initiatorId = valuesList[1].text;
-            transaction.heigth = valuesList[2].text;
-            transaction.ammount = valuesList[3].text;
-            transaction.receiverNickname = valuesList[4].text;
-            transaction.receiverId = valuesList[5].text;
-            transaction.senderData = valuesList[6].text;
-            transaction.initiatorSignature = valuesList[7].text;
-            transaction.signatures = valuesList[8].text;
-            print(transaction.toString());
-            url = "https://nyzo.co/cycleTransactionSign?s="+transaction.initiatorSignature;
-            http.Response response = await http.get(url);
-            Document document = parse(response.body, encoding: "utf-8");
-            transaction.bytes = document.body.children[1].children[1].getElementsByTagName('script')[0].text.split("'")[5];
-            transactions.add(transaction);
-      } else if (eachTransaction
-              .getElementsByClassName(
-                  "transaction-table-cell transaction-table-cell-right")
-              .length ==
-          8) {
-        var transaction = CycleTransaction();
-        List valuesList = eachTransaction.getElementsByClassName(
-            "transaction-table-cell transaction-table-cell-right");
-            transaction.initiatorNickname = valuesList[0].text;
-            transaction.initiatorId = valuesList[1].text;
-            transaction.heigth = valuesList[2].text;
-            transaction.ammount = valuesList[3].text;
-            //transaction.receiverNickname = valuesList[4].text;
-            transaction.receiverId = valuesList[4].text;
-            transaction.senderData = valuesList[5].text;
-            transaction.initiatorSignature = valuesList[6].text;
-            transaction.signatures = valuesList[7].text;
-            transactions.add(transaction);
-                        print(transaction.toString());
 
-      }
+      var transaction = CycleTransaction();
+      List valuesList = eachTransaction.getElementsByClassName(
+          "transaction-table-cell transaction-table-cell-right");
+      transaction.initiatorNickname = valuesList[0].text;
+      transaction.initiatorId = valuesList[1].text;
+      transaction.initiatorIdAsNyzoString = valuesList[2].text;
+      transaction.ammount = valuesList[3].text;
+      transaction.receiverNickname = valuesList[4].text;
+      transaction.receiverId = valuesList[5].text;
+      transaction.receiverIdAsNyzoString = valuesList[6].text;
+      transaction.senderData = valuesList[7].text;
+      transaction.initiatorSignature = valuesList[8].text;
+      transaction.totalVotes = valuesList[9].text;
+      transaction.votesAgainst = valuesList[10].text;
+      transaction.votesForTransaction = valuesList[11].text;
+      transactions.add(transaction);
     }
     document
         .getElementsByClassName("transaction-table")[0]
         .getElementsByClassName(
             "transaction-table-cell transaction-table-cell-right")[1]
         .text;
-  return transactions;
+    return transactions;
   } catch (e) {
     return null;
   }
@@ -834,7 +775,6 @@ Future<Verifier> getVerifierStatus(Verifier verifier) async {
 
     for (Element eachAttribute in attributeElementList) {
       for (String eachAttribute in eachAttribute.innerHtml.split("<br>")) {
-        // print(eachAttribute + "\n");
         List<String> tempAttributeList = eachAttribute.split(":");
         if (tempAttributeList.length == 2) {
           verifierMap[tempAttributeList[0]] = tempAttributeList[1];
@@ -865,8 +805,6 @@ Future<Verifier> getVerifierStatus(Verifier verifier) async {
         ? verifier.inCicle = true
         : verifier.inCicle = false;
 
-    //verifier.balance = double.parse(lmao.toString());
-    //print("gotverifs");
     return verifier;
   } catch (e) {}
   return verifier;
@@ -893,7 +831,6 @@ Future<List<List<String>>> getBalanceList() async {
     for (var eachAddress in balanceList) {
       eachAddress[0] = eachAddress[0].split("-").join();
     }
-    //print("gotblist");
     return balanceList;
   } catch (e) {}
   return balanceList;
