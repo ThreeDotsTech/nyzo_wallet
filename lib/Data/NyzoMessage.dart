@@ -7,7 +7,7 @@ import 'package:hex/hex.dart';
 import 'ByteBuffer.dart';
 import 'TransactionResponse.dart';
 import 'PreviousHashResponse.dart';
-import 'package:tweetnacl/tweetnacl.dart';
+import 'package:cryptography/cryptography.dart';
 
 class NyzoMessage {
   static const Invalid0 = 0;
@@ -80,55 +80,27 @@ class NyzoMessage {
     if (includeSignature) {
       byteBuffer.putBytes(this.sourceNodeSignature);
     }
-
-    var byteArray = byteBuffer.toArray();
-    print('message byte buffer is ' +
-        hexStringFromArrayWithDashes(byteArray, 0, byteArray.length));
-
     return byteBuffer.toArray();
   }
 
-  sign(List<int> privKey) {
-    KeyPair keyPair = Signature.keyPair_fromSeed(privKey);
-    Uint8List pubKey = keyPair.publicKey;
+  sign(PrivateKey privKey) {
+    KeyPair keyPair = ed25519.newKeyPairFromSeedSync(privKey);
+    PublicKey pubKey = keyPair.publicKey;
     for (var i = 0; i < 32; i++) {
-      this.sourceNodeIdentifier[i] = pubKey[i];
+      this.sourceNodeIdentifier[i] = pubKey.bytes[i];
     }
-    print(this.sourceNodeIdentifier.toString());
-    Signature s1 = Signature(null, keyPair.secretKey);
-    Uint8List signature = s1.detached(this.getBytes(false));
+    Signature signature = ed25519.signSync(this.getBytes(false), keyPair);
     for (var i = 0; i < 64; i++) {
-      this.sourceNodeSignature[i] = signature[i];
+      this.sourceNodeSignature[i] = signature.bytes[i];
     }
-  }
-
-  Future<bool> verify() async {
-    var messageBytes = this.getBytes(false);
-    print('message to verify ' +
-        hexStringFromArrayWithDashes(messageBytes, 0, messageBytes.length));
-    print('signature to verify ' +
-        hexStringFromArrayWithDashes(this.signature, 0, this.signature.length));
-    Signature s2 = Signature(this.sourceNodeIdentifier, null);
-    bool signatureIsValid = s2.detached_verify(this.getBytes(false), signature);
-    return signatureIsValid;
   }
 
   fromByteBuffer(byteBuffer) {}
 
-  Future<NyzoMessage> send(String privKey,http.Client client) async {
-    Uint8List hexStringAsUint8Array(String identifier) {
-      identifier = identifier.split('-').join('');
-      var array = new Uint8List((identifier.length / 2).floor());
-      for (var i = 0; i < array.length; i++) {
-        array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
-      }
-
-      return array;
-    }
-
-    KeyPair keyPair = Signature.keyPair_fromSeed(hexStringAsUint8Array(
-        privKey)); //Creates a KeyPair from the generated Seed
-    Uint8List pubKey = keyPair.publicKey; //Set the Public Key
+  Future<NyzoMessage> send(PrivateKey privKey, http.Client client) async {
+    KeyPair keyPair = ed25519.newKeyPairFromSeedSync(
+        privKey); //Creates a KeyPair from the generated Seed
+    PublicKey publicKey = keyPair.publicKey; //Set the Public Key
 
     http.Response response = await client.post("https://nyzo.co/message",
         headers: {
@@ -141,19 +113,13 @@ class NyzoMessage {
           "Content-Type": "application/octet-stream",
           "Accept": "*/*",
           "Referer": "https://nyzo.co/wallet?id=" +
-              HEX.encode(pubKey), //change this to + pubKey
+              HEX.encode(publicKey.bytes), //change this to + pubKey
           "Accept-Encoding": "gzip, deflate, br",
           "Accept-Language":
               "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
         },
         body: this.getBytes(true));
-    /*
-        print("Request Headers: "+response.request.headers.toString());
-        print("Request Body: "+response.body.toString());
-        print("Request Status Code: "+response.statusCode.toString());
-        print("Request Status:"+response.reasonPhrase);
-        print("Request Headers: "+response.headers.toString());
-        print("Response Length"+response.contentLength.toString());*/
+
     var arrayBuffer = response.bodyBytes;
 
     if (arrayBuffer == null) {
@@ -161,14 +127,10 @@ class NyzoMessage {
     }
 
     var byteArray = new Uint8List.fromList(arrayBuffer);
-    print('byte array response is ' +
-        hexStringFromArrayWithDashes(byteArray, 0, byteArray.length));
-
     var response2 = new NyzoMessage();
 
     response2.timestamp = intValueFromArray(byteArray, 4, 8);
     response2.type = intValueFromArray(byteArray, 12, 2);
-    print('message type is ' + response2.type.toString());
     response2.content = contentForType(response2.type, byteArray, 14);
     int sourceNodeIdentifierIndex =
         14 + contentSizeForType(response2.type, byteArray, 14);
@@ -176,19 +138,10 @@ class NyzoMessage {
         arrayFromArray(byteArray, sourceNodeIdentifierIndex, 32);
     response2.signature =
         arrayFromArray(byteArray, sourceNodeIdentifierIndex + 32, 64);
-    print('signature is valid ' + response2.verify().toString());
-    print('got response with timestamp ' + response2.timestamp.toString());
-    print('response signature is ' +
-        hexStringFromArrayWithDashes(response2.signature, 0, 64));
     return response2;
   }
 
   contentForType(messageType, Uint8List byteArray, index) {
-    print('getting content for type ' +
-        messageType.toString() +
-        ' from index ' +
-        index.toString());
-
     var result;
     if (messageType == TransactionResponse6) {
       var transactionAccepted = byteArray[index];
@@ -210,12 +163,6 @@ class NyzoMessage {
     } else if (messageType == PreviousHashResponse8) {
       contentSize = 8 + 32;
     }
-
-    print('content size is ' +
-        contentSize.toString() +
-        ' for message type ' +
-        messageType.toString());
-
     return contentSize;
   }
 }
