@@ -4,7 +4,6 @@ import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:flutter/services.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
-
 class BackUpSeed extends StatefulWidget {
   BackUpSeed(this._password);
   final String _password;
@@ -17,6 +16,7 @@ class _BackUpSeedState extends State<BackUpSeed> {
   final String _password;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _privKey = "";
+  bool isBacked = false;
   @override
   void initState() {
     getPrivateKey(_password).then((String privKey) {
@@ -30,7 +30,7 @@ class _BackUpSeedState extends State<BackUpSeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorTheme.of(context).baseColor,
+        backgroundColor: ColorTheme.of(context).baseColor,
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
@@ -42,12 +42,24 @@ class _BackUpSeedState extends State<BackUpSeed> {
               new Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
-                      child: new Text(AppLocalizations.of(context).translate("String4"),
+                      child: new Text(
+                          AppLocalizations.of(context).translate("String4"),
                           style: new TextStyle(
                             color: ColorTheme.of(context).secondaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
                           )))),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  AppLocalizations.of(context).translate("String100"),
+                  style: new TextStyle(
+                    color: ColorTheme.of(context).secondaryColor,
+                    fontSize: 15.0,
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
+              ),
               new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,32 +68,34 @@ class _BackUpSeedState extends State<BackUpSeed> {
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
                     child: RaisedButton(
                       shape: new RoundedRectangleBorder(
-                            
-                            borderRadius: new BorderRadius.circular(100.0)),
+                          borderRadius: new BorderRadius.circular(100.0)),
                       color: ColorTheme.of(context).secondaryColor,
-                      
-                        onPressed: () {
-                          Clipboard.setData(new ClipboardData(text: _privKey));
-                          final snackBar = SnackBar(
-                              content: Text(AppLocalizations.of(context).translate("String5")));
+                      onPressed: () {
+                        Clipboard.setData(new ClipboardData(text: _privKey));
+                        final snackBar = SnackBar(
+                            content: Text(AppLocalizations.of(context)
+                                .translate("String5")));
 
-                          _scaffoldKey.currentState..showSnackBar(snackBar);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _privKey,
-                            style: TextStyle(color: ColorTheme.of(context).baseColor, fontSize: 15),
-                          ),
+                        _scaffoldKey.currentState..showSnackBar(snackBar);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _privKey,
+                          style: TextStyle(
+                              color: ColorTheme.of(context).baseColor,
+                              fontSize: 15),
                         ),
-                      
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
                     child: Text(
                       AppLocalizations.of(context).translate("String6"),
-                      style: TextStyle(color: ColorTheme.of(context).secondaryColor, fontSize: 15),
+                      style: TextStyle(
+                          color: ColorTheme.of(context).secondaryColor,
+                          fontSize: 15),
                     ),
                   ),
                   RaisedButton(
@@ -91,7 +105,10 @@ class _BackUpSeedState extends State<BackUpSeed> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: new Text(AppLocalizations.of(context).translate("String7"),style: TextStyle(color: ColorTheme.of(context).baseColor)),
+                    child: new Text(
+                        AppLocalizations.of(context).translate("String7"),
+                        style:
+                            TextStyle(color: ColorTheme.of(context).baseColor)),
                   ),
                 ],
               ),
