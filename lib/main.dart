@@ -37,12 +37,12 @@ class _MyAppState extends State<MyApp> {
   void updateTheme() {
     getNightModeValue().then((bool value) {
       setState(() {
-        value??=false;
+        value ??= false;
         lightTheme = value;
         if (!lightTheme) {
           baseColor = Color(0xFFF5F5F5);
           dephtColor = Colors.white;
-          secondaryColor =  Color(0xFF121212);
+          secondaryColor = Color(0xFF121212);
           extraColor = Colors.black87;
           transparentColor = Colors.grey[300];
           highLightColor = Colors.grey[100];
@@ -62,8 +62,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    
     return ColorTheme(
       lightTheme: lightTheme,
       update: updateTheme,
@@ -80,32 +78,30 @@ class _MyAppState extends State<MyApp> {
       balanceList: balanceList,
       updateAddressesToWatch: updateWatchAddresses,
       child: MaterialApp(
-        supportedLocales:[
-          Locale('en','US'),
-          Locale('es','ES'),
-          Locale('zh','CN'),
-          Locale('nl','NL'),
-          Locale('de','DE'),
-          Locale('fr','FR'),
-          Locale('hr','HR'),
-          Locale('ru','RU'),
-          Locale('cs','CZ')
-
-        ] ,
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('es', 'ES'),
+          Locale('zh', 'CN'),
+          Locale('nl', 'NL'),
+          Locale('de', 'DE'),
+          Locale('fr', 'FR'),
+          Locale('hr', 'HR'),
+          Locale('ru', 'RU'),
+          Locale('cs', 'CZ')
+        ],
         localizationsDelegates: [
           AppLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
-        localeListResolutionCallback: (List<Locale> locales,Iterable<Locale> supportedLocales){
-          print(locales.toString());
-          for (var eachLocale  in locales) {
+        localeListResolutionCallback:
+            (List<Locale> locales, Iterable<Locale> supportedLocales) {
+          for (var eachLocale in locales) {
             for (var eachSupportedLocale in supportedLocales) {
               if (eachLocale.languageCode == eachSupportedLocale.languageCode) {
                 return eachSupportedLocale;
               }
-              
             }
           }
           return supportedLocales.first;
@@ -126,44 +122,44 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void updateWatchAddresses(){
+  void updateWatchAddresses() {
     getWatchAddresses().then((List<WatchedAddress> _list) {
-          setState(() {
-            addressesToWatch = _list;
-            for (var eachAddress in addressesToWatch) {
-              try {
-                eachAddress.balance =
-                  balanceList.firstWhere((List<String> address) {
-                return address[0] == eachAddress.address;
-              })[1];
-              } catch (e) {
-                eachAddress.balance = "0";
-              }
-              
-            }
-          });
-        });
+      setState(() {
+        addressesToWatch = _list;
+        for (var eachAddress in addressesToWatch) {
+          try {
+            eachAddress.balance =
+                balanceList.firstWhere((List<String> address) {
+              return address[0] == eachAddress.address;
+            })[1];
+          } catch (e) {
+            eachAddress.balance = "0";
+          }
+        }
+      });
+    });
   }
-  void downloadBalanceList(){
+
+  void downloadBalanceList() {
     getBalanceList().then((List<List<String>> _balanceList) {
+      setState(() {
+        balanceList = _balanceList;
+      });
+      getWatchAddresses().then((List<WatchedAddress> _list) {
         setState(() {
-          balanceList = _balanceList;
-        });
-        getWatchAddresses().then((List<WatchedAddress> _list) {
-          setState(() {
-            addressesToWatch = _list;
-            for (var eachAddress in addressesToWatch) {
-             try {
-                eachAddress.balance =
+          addressesToWatch = _list;
+          for (var eachAddress in addressesToWatch) {
+            try {
+              eachAddress.balance =
                   balanceList.firstWhere((List<String> address) {
                 return address[0] == eachAddress.address;
               })[1];
-             } catch (e) {
-               eachAddress.balance = "0";
-             }
+            } catch (e) {
+              eachAddress.balance = "0";
             }
-          });
+          }
         });
       });
+    });
   }
 }

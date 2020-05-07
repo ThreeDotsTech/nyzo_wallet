@@ -55,7 +55,6 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         //resizeToAvoidBottomInset: false,
         //resizeToAvoidBottomPadding: false,
@@ -67,7 +66,10 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(Icons.arrow_back,color: Colors.black,),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
           ),
         ),
         body: new Container(
@@ -95,33 +97,33 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     controller: textController1,
                     style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                              filled: true,
-                              fillColor: ColorTheme.of(context).dephtColor,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              contentPadding: EdgeInsets.all(10),
-                              hasFloatingPlaceholder: false,
-                              labelText: AppLocalizations.of(context)
-                                  .translate("String81"),
-                              labelStyle: TextStyle(
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ) ,
+                      filled: true,
+                      fillColor: ColorTheme.of(context).dephtColor,
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Colors.red)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Colors.red)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Color(0x55666666))),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Color(0x55666666))),
+                      contentPadding: EdgeInsets.all(10),
+                      hasFloatingPlaceholder: false,
+                      labelText:
+                          AppLocalizations.of(context).translate("String81"),
+                      labelStyle: TextStyle(
+                          color: Color(0xFF555555),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15),
+                    ),
                   ),
-                  Padding(padding: EdgeInsets.all(8),),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                  ),
                   new TextFormField(
                     key: formKey,
                     autocorrect: false,
@@ -129,31 +131,29 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     obscureText: true,
                     style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                              filled: true,
-                              fillColor: ColorTheme.of(context).dephtColor,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              contentPadding: EdgeInsets.all(10),
-                              hasFloatingPlaceholder: false,
-                              labelText: AppLocalizations.of(context)
-                                  .translate("String84"),
-                              labelStyle: TextStyle(
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
+                      filled: true,
+                      fillColor: ColorTheme.of(context).dephtColor,
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Colors.red)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Colors.red)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Color(0x55666666))),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          borderSide: BorderSide(color: Color(0x55666666))),
+                      contentPadding: EdgeInsets.all(10),
+                      hasFloatingPlaceholder: false,
+                      labelText:
+                          AppLocalizations.of(context).translate("String84"),
+                      labelStyle: TextStyle(
+                          color: Color(0xFF555555),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15),
+                    ),
                     validator: (val) => val != textController1.text
                         ? AppLocalizations.of(context).translate("String85")
                         : val == ''

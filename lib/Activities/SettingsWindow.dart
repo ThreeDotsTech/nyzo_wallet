@@ -21,9 +21,9 @@ class SettingsWindowState extends State<SettingsWindow> {
   String version = "";
   @override
   void initState() {
-     Utils.getVersion().then((String onValue){
-       version = onValue;
-     });
+    Utils.getVersion().then((String onValue) {
+      version = onValue;
+    });
     walletWindowState =
         context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
     watchSentinels().then((bool val) {
@@ -75,7 +75,7 @@ class SettingsWindowState extends State<SettingsWindow> {
             onTap: () {
               WalletWindowState foldingCellState =
                   context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
-              print(foldingCellState.toString());
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -153,9 +153,9 @@ class SettingsWindowState extends State<SettingsWindow> {
                                 MaterialPageRoute(
                                     builder: (context) => HomePage()),
                               );
-                               ColorTheme.of(context).update();
-                               ColorTheme.of(context).updateAddressesToWatch();
-                               ColorTheme.of(context).updateVerifiers();
+                              ColorTheme.of(context).update();
+                              ColorTheme.of(context).updateAddressesToWatch();
+                              ColorTheme.of(context).updateVerifiers();
                             },
                           ),
                         ],
@@ -284,7 +284,6 @@ class SettingsWindowState extends State<SettingsWindow> {
             onTap: () {
               WalletWindowState foldingCellState =
                   context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
-              print(foldingCellState.toString());
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -326,7 +325,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      "Beta v"+version,
+                      "Beta v" + version,
                       style: TextStyle(
                           color: ColorTheme.of(context).secondaryColor,
                           fontWeight: FontWeight.w700,
@@ -335,7 +334,6 @@ class SettingsWindowState extends State<SettingsWindow> {
                   )),
             ),
           ),
-          
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: new Row(

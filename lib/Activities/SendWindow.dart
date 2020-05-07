@@ -449,14 +449,10 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           NyzoStringEncoder.encode(
                                               NyzoStringPublicIdentifier(
                                                   pre.getReceiverIdentifier()));
-                                      print(NyzoStringEncoder.encode(
-                                          NyzoStringPublicIdentifier(
-                                              pre.getReceiverIdentifier())));
+
                                       walletWindowState
                                               .textControllerData.text =
                                           utf8.decode(pre.getSenderData());
-                                      print(utf8.decode(pre.getSenderData()));
-                                      //});
                                     }
                                   } catch (e) {
                                     if (e.runtimeType == InvalisNyzoString) {
@@ -509,12 +505,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               contactsList = _contactList;
                                             });
                                             showPickerDialog(
-                                              context, contactsList);
-                                              FocusScope.of(context).unfocus();
+                                                context, contactsList);
+                                            FocusScope.of(context).unfocus();
                                           });
-                                          
-
-                                          
                                         },
                                       )
                                     ],
