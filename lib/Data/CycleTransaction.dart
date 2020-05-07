@@ -1,12 +1,14 @@
 class CycleTransaction {
   String initiatorNickname;
   String initiatorId;
-  String heigth;
+  String initiatorIdAsNyzoString;
   String ammount;
   String receiverNickname;
   String receiverId;
+  String receiverIdAsNyzoString;
   String senderData;
   String initiatorSignature;
-  String signatures;
-  String bytes;
+  String totalVotes;
+  String votesAgainst;
+  String votesForTransaction;
 }
