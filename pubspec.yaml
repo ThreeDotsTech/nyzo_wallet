@@ -1,5 +1,5 @@
 name: nyzo_wallet
-description: A new Flutter project.
+description: An iOS and Android wallet for the Nyzo cryptocurrency.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.6.1+11
+version: 0.7.0+12
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
