@@ -1,12 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:direct_select_flutter/generated/i18n.dart';
 import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter/services.dart';
-import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -204,14 +201,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                           ColorTheme.of(context).highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow(
-                                        "initiator ID", currentTx.initiatorId),
-                                    Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
-                                      height: 0,
-                                    ),
-                                    _getRow("initiator ID (Nyzo String)",
+                                    _getRow("initiator ID",
                                         currentTx.initiatorIdAsNyzoString),
                                     Divider(
                                       color:
@@ -231,14 +221,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                           ColorTheme.of(context).highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow(
-                                        "receiver ID", currentTx.receiverId),
-                                    Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
-                                      height: 0,
-                                    ),
-                                    _getRow("receiver ID (Nyzo String)",
+                                    _getRow("receiver ID",
                                         currentTx.receiverIdAsNyzoString),
                                     Divider(
                                       color:
