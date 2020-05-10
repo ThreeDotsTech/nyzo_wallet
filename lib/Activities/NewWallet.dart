@@ -37,19 +37,14 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
     setState(() {
       _isLoading = true;
     });
+
     createNewWallet(textController1.text).then((onValue) {
+      ColorTheme.of(context).update();
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => WalletWindow(textController1.text)),
       );
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => BackUpSeed(textController1.text)),
-      );
-
-      ///this.dispose();
     });
   }
 

@@ -70,12 +70,13 @@ Future createNewWallet(String password) async {
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
   prefs.setString('pubKey', HEX.encode(pubKey.bytes));
   await _storage.write(key: "Password", value: password);
-  setNightModeValue(false);
+  setNightModeValue(true);
   setWatchSentinels(false);
   addContact(
       [],
       Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
           "Donate", "Help us develop this wallet."));
+  prefs.setBool('nigthMode', true);
   return [HEX.encode(await privKey.extract()), HEX.encode(pubKey.bytes)];
 }
 
@@ -94,7 +95,7 @@ Future<bool> importWallet(String nyzoString, String password) async {
 
   final prefs = await SharedPreferences
       .getInstance(); //Create a Shared Preferences instance to save balance and pubKey
-  setNightModeValue(false);
+  setNightModeValue(true);
   setWatchSentinels(false);
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
@@ -122,7 +123,6 @@ Future<bool> importWallet(String nyzoString, String password) async {
       [],
       Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
           "Donate", "Help us develop this wallet."));
-
   return true;
 }
 
@@ -143,9 +143,9 @@ void setSavedBalance(double balance) async {
   _prefs.setDouble('balance', balance);
 }
 
-Future getBalance(String address) async {
+Future<double> getBalance(String address) async {
   final _prefs = await SharedPreferences.getInstance();
-  double _balance = _prefs.getDouble('balance') ?? 70.0;
+  double _balance = _prefs.getDouble('balance') ?? 0.0;
   String url = "https://nyzo.co/walletRefresh?id=" + address;
   try {
     http.Response response = await http.get(url, headers: {
@@ -159,9 +159,9 @@ Future getBalance(String address) async {
       "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
     });
-    var lmao = await json.decode(response.body)["balanceMicronyzos"];
-    _balance = double.parse(lmao.toString());
-    return lmao;
+    var balanceMicronyzos =
+        await json.decode(response.body)["balanceMicronyzos"];
+    _balance = double.parse(balanceMicronyzos.toString());
   } catch (e) {
 //TODO: Correct error handling
   }
@@ -178,7 +178,7 @@ Future<String> getPrivateKey(String password) async {
   return privKey;
 }
 
-Future<List> getTransactions(String address) async {
+Future<List<Transaction>> getTransactions(String address) async {
   List<Transaction> transactions = new List();
   final _prefs = await SharedPreferences.getInstance();
   final _address = _prefs.getString('pubKey') ?? '';
