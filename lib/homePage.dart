@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
-
   bool _walletCreated;
   bool _visibleButttons = false;
 
@@ -83,7 +82,9 @@ class _MyHomePageState extends State<HomePage> {
                                     builder: (context) => NewWalletScreen()),
                               );
                             },
-                            child: Text(AppLocalizations.of(context).translate("String65"),
+                            child: Text(
+                                AppLocalizations.of(context)
+                                    .translate("String65"),
                                 style: TextStyle(color: Colors.white)),
                           )),
                       new Padding(
@@ -115,13 +116,16 @@ class _MyHomePageState extends State<HomePage> {
             new Expanded(
               child: new Container(),
             ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text(AppLocalizations.of(context).translate("String39")),
-                new Icon(Icons.favorite, color: Colors.black),
-                new Text(AppLocalizations.of(context).translate("String40"))
-              ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text(AppLocalizations.of(context).translate("String39")),
+                  new Icon(Icons.favorite, color: Colors.black),
+                  new Text(AppLocalizations.of(context).translate("String40"))
+                ],
+              ),
             )
           ],
         ),
