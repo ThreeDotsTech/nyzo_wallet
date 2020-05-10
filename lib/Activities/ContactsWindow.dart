@@ -28,8 +28,7 @@ class ContactsWindowState extends State<ContactsWindow> {
 
   @override
   void initState() {
-    walletWindowState =
-        context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+    walletWindowState = context.findAncestorStateOfType<WalletWindowState>();
     getContacts().then((List<Contact> contactList) {
       setState(() {
         contactsList = contactList;

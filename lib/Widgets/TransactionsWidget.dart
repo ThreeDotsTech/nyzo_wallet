@@ -27,19 +27,11 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
   String _address = '';
   List<Contact> _contactsList;
   WalletWindowState walletWindowState;
-  int balance = 0;
   final SlidableController slidableController = SlidableController();
 
   @override
   void initState() {
-    getSavedBalance().then((double _balance) {
-      setState(() {
-        balance = _balance.floor();
-      });
-    });
-
-    walletWindowState =
-        context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+    walletWindowState = context.findAncestorStateOfType<WalletWindowState>();
     getAddress().then((address) {
       _address = address;
       getTransactions(_address).then((List transactions) {
@@ -56,16 +48,17 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
 
   Future<void> refresh() async {
     WalletWindowState walletWindowState =
-        context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+        context.findAncestorStateOfType<WalletWindowState>();
     Future transactions = getTransactions(_address);
-    getBalance(_address).then((_balance) {
+    getBalance(_address).then((double _balance) {
       walletWindowState.setState(() {
-        walletWindowState.balance = _balance;
+        walletWindowState.balance = _balance.floor();
+        setSavedBalance(_balance);
       });
     });
-    transactions.then((ok) {
+    transactions.then((transactionsList) {
       setState(() {
-        _transactions = ok;
+        _transactions = transactionsList;
       });
       //getBalance(_address).then((int balance){});
     });
@@ -110,7 +103,7 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                     RichText(
                       text: TextSpan(
                         text: walletWindowState.balance == 0
-                            ? balance.toString()
+                            ? walletWindowState.balance.toString()
                             : (walletWindowState.balance / 1000000).toString(),
                         style: TextStyle(
                             color: ColorTheme.of(context).secondaryColor,
@@ -207,12 +200,14 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                         actions: <Widget>[
                                           IconSlideAction(
                                             caption: 'Send',
-                                            color: ColorTheme.of(context).baseColor,
+                                            color: ColorTheme.of(context)
+                                                .baseColor,
                                             icon: Icons.send,
                                             onTap: () {
                                               walletWindowState
-                                                  .textControllerAddress
-                                                  .text = _transactions[i].address;
+                                                      .textControllerAddress
+                                                      .text =
+                                                  _transactions[i].address;
                                               walletWindowState.setState(() {
                                                 walletWindowState.pageIndex = 2;
                                               });
@@ -220,19 +215,21 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                           )
                                         ],
                                         child: ExpandablePanel(
-                                          iconColor:
-                                              ColorTheme.of(context).secondaryColor,
+                                          iconColor: ColorTheme.of(context)
+                                              .secondaryColor,
                                           collapsed: ListTile(
                                             leading: Container(
                                               decoration: new BoxDecoration(
                                                 borderRadius:
-                                                    new BorderRadius.circular(25.0),
+                                                    new BorderRadius.circular(
+                                                        25.0),
                                                 border: new Border.all(
                                                   width: 1.0,
                                                   color: Color(0xFF555555),
                                                 ),
                                               ),
-                                              child: _transactions[i].type == "from"
+                                              child: _transactions[i].type ==
+                                                      "from"
                                                   ? Icon(
                                                       Icons.add,
                                                       color: Color(0xFF555555),
@@ -244,44 +241,55 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                             ),
                                             title: InkWell(
                                               onTap: () {
-                                                Clipboard.setData(new ClipboardData(
-                                                    text:
-                                                        _transactions[i].address));
+                                                Clipboard.setData(
+                                                    new ClipboardData(
+                                                        text: _transactions[i]
+                                                            .address));
                                                 final snackbar = SnackBar(
                                                     content: Text(
-                                                        AppLocalizations.of(context)
+                                                        AppLocalizations.of(
+                                                                context)
                                                             .translate(
                                                                 "String25")));
                                                 Scaffold.of(context)
                                                     .showSnackBar(snackbar);
                                               },
                                               child: Text(
-                                                _contactsList.any((Contact contact){
-                                                          return contact.address==_transactions[i].address;
-                                                  
-                                                        }) ? _contactsList.firstWhere((Contact contact){
-                                                          return contact.address==_transactions[i].address;
-                                                  
-                                                        }).name:
-                                                _transactions[i]
-                                                        .address
-                                                        .substring(0, 4) +
-                                                    "..." +
-                                                    _transactions[i]
-                                                        .address
-                                                        .substring(_transactions[i]
-                                                                .address
-                                                                .length -
-                                                            4),
+                                                _contactsList
+                                                        .any((Contact contact) {
+                                                  return contact.address ==
+                                                      _transactions[i].address;
+                                                })
+                                                    ? _contactsList.firstWhere(
+                                                        (Contact contact) {
+                                                        return contact
+                                                                .address ==
+                                                            _transactions[i]
+                                                                .address;
+                                                      }).name
+                                                    : _transactions[i]
+                                                            .address
+                                                            .substring(0, 4) +
+                                                        "..." +
+                                                        _transactions[i]
+                                                            .address
+                                                            .substring(
+                                                                _transactions[i]
+                                                                        .address
+                                                                        .length -
+                                                                    4),
                                                 style: TextStyle(
-                                                    color: ColorTheme.of(context)
-                                                        .secondaryColor,
+                                                    color:
+                                                        ColorTheme.of(context)
+                                                            .secondaryColor,
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 15),
                                               ),
                                             ),
                                             trailing: Text(
-                                              _transactions[i].amount.toString() +
+                                              _transactions[i]
+                                                      .amount
+                                                      .toString() +
                                                   " ∩",
                                               style: TextStyle(
                                                   color: ColorTheme.of(context)
@@ -296,22 +304,25 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                 leading: Container(
                                                   decoration: new BoxDecoration(
                                                     borderRadius:
-                                                        new BorderRadius.circular(
-                                                            25.0),
+                                                        new BorderRadius
+                                                            .circular(25.0),
                                                     border: new Border.all(
                                                       width: 1.0,
                                                       color: Color(0xFF555555),
                                                     ),
                                                   ),
-                                                  child: _transactions[i].type ==
+                                                  child: _transactions[i]
+                                                              .type ==
                                                           "from"
                                                       ? Icon(
                                                           Icons.add,
-                                                          color: Colors.green[200],
+                                                          color:
+                                                              Colors.green[200],
                                                         )
                                                       : Icon(
                                                           Icons.remove,
-                                                          color: Colors.red[200],
+                                                          color:
+                                                              Colors.red[200],
                                                         ),
                                                 ),
                                                 title: Column(
@@ -322,9 +333,9 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                       onTap: () {
                                                         Clipboard.setData(
                                                             new ClipboardData(
-                                                                text:
-                                                                    _transactions[i]
-                                                                        .address));
+                                                                text: _transactions[
+                                                                        i]
+                                                                    .address));
                                                         final snackbar = SnackBar(
                                                             content: Text(
                                                                 AppLocalizations.of(
@@ -332,13 +343,15 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                                     .translate(
                                                                         "String25")));
                                                         Scaffold.of(context)
-                                                            .showSnackBar(snackbar);
+                                                            .showSnackBar(
+                                                                snackbar);
                                                       },
                                                       child: Text(
-                                                        _transactions[i].address,
+                                                        _transactions[i]
+                                                            .address,
                                                         style: TextStyle(
-                                                            color: ColorTheme.of(
-                                                                    context)
+                                                            color: ColorTheme
+                                                                    .of(context)
                                                                 .secondaryColor,
                                                             fontWeight:
                                                                 FontWeight.w700,
@@ -347,15 +360,18 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                     ),
                                                     Padding(
                                                       padding: const EdgeInsets
-                                                          .symmetric(vertical: 4.0),
+                                                              .symmetric(
+                                                          vertical: 4.0),
                                                       child: AutoSizeText(
                                                         ("Block: " +
-                                                            _transactions[i].block),
+                                                            _transactions[i]
+                                                                .block),
                                                         maxLines: 1,
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
-                                                            color: ColorTheme.of(
-                                                                    context)
+                                                            color: ColorTheme
+                                                                    .of(context)
                                                                 .secondaryColor),
                                                       ),
                                                     )
@@ -364,20 +380,22 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                 trailing: Text(
                                                   _transactions[i]
                                                           .amount
-                                                          .toStringAsFixed(
-                                                              _transactions[i]
-                                                                          .amount
-                                                                          .truncateToDouble() ==
-                                                                      _transactions[
-                                                                              i]
-                                                                          .amount
-                                                                  ? 0
-                                                                  : 2) +
+                                                          .toStringAsFixed(_transactions[
+                                                                          i]
+                                                                      .amount
+                                                                      .truncateToDouble() ==
+                                                                  _transactions[
+                                                                          i]
+                                                                      .amount
+                                                              ? 0
+                                                              : 2) +
                                                       " ∩",
                                                   style: TextStyle(
-                                                      color: ColorTheme.of(context)
-                                                          .secondaryColor,
-                                                      fontWeight: FontWeight.w700,
+                                                      color:
+                                                          ColorTheme.of(context)
+                                                              .secondaryColor,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       fontSize: 20),
                                                 ),
                                               ),
@@ -385,11 +403,12 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                           ),
                                         ),
                                       ),
-                                    Divider(
-                                      color: ColorTheme.of(context).highLigthColor,
-                                      indent: 0,
-                                      height: 0,
-                                    )
+                                      Divider(
+                                        color: ColorTheme.of(context)
+                                            .highLigthColor,
+                                        indent: 0,
+                                        height: 0,
+                                      )
                                     ],
                                   ),
                                 )),

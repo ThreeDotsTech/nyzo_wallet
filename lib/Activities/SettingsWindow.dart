@@ -24,8 +24,7 @@ class SettingsWindowState extends State<SettingsWindow> {
     Utils.getVersion().then((String onValue) {
       version = onValue;
     });
-    walletWindowState =
-        context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+    walletWindowState = context.findAncestorStateOfType<WalletWindowState>();
     watchSentinels().then((bool val) {
       setState(() {
         _switchValue = val;
@@ -74,7 +73,7 @@ class SettingsWindowState extends State<SettingsWindow> {
           InkWell(
             onTap: () {
               WalletWindowState foldingCellState =
-                  context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+                  context.findAncestorStateOfType<WalletWindowState>();
 
               Navigator.push(
                 context,
@@ -283,7 +282,7 @@ class SettingsWindowState extends State<SettingsWindow> {
           InkWell(
             onTap: () {
               WalletWindowState foldingCellState =
-                  context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+                  context.findAncestorStateOfType<WalletWindowState>();
               Navigator.push(
                 context,
                 MaterialPageRoute(
