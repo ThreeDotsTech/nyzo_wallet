@@ -7,7 +7,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nyzo_wallet/Activities/QRCamera.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
-import 'package:nyzo_wallet/Data/NyzoMessage.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
@@ -32,7 +31,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   final String password;
   final String address;
   bool sendRECEIVE = false;
-  FocusNode focusNodeAmmount = FocusNode();
+  FocusNode focusNodeAmount = FocusNode();
   FocusNode focusNodeAddress = FocusNode();
   FocusNode focusNodeData = FocusNode();
   bool isKeyboardOpen = false;
@@ -67,8 +66,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    walletWindowState =
-        context.ancestorStateOfType(TypeMatcher<WalletWindowState>());
+    walletWindowState = context.findAncestorStateOfType<WalletWindowState>();
     getContacts().then((List<Contact> _contactList) {
       setState(() {
         contactsList = _contactList;
@@ -80,7 +78,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
         quitFocus();
       });
     });
-    focusNodeAmmount.addListener(() {
+    focusNodeAmount.addListener(() {
       setState(() {
         quitFocus();
       });
@@ -94,7 +92,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   }
 
   void quitFocus() {
-    if (!focusNodeAmmount.hasFocus &&
+    if (!focusNodeAmount.hasFocus &&
         !focusNodeAddress.hasFocus &&
         !focusNodeData.hasFocus) {
       FocusScope.of(context).unfocus();
@@ -135,7 +133,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                   flex: 2,
                   child: Container(),
                 ),
-                !focusNodeAmmount.hasFocus &&
+                !focusNodeAmount.hasFocus &&
                         !focusNodeAddress.hasFocus &&
                         !focusNodeData.hasFocus
                     ? Center(
@@ -341,7 +339,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                               ),
                               child: TextFormField(
                                 maxLengthEnforced: false,
-                                focusNode: focusNodeAmmount,
+                                focusNode: focusNodeAmount,
                                 key: walletWindowState.amountFormKey,
                                 controller:
                                     walletWindowState.textControllerAmount,
@@ -370,6 +368,25 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     color:
                                         ColorTheme.of(context).secondaryColor),
                                 decoration: InputDecoration(
+                                  suffixIcon: RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100))),
+                                    color: Colors.transparent,
+                                    elevation: 0,
+                                    onPressed: () {
+                                      walletWindowState
+                                              .textControllerAmount.text =
+                                          (walletWindowState.balance / 1000000)
+                                              .toString();
+                                    },
+                                    child: Text(
+                                      "MAX",
+                                      style: TextStyle(
+                                          color: ColorTheme.of(context)
+                                              .secondaryColor),
+                                    ),
+                                  ),
                                   filled: true,
                                   fillColor: ColorTheme.of(context).dephtColor,
                                   focusedErrorBorder: OutlineInputBorder(
@@ -431,32 +448,36 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 controller:
                                     walletWindowState.textControllerAddress,
                                 validator: (String val) {
-                                  try {
-                                    NyzoStringEncoder.decode(val);
-                                    if (NyzoStringEncoder.decode(val)
-                                            .getType()
-                                            .getPrefix() ==
-                                        'pre_') {
-                                      NyzoStringPrefilledData pre =
-                                          NyzoStringPrefilledData
-                                              .fromByteBuffer(
-                                                  NyzoStringEncoder.decode(val)
-                                                      .getBytes()
-                                                      .buffer);
-                                      //setState(() {
-                                      walletWindowState
-                                              .textControllerAddress.text =
-                                          NyzoStringEncoder.encode(
-                                              NyzoStringPublicIdentifier(
-                                                  pre.getReceiverIdentifier()));
-
-                                      walletWindowState
-                                              .textControllerData.text =
-                                          utf8.decode(pre.getSenderData());
+                                  if (val != "") {
+                                    if (val == address) {
+                                      return 'This is your own address!';
                                     }
-                                  } catch (e) {
-                                    if (e.runtimeType == InvalisNyzoString) {
-                                      return e.errMsg();
+                                    try {
+                                      NyzoStringEncoder.decode(val);
+                                      if (NyzoStringEncoder.decode(val)
+                                              .getType()
+                                              .getPrefix() ==
+                                          'pre_') {
+                                        NyzoStringPrefilledData pre =
+                                            NyzoStringPrefilledData
+                                                .fromByteBuffer(
+                                                    NyzoStringEncoder.decode(
+                                                            val)
+                                                        .getBytes()
+                                                        .buffer);
+                                        //setState(() {
+                                        walletWindowState
+                                                .textControllerAddress.text =
+                                            NyzoStringEncoder.encode(
+                                                NyzoStringPublicIdentifier(pre
+                                                    .getReceiverIdentifier()));
+
+                                        walletWindowState
+                                                .textControllerData.text =
+                                            utf8.decode(pre.getSenderData());
+                                      }
+                                    } catch (e) {
+                                      return InvalisNyzoString().errMsg();
                                     }
                                   }
                                   return null;
@@ -572,6 +593,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     color:
                                         ColorTheme.of(context).secondaryColor),
                                 decoration: InputDecoration(
+                                  counterStyle: TextStyle(
+                                      color: ColorTheme.of(context)
+                                          .secondaryColor),
                                   filled: true,
                                   fillColor: ColorTheme.of(context).dephtColor,
                                   contentPadding: EdgeInsets.all(10),

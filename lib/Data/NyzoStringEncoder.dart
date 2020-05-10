@@ -59,7 +59,6 @@ class NyzoStringEncoder {
     for (var j = 0; j < checksumLength; j++) {
       expandedArray[i++] = checksum[j];
     }
-    
 
     // Build and return the encoded string from the expanded array.
     return encodedStringForByteArray(expandedArray);
@@ -79,7 +78,12 @@ class NyzoStringEncoder {
     encodedString = encodedString.replaceAll('l', '1').replaceAll('O', '0');
 
     // Get the type from the prefix.
-    var type = NyzoStringType.forPrefix(encodedString.substring(0, 4));
+    var type;
+    try {
+      type = NyzoStringType.forPrefix(encodedString.substring(0, 4));
+    } catch (e) {
+      throw InvalisNyzoString();
+    }
 
     // If the type is valid, continue.
     if (type != null) {
@@ -110,7 +114,7 @@ class NyzoStringEncoder {
           switch (type.getPrefix()) {
             case NyzoStringType.PrefilledData:
               result = NyzoStringPrefilledData(contentBytes.sublist(0, 32),
-              contentBytes.sublist(33, contentBytes.length));
+                  contentBytes.sublist(33, contentBytes.length));
               break;
             case NyzoStringType.PrivateSeed:
               result = NyzoStringPrivateSeed(contentBytes);
@@ -119,18 +123,15 @@ class NyzoStringEncoder {
               result = NyzoStringPublicIdentifier(contentBytes);
               break;
           }
-        }
-        else{
+        } else {
           throw InvalisNyzoString();
         }
+      } else {
+        throw InvalisNyzoString();
       }
-      else{
-          throw InvalisNyzoString();
-        }
+    } else {
+      throw InvalisNyzoString();
     }
-    else{
-          throw InvalisNyzoString();
-        }
 
     return result;
   }
@@ -190,6 +191,6 @@ class NyzoStringEncoder {
   }
 }
 
-class InvalisNyzoString implements Exception { 
-   String errMsg() => 'Invalid Nyzo String'; 
-} 
+class InvalisNyzoString implements Exception {
+  String errMsg() => 'Invalid Nyzo String';
+}
