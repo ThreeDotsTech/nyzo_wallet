@@ -3,18 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:nyzo_wallet/Activities/SettingsWindow.dart';
 import 'package:nyzo_wallet/Activities/verifiersWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-import 'package:nyzo_wallet/Data/NyzoMessage.dart';
-import 'package:nyzo_wallet/Data/NyzoString.dart';
-import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
-import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:flutter/services.dart';
-import 'package:nyzo_wallet/Data/watchedAddress.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/TransactionsWidget.dart';
 import 'package:nyzo_wallet/Widgets/verifierDialog.dart';
-import "package:hex/hex.dart";
-
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Activities/SendWindow.dart';
@@ -31,16 +24,13 @@ class WalletWindow extends StatefulWidget {
 
 class WalletWindowState extends State<WalletWindow> {
   WalletWindowState(this.password);
-
   ContactsWindow contactsWindow = ContactsWindow(_contactsList);
   TranSactionsWidget tranSactionsWidgetInstance = TranSactionsWidget(null);
   VerifiersWindow verifiersWindow;
   SendWindow sendWindowInstance;
   SettingsWindow settingsWindow = SettingsWindow();
-
   String password;
   double screenHeight;
-
   int balance = 0;
   String _address = '';
   static List<Transaction> transactions;
@@ -67,35 +57,37 @@ class WalletWindowState extends State<WalletWindow> {
 
   @override
   void initState() {
+    //The first thing we do is load the last balance saved on disk.
     getSavedBalance().then((double _balance) {
       setState(() {
         balance = _balance.floor();
       });
     });
+    //We initialize the verifiers Window
     verifiersWindow = VerifiersWindow();
-
+    //This is the saved preference to know if we mus display the verifiers window or not.
     watchSentinels().then((bool val) {
       setState(() {
         sentinels = val;
       });
     });
+
     getAddress().then((address) {
-      //load the address from disk
+      //load the wallet's address from disk
       setState(() {
         _address = address;
-        //NyzoString _string = NyzoStringEncoder.decode(_address);
-
+        //Now that we have the address, we instantialize  the send window.
         sendWindowInstance =
             new SendWindow(password, nyzoStringFromPublicIdentifier(_address));
 
         getBalance(_address).then((_balance) {
           //get the balance value from the network
           setState(() {
-            balance = _balance;
+            balance = _balance.floor();
             setSavedBalance(double.parse(balance.toString())); //set the balance
           });
-          getTransactions(_address).then((List transactions) {
-            transactions = transactions;
+          getTransactions(_address).then((List _transactions) {
+            transactions = _transactions;
           });
         }); //set the address
       });
