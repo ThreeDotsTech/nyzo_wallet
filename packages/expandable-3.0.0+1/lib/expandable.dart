@@ -3,33 +3,32 @@ library expandable;
 
 import 'package:flutter/material.dart';
 
-
 /// Makes an [ExpandableController] available to the widget subtree.
 /// Useful for making multiple [Expandable] widgets synchronized with a single controller.
 class ExpandableNotifier extends StatefulWidget {
-
   final ExpandableController controller;
   final bool initialExpanded;
   final Duration animationDuration;
   final Widget child;
 
-  ExpandableNotifier({
-    // An optional key
-    Key key,
+  ExpandableNotifier(
+      {
+      // An optional key
+      Key key,
 
-    /// If the controller is not provided, it's created with the initial value of `initialExpanded`.
-    this.controller,
+      /// If the controller is not provided, it's created with the initial value of `initialExpanded`.
+      this.controller,
 
-    /// Initial expaned state. Must not be used together with [controller].
-    this.initialExpanded,
+      /// Initial expaned state. Must not be used together with [controller].
+      this.initialExpanded,
 
-    /// Initial animation duration. Must not be used together with [controller].
-    this.animationDuration,
+      /// Initial animation duration. Must not be used together with [controller].
+      this.animationDuration,
+      @required
 
-    @required
-    /// The child can be any widget which contains [Expandable] widgets in its widget tree.
-    this.child}): 
-        assert(!(controller != null && animationDuration != null)),
+          /// The child can be any widget which contains [Expandable] widgets in its widget tree.
+          this.child})
+      : assert(!(controller != null && animationDuration != null)),
         assert(!(controller != null && initialExpanded != null)),
         super(key: key);
 
@@ -38,33 +37,34 @@ class ExpandableNotifier extends StatefulWidget {
 }
 
 class _ExpandableNotifierState extends State<ExpandableNotifier> {
-
   ExpandableController controller;
 
   @override
   void initState() {
     super.initState();
-    if(widget.controller == null) {
-      controller = ExpandableController(initialExpanded: widget.initialExpanded ?? false,
-                                           animationDuration: widget.animationDuration);
+    if (widget.controller == null) {
+      controller = ExpandableController(
+          initialExpanded: widget.initialExpanded ?? false,
+          animationDuration: widget.animationDuration);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return _ExpandableInheritedNotifier(controller: controller ?? widget.controller, child: widget.child);
+    return _ExpandableInheritedNotifier(
+        controller: controller ?? widget.controller, child: widget.child);
   }
 }
 
-
 /// Makes an [ExpandableController] available to the widget subtree.
 /// Useful for making multiple [Expandable] widgets synchronized with a single controller.
-class _ExpandableInheritedNotifier extends InheritedNotifier<ExpandableController> {
+class _ExpandableInheritedNotifier
+    extends InheritedNotifier<ExpandableController> {
   _ExpandableInheritedNotifier(
-      {
-      @required
-        /// If the controller is not provided, it's created with the initial state of collapsed.
-      ExpandableController controller,
+      {@required
+
+          /// If the controller is not provided, it's created with the initial state of collapsed.
+          ExpandableController controller,
       @required
 
           /// The child can be any widget which contains [Expandable] widgets in its widget tree.
@@ -79,10 +79,9 @@ class ExpandableController extends ValueNotifier<bool> {
   bool get expanded => value;
   final Duration animationDuration;
 
-  ExpandableController({
-    bool initialExpanded, 
-    Duration animationDuration}) : 
-        this.animationDuration = animationDuration ?? const Duration(milliseconds: 300),
+  ExpandableController({bool initialExpanded, Duration animationDuration})
+      : this.animationDuration =
+            animationDuration ?? const Duration(milliseconds: 300),
         super(initialExpanded ?? false);
 
   /// Sets the expanded state.
@@ -95,10 +94,12 @@ class ExpandableController extends ValueNotifier<bool> {
     expanded = !expanded;
   }
 
-  static ExpandableController of(BuildContext context, {bool rebuildOnChange = true}) {
+  static ExpandableController of(BuildContext context,
+      {bool rebuildOnChange = true}) {
     final notifier = rebuildOnChange
-        ? context.inheritFromWidgetOfExactType(_ExpandableInheritedNotifier)
-        : context.ancestorWidgetOfExactType(_ExpandableInheritedNotifier);
+        ? context
+            .dependOnInheritedWidgetOfExactType<_ExpandableInheritedNotifier>()
+        : context.findAncestorWidgetOfExactType<_ExpandableInheritedNotifier>();
     return (notifier as _ExpandableInheritedNotifier)?.notifier;
   }
 }
@@ -147,35 +148,43 @@ class Expandable extends StatelessWidget {
       this.fadeCurve = Curves.linear,
       this.sizeCurve = Curves.fastOutSlowIn,
       this.alignment = Alignment.topLeft})
-      :
-      super(key: key);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = this.controller ?? ExpandableController.of(context);
     // ignore: deprecated_member_use_from_same_package
-    final double collapsedFadeStart = crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
+    final double collapsedFadeStart =
+        crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
     // ignore: deprecated_member_use_from_same_package
-    final double collapsedFadeEnd = crossFadePoint < 0.5 ? 2 * crossFadePoint : 1;
+    final double collapsedFadeEnd =
+        crossFadePoint < 0.5 ? 2 * crossFadePoint : 1;
     // ignore: deprecated_member_use_from_same_package
-    final double expandedFadeStart = crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
+    final double expandedFadeStart =
+        crossFadePoint < 0.5 ? 0 : (crossFadePoint * 2 - 1);
     // ignore: deprecated_member_use_from_same_package
-    final double expandedFadeEnd = crossFadePoint < 0.5 ? 2 * crossFadePoint : 1;
+    final double expandedFadeEnd =
+        crossFadePoint < 0.5 ? 2 * crossFadePoint : 1;
 
     return AnimatedCrossFade(
       alignment: this.alignment,
       firstChild: collapsed ?? Container(),
       secondChild: expanded ?? Container(),
-      firstCurve: Interval(collapsedFadeStart, collapsedFadeEnd, curve: fadeCurve),
-      secondCurve: Interval(expandedFadeStart, expandedFadeEnd, curve: fadeCurve),
+      firstCurve:
+          Interval(collapsedFadeStart, collapsedFadeEnd, curve: fadeCurve),
+      secondCurve:
+          Interval(expandedFadeStart, expandedFadeEnd, curve: fadeCurve),
       sizeCurve: sizeCurve,
-      crossFadeState: controller.expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      crossFadeState: controller.expanded
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       duration: controller.animationDuration,
     );
   }
 }
 
-typedef Widget ExpandableBuilder(BuildContext context, Widget collapsed, Widget expanded);
+typedef Widget ExpandableBuilder(
+    BuildContext context, Widget collapsed, Widget expanded);
 
 /// Determines the placement of the expand/collapse icon in [ExpandablePanel]
 enum ExpandablePanelIconPlacement {
@@ -235,7 +244,8 @@ class ExpandablePanel extends StatelessWidget {
   /// the controller will be created with the initial state of [initialExpanded].
   final ExpandableController controller;
 
-  static Widget defaultExpandableBuilder(BuildContext context, Widget collapsed, Widget expanded) {
+  static Widget defaultExpandableBuilder(
+      BuildContext context, Widget collapsed, Widget expanded) {
     return Expandable(
       collapsed: collapsed,
       expanded: expanded,
@@ -268,13 +278,16 @@ class ExpandablePanel extends StatelessWidget {
           Expanded(
             child: child,
           ),
-          ExpandableIcon(color: iconColor,),
+          ExpandableIcon(
+            color: iconColor,
+          ),
 //          ExpandableIcon(),
         ];
         return Row(
           crossAxisAlignment: calculateHeaderCrossAxisAlignment(),
-          children:
-              iconPlacement == ExpandablePanelIconPlacement.right ? rowChildren : rowChildren.reversed.toList(),
+          children: iconPlacement == ExpandablePanelIconPlacement.right
+              ? rowChildren
+              : rowChildren.reversed.toList(),
         );
       }
     }
@@ -297,19 +310,22 @@ class ExpandablePanel extends StatelessWidget {
     }
 
     Widget buildWithoutHeader() {
-      return buildHeaderRow(builder(context, buildHeader(collapsed), buildBody(expanded)));
+      return buildHeaderRow(
+          builder(context, buildHeader(collapsed), buildBody(expanded)));
     }
 
-    final panel = this.header != null ? buildWithHeader() : buildWithoutHeader();
+    final panel =
+        this.header != null ? buildWithHeader() : buildWithoutHeader();
 
-    if(controller != null) {
+    if (controller != null) {
       return ExpandableNotifier(
         controller: controller,
         child: panel,
       );
     } else {
-      final controller = ExpandableController.of(context, rebuildOnChange: false);
-      if(controller == null) {
+      final controller =
+          ExpandableController.of(context, rebuildOnChange: false);
+      if (controller == null) {
         return ExpandableNotifier(
           child: panel,
         );
@@ -336,7 +352,6 @@ class ExpandablePanel extends StatelessWidget {
 /// An down/up arrow icon that toggles the state of [ExpandableController] when the user clicks on it.
 /// The model is accessed via [ScopedModelDescendant].
 class ExpandableIcon extends StatelessWidget {
-
   final Color color;
 
   ExpandableIcon({this.color});
@@ -371,7 +386,6 @@ class ExpandableButton extends StatelessWidget {
   }
 }
 
-
 /// Ensures that the child is visible on the screen by scrolling the outer viewport
 /// when the outer [ExpandableNotifier] delivers a change event.
 ///
@@ -379,30 +393,28 @@ class ExpandableButton extends StatelessWidget {
 ///
 /// * [RenderObject.showOnScreen]
 class ScrollOnExpand extends StatefulWidget {
-
   final Widget child;
   final Duration scrollAnimationDuration;
+
   /// If true then the widget will be scrolled to become visible when expanded
   final bool scrollOnExpand;
+
   /// If true then the widget will be scrolled to become visible when collapsed
   final bool scrollOnCollapse;
 
   ScrollOnExpand({
     Key key,
-    @required
-    this.child,
+    @required this.child,
     this.scrollAnimationDuration = const Duration(milliseconds: 300),
     this.scrollOnExpand = true,
     this.scrollOnCollapse = true,
-  }): super(key: key);
+  }) : super(key: key);
 
   @override
   _ScrollOnExpandState createState() => _ScrollOnExpandState();
-
 }
 
 class _ScrollOnExpandState extends State<ScrollOnExpand> {
-
   ExpandableController _controller;
   int _isAnimating = 0;
   BuildContext _lastContext;
@@ -417,8 +429,9 @@ class _ScrollOnExpandState extends State<ScrollOnExpand> {
   @override
   void didUpdateWidget(ScrollOnExpand oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final newController = ExpandableController.of(context, rebuildOnChange: false);
-    if(newController != _controller) {
+    final newController =
+        ExpandableController.of(context, rebuildOnChange: false);
+    if (newController != _controller) {
       _controller.removeListener(_expandedStateChanged);
       _controller = newController;
       _controller.addListener(_expandedStateChanged);
@@ -433,17 +446,20 @@ class _ScrollOnExpandState extends State<ScrollOnExpand> {
 
   _animationComplete() {
     _isAnimating--;
-    if(_isAnimating == 0 && _lastContext != null && mounted) {
-      if( (_controller.expanded && widget.scrollOnExpand) ||
+    if (_isAnimating == 0 && _lastContext != null && mounted) {
+      if ((_controller.expanded && widget.scrollOnExpand) ||
           (!_controller.expanded && widget.scrollOnCollapse)) {
-        _lastContext?.findRenderObject()?.showOnScreen(duration: widget.scrollAnimationDuration);
+        _lastContext
+            ?.findRenderObject()
+            ?.showOnScreen(duration: widget.scrollAnimationDuration);
       }
     }
   }
 
   _expandedStateChanged() {
     _isAnimating++;
-      Future.delayed(_controller.animationDuration + Duration(milliseconds: 10), _animationComplete);
+    Future.delayed(_controller.animationDuration + Duration(milliseconds: 10),
+        _animationComplete);
   }
 
   @override
@@ -451,6 +467,4 @@ class _ScrollOnExpandState extends State<ScrollOnExpand> {
     _lastContext = context;
     return widget.child;
   }
-
-
 }

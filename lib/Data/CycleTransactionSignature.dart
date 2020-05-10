@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'ByteBuffer.dart';
 
 class CycleTransactionSignature {
-
   Uint8List transactionInitiator;
   Uint8List identifier;
   Uint8List signature;
@@ -32,8 +31,6 @@ class CycleTransactionSignature {
   }
 
   getBytes(includeSignature) {
-    var forSigning = !includeSignature;
-
     var buffer = new ByteBuffer(1000);
 
     buffer.putBytes(this.transactionInitiator);

@@ -38,15 +38,12 @@ class ColorTheme extends InheritedWidget {
 
   @override
   bool updateShouldNotify(ColorTheme oldWidget) {
-    print(((lightTheme != oldWidget.lightTheme) ||
-            (verifiersList != oldWidget.verifiersList))
-        .toString());
     return ((lightTheme != oldWidget.lightTheme) ||
         (verifiersList != oldWidget.verifiersList) ||
         (addressesToWatch != oldWidget.addressesToWatch));
   }
 
   static ColorTheme of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(ColorTheme);
+    return context.dependOnInheritedWidgetOfExactType<ColorTheme>();
   }
 }
