@@ -158,7 +158,10 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                         ? AppLocalizations.of(context).translate("String85")
                         : val == ''
                             ? AppLocalizations.of(context).translate("String86")
-                            : null,
+                            : val.length < 6
+                                ? AppLocalizations.of(context)
+                                    .translate("String101")
+                                : null,
                   ),
                   new SizedBox(
                     height: 50.0,
