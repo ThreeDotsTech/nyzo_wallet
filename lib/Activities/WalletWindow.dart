@@ -1,5 +1,3 @@
-
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,7 +22,7 @@ import 'package:nyzo_wallet/Widgets/verifierDialog.dart';
 
 class WalletWindow extends StatefulWidget {
   final _password;
-  WalletWindow(this._password);
+  const WalletWindow(this._password);
   @override
   WalletWindowState createState() => WalletWindowState(_password);
 }
@@ -32,7 +30,8 @@ class WalletWindow extends StatefulWidget {
 class WalletWindowState extends State<WalletWindow> {
   WalletWindowState(this.password);
   ContactsWindow contactsWindow = ContactsWindow(contactsList!);
-  TranSactionsWidget tranSactionsWidgetInstance = TranSactionsWidget(List<Transaction>.empty(growable: true));
+  TranSactionsWidget tranSactionsWidgetInstance =
+      TranSactionsWidget(List<Transaction>.empty(growable: true));
   VerifiersWindow? verifiersWindow;
   SendWindow? sendWindowInstance;
   SettingsWindow? settingsWindow = SettingsWindow();
@@ -43,18 +42,18 @@ class WalletWindowState extends State<WalletWindow> {
   static List<Transaction>? transactions;
   static List<Contact>? contactsList = List<Contact>.empty(growable: true);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var f = new NumberFormat("###.0#", "en_US");
+  var f = NumberFormat('###.0#', 'en_US');
   bool _compactFormat = true;
   int pageIndex = 0;
 
   bool sentinels = false;
 
-  final textControllerAmount = new TextEditingController();
-  final textControllerAddress = new TextEditingController();
-  final textControllerData = new TextEditingController();
-  final amountFormKey = new GlobalKey<FormFieldState>();
-  final addressFormKey = new GlobalKey<FormFieldState>();
-  final dataFormKey = new GlobalKey<FormFieldState>();
+  final textControllerAmount = TextEditingController();
+  final textControllerAddress = TextEditingController();
+  final textControllerData = TextEditingController();
+  final amountFormKey = GlobalKey<FormFieldState>();
+  final addressFormKey = GlobalKey<FormFieldState>();
+  final dataFormKey = GlobalKey<FormFieldState>();
 
   AddVerifierDialog floatingdialog = AddVerifierDialog();
 
@@ -85,7 +84,7 @@ class WalletWindowState extends State<WalletWindow> {
         _address = address;
         //Now that we have the address, we instantialize  the send window.
         sendWindowInstance =
-            new SendWindow(password, nyzoStringFromPublicIdentifier(_address));
+            SendWindow(password, nyzoStringFromPublicIdentifier(_address));
 
         getBalance(_address).then((_balance) {
           //get the balance value from the network
@@ -122,26 +121,26 @@ class WalletWindowState extends State<WalletWindow> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
 
-    var childButtons = List<UnicornButton>.empty(growable: true);
+    final childButtons = List<UnicornButton>.empty(growable: true);
 
     childButtons.add(UnicornButton(
         hasLabel: false,
         //labelText: 	AppLocalizations.of(context)!.translate("String96"),
-        labelText: "",
+        labelText: '',
         currentButton: FloatingActionButton(
-          heroTag: "verifier",
+          heroTag: 'verifier',
           backgroundColor: Colors.white,
           mini: true,
           child: Container(
-              margin: EdgeInsets.all(8),
+              margin: const EdgeInsets.all(8),
               child: Image.asset(
-                "images/normal.png",
+                'images/normal.png',
                 color: Colors.black,
               )),
           onPressed: () {
             floatingdialog.information(
                 context,
-                AppLocalizations.of(context)!.translate("String97"),
+                AppLocalizations.of(context)!.translate('String97'),
                 true, onClose: () {
               ColorTheme.of(context)!.updateVerifiers!();
             });
@@ -153,10 +152,10 @@ class WalletWindowState extends State<WalletWindow> {
         //labelText: 	AppLocalizations.of(context)!.translate("String98"),
 
         currentButton: FloatingActionButton(
-          heroTag: "address",
+          heroTag: 'address',
           backgroundColor: Colors.white,
           mini: true,
-          child: Icon(
+          child: const Icon(
             Icons.account_balance_wallet,
             color: Colors.black,
           ),
@@ -164,7 +163,7 @@ class WalletWindowState extends State<WalletWindow> {
             setState(() {
               floatingdialog.information(
                   context,
-                  AppLocalizations.of(context)!.translate("String97"),
+                  AppLocalizations.of(context)!.translate('String97'),
                   false, onClose: () {
                 ColorTheme.of(context)!.updateAddressesToWatch!();
               });
@@ -179,15 +178,15 @@ class WalletWindowState extends State<WalletWindow> {
         floatingActionButton: sentinels
             ? pageIndex == 3
                 ? UnicornDialer(
-                    parentHeroTag: "ParenTagg",
+                    parentHeroTag: 'ParenTagg',
                     childButtons: childButtons,
                     parentButtonBackground: Colors.white,
                     backgroundColor: Colors.black12,
-                    finalButtonIcon: Icon(
+                    finalButtonIcon: const Icon(
                       Icons.close,
                       color: Colors.black,
                     ),
-                    parentButton: Icon(
+                    parentButton: const Icon(
                       Icons.add,
                       color: Colors.black,
                     ),
@@ -207,7 +206,7 @@ class WalletWindowState extends State<WalletWindow> {
                 pageIndex, // Use this to update the Bar giving a position
             onTap: (index) {
               setState(() {
-                FocusScope.of(context).requestFocus(new FocusNode());
+                FocusScope.of(context).requestFocus(FocusNode());
                 pageIndex = index;
               });
             },
@@ -215,47 +214,47 @@ class WalletWindowState extends State<WalletWindow> {
                 ? [
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text(
-                            AppLocalizations.of(context)!.translate("String72")),
-                        icon: Icon(Icons.history)),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String72')),
+                        icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
                         title: Text(
-                            AppLocalizations.of(context)!.translate("String8")),
-                        icon: Icon(Icons.contacts)),
+                            AppLocalizations.of(context)!.translate('String8')),
+                        icon: const Icon(Icons.contacts)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text(
-                            AppLocalizations.of(context)!.translate("String21")),
-                        icon: Icon(Icons.send)),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String21')),
+                        icon: const Icon(Icons.send)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text(
-                            AppLocalizations.of(context)!.translate("String94")),
-                        icon: Icon(Icons.remove_red_eye)),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String94')),
+                        icon: const Icon(Icons.remove_red_eye)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text(
-                            AppLocalizations.of(context)!.translate("String30")),
-                        icon: Icon(Icons.settings)),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String30')),
+                        icon: const Icon(Icons.settings)),
                   ]
                 : [
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text('History'),
-                        icon: Icon(Icons.history)),
+                        title: const Text('History'),
+                        icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text('Contacts'),
-                        icon: Icon(Icons.contacts)),
+                        title: const Text('Contacts'),
+                        icon: const Icon(Icons.contacts)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text('Transfer'),
-                        icon: Icon(Icons.send)),
+                        title: const Text('Transfer'),
+                        icon: const Icon(Icons.send)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text('Settings'),
-                        icon: Icon(Icons.settings)),
+                        title: const Text('Settings'),
+                        icon: const Icon(Icons.settings)),
                   ]),
         body: Column(
           children: <Widget>[

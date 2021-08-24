@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:typed_data';
 
@@ -18,10 +16,10 @@ class NyzoString {
   }
 
   NyzoStringType getType() {
-    return this._type!;
+    return _type!;
   }
 
   Uint8List getBytes() {
-    return this._bytes!;
+    return _bytes!;
   }
 }

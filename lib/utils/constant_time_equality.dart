@@ -1,4 +1,3 @@
-
 // Copyright 2019-2020 Gohilla Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,7 +51,7 @@ class _ConstantTimeBytesEquality implements Equality<List<int>> {
     }
     var result = 0;
     for (var i = 0; i < left.length; i++) {
-      result |= (left[i] ^ right[i]);
+      result |= left[i] ^ right[i];
     }
     return result == 0;
   }

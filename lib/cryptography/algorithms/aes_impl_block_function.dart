@@ -30,9 +30,9 @@ Uint32List prepareEncrypt(List<int> key) {
     throw ArgumentError('Invalid key length');
   }
   final encryptionData = Uint32List((rounds + 1) * 4);
-  var roundKeyCount = (rounds + 1) * 4;
-  var keyLengthInWords = key.length ~/ 4;
-  var words = _uint32ListFrom(key, 0, key.length);
+  final roundKeyCount = (rounds + 1) * 4;
+  final keyLengthInWords = key.length ~/ 4;
+  final words = _uint32ListFrom(key, 0, key.length);
 
   for (var i = 0; i < keyLengthInWords; i++) {
     encryptionData[i] = words[i];
@@ -42,11 +42,11 @@ Uint32List prepareEncrypt(List<int> key) {
   for (var t = keyLengthInWords; t < roundKeyCount;) {
     var word = words[keyLengthInWords - 1];
 
-    words[0] ^= ((_S[(word >> 16) & 0xFF] << 24) ^
+    words[0] ^= (_S[(word >> 16) & 0xFF] << 24) ^
         (_S[(word >> 8) & 0xFF] << 16) ^
         (_S[word & 0xFF] << 8) ^
         _S[(word >> 24) & 0xFF] ^
-        (_roundConstants[roundConstantIndex] << 24));
+        (_roundConstants[roundConstantIndex] << 24);
 
     roundConstantIndex++;
 
@@ -60,10 +60,10 @@ Uint32List prepareEncrypt(List<int> key) {
       }
       word = words[(keyLengthInWords ~/ 2) - 1];
 
-      words[keyLengthInWords ~/ 2] ^= (_S[0xFF & word] ^
+      words[keyLengthInWords ~/ 2] ^= _S[0xFF & word] ^
           (_S[0xFF & (word >> 8)] << 8) ^
           (_S[0xFF & (word >> 16)] << 16) ^
-          (_S[0xFF & (word >> 24)] << 24));
+          (_S[0xFF & (word >> 24)] << 24);
 
       for (var i = (keyLengthInWords ~/ 2) + 1; i < keyLengthInWords; i++) {
         words[i] ^= words[i - 1];
@@ -83,9 +83,9 @@ Uint32List prepareDecrypt(List<int> key) {
     throw ArgumentError('Invalid key length');
   }
   final decryptionData = Uint32List((rounds + 1) * 4);
-  var roundKeyCount = (rounds + 1) * 4;
-  var keyLengthInWords = key.length ~/ 4;
-  var words = _uint32ListFrom(key, 0, key.length);
+  final roundKeyCount = (rounds + 1) * 4;
+  final keyLengthInWords = key.length ~/ 4;
+  final words = _uint32ListFrom(key, 0, key.length);
 
   for (var i = 0; i < keyLengthInWords; i++) {
     final word = words[i];
@@ -96,11 +96,11 @@ Uint32List prepareDecrypt(List<int> key) {
   for (var t = keyLengthInWords; t < roundKeyCount;) {
     var word = words[keyLengthInWords - 1];
 
-    words[0] ^= ((_S[(word >> 16) & 0xFF] << 24) ^
+    words[0] ^= (_S[(word >> 16) & 0xFF] << 24) ^
         (_S[(word >> 8) & 0xFF] << 16) ^
         (_S[word & 0xFF] << 8) ^
         _S[(word >> 24) & 0xFF] ^
-        (_roundConstants[roundConstantIndex] << 24));
+        (_roundConstants[roundConstantIndex] << 24);
 
     roundConstantIndex++;
 
@@ -114,10 +114,10 @@ Uint32List prepareDecrypt(List<int> key) {
       }
       word = words[(keyLengthInWords ~/ 2) - 1];
 
-      words[keyLengthInWords ~/ 2] ^= (_S[0xFF & word] ^
+      words[keyLengthInWords ~/ 2] ^= _S[0xFF & word] ^
           (_S[0xFF & (word >> 8)] << 8) ^
           (_S[0xFF & (word >> 16)] << 16) ^
-          (_S[0xFF & (word >> 24)] << 24));
+          (_S[0xFF & (word >> 24)] << 24);
 
       for (var i = (keyLengthInWords ~/ 2) + 1; i < keyLengthInWords; i++) {
         words[i] ^= words[i - 1];
@@ -132,10 +132,10 @@ Uint32List prepareDecrypt(List<int> key) {
   for (var round = 1; round < rounds; round++) {
     for (var c = 0; c < 4; c++) {
       final x = decryptionData[4 * round + c];
-      decryptionData[4 * round + c] = (_U1[0xFF & (x >> 24)] ^
+      decryptionData[4 * round + c] = _U1[0xFF & (x >> 24)] ^
           _U2[0xFF & (x >> 16)] ^
           _U3[0xFF & (x >> 8)] ^
-          _U4[0xFF & x]);
+          _U4[0xFF & x];
     }
   }
   return decryptionData;

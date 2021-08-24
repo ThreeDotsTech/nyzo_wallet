@@ -16,9 +16,6 @@ import 'dart:convert';
 
 import 'package:nyzo_wallet/utils/constant_time_equality.dart';
 
-
-
-
 /// An output produced by [HashAlgorithm].
 class Hash {
   /// Bytes of the hash.
@@ -51,7 +48,7 @@ class Hash {
 ///
 /// An example of using [blake2s]:
 /// ```
-/// 
+///
 ///
 /// void main() {
 ///   // Create a sink
@@ -92,7 +89,7 @@ abstract class HashAlgorithm {
   /// Calculates hash for the argument.
   Hash hashSync(List<int> data) {
     ArgumentError.checkNotNull(data);
-    var sink = newSink();
+    final sink = newSink();
     sink.add(data);
     sink.close();
     return sink.hash;
@@ -102,7 +99,7 @@ abstract class HashAlgorithm {
   ///
   /// An example with [sha256]:
   /// ```
-  /// 
+  ///
   ///
   /// void main() {
   ///   // Create a sink

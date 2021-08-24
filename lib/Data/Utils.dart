@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:typed_data';
 
@@ -49,7 +47,7 @@ class Utils {
   }
 
   static Future<String> getVersion() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
   }
 }

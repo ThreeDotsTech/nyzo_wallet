@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:async';
 import 'dart:io';
@@ -24,31 +22,34 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _storage = new FlutterSecureStorage();
-  var _localAuth = new LocalAuthentication();
-  final textController = new TextEditingController();
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final LocalAuthentication _localAuth = LocalAuthentication();
+  final TextEditingController textController = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () async {
+    Future<Duration?>.delayed(const Duration(seconds: 1), () async {
       try {
         Future didAuthenticate;
         if (Platform.isIOS) {
-          didAuthenticate = _localAuth.authenticateWithBiometrics(
+          didAuthenticate = _localAuth.authenticate(
+            biometricOnly: true,
             stickyAuth: true,
-            localizedReason: AppLocalizations.of(context)!.translate("String80"),
+            localizedReason:
+                AppLocalizations.of(context)!.translate('String80'),
           );
         } else {
-          didAuthenticate = _localAuth.authenticateWithBiometrics(
+          didAuthenticate = _localAuth.authenticate(
+              biometricOnly: true,
               stickyAuth: true,
               localizedReason:
-                  AppLocalizations.of(context)!.translate("String80"));
+                  AppLocalizations.of(context)!.translate('String80'));
         }
         didAuthenticate.then((value) {
           if (value) {
-            Future salt = _storage.read(key: "Password");
+            final Future salt = _storage.read(key: 'Password');
             salt.then((value) {
               Navigator.push(
                 context,
@@ -77,29 +78,29 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: new Scaffold(
+      child: Scaffold(
         backgroundColor: ColorTheme.of(context)!.baseColor,
         key: scaffoldKey,
         resizeToAvoidBottomInset: false,
-        body: new Center(
-          child: new Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: new Column(
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 125.0, 0.0, 75.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 125.0, 0.0, 75.0),
                   child: InkWell(
                     onTap: () {
                       try {
-                        Future didAuthenticate =
-                            _localAuth.authenticateWithBiometrics(
-                                localizedReason: AppLocalizations.of(context)!
-                                    .translate("String80"),
-                                stickyAuth: true);
+                        final Future didAuthenticate = _localAuth.authenticate(
+                            biometricOnly: true,
+                            localizedReason: AppLocalizations.of(context)!
+                                .translate('String80'),
+                            stickyAuth: true);
                         didAuthenticate.then((value) {
                           if (value) {
-                            Future salt = _storage.read(key: "Password");
+                            final Future salt = _storage.read(key: 'Password');
                             salt.then((value) {
                               Navigator.push(
                                 context,
@@ -123,24 +124,23 @@ class _AuthScreenState extends State<AuthScreen> {
                         color: ColorTheme.of(context)!.secondaryColor),
                   ),
                 ),
-                new Expanded(
-                  child: new Column(
+                Expanded(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      new Text(
-                          AppLocalizations.of(context)!.translate("String1"),
+                      Text(AppLocalizations.of(context)!.translate('String1'),
                           textAlign: TextAlign.justify,
-                          style: new TextStyle(
+                          style: TextStyle(
                             color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 21.0,
                           )),
-                      new SizedBox(
+                      const SizedBox(
                         height: 40.0,
                       ),
-                      new TextFormField(
+                      TextFormField(
                         onFieldSubmitted: (text) {
-                          Future salt = _storage.read(key: "Password");
+                          final Future salt = _storage.read(key: 'Password');
                           salt.then((value) {
                             if (text == value) {
                               Navigator.push(
@@ -153,7 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             } else {
                               final snackBar = SnackBar(
                                   content: Text(AppLocalizations.of(context)!
-                                      .translate("String2")));
+                                      .translate('String2')));
 
                               scaffoldKey.currentState!..showSnackBar(snackBar);
                             }
@@ -170,22 +170,24 @@ class _AuthScreenState extends State<AuthScreen> {
                           fillColor: ColorTheme.of(context)!.dephtColor,
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Colors.red)),
+                              borderSide: const BorderSide(color: Colors.red)),
                           errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Colors.red)),
+                              borderSide: const BorderSide(color: Colors.red)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Color(0x55666666))),
+                              borderSide:
+                                  const BorderSide(color: Color(0x55666666))),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Color(0x55666666))),
-                          contentPadding: EdgeInsets.all(10),
-                          hasFloatingPlaceholder: false,
+                              borderSide:
+                                  const BorderSide(color: Color(0x55666666))),
+                          contentPadding: const EdgeInsets.all(10),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           labelText: AppLocalizations.of(context)!
-                              .translate("String81"),
-                          labelStyle: TextStyle(
-                              color: Color(0xFF555555),
+                              .translate('String81'),
+                          labelStyle: const TextStyle(
+                              color: const Color(0xFF555555),
                               fontWeight: FontWeight.w600,
                               fontSize: 15),
                         ),
@@ -194,11 +196,11 @@ class _AuthScreenState extends State<AuthScreen> {
                         padding: const EdgeInsets.all(15.0),
                         child: RaisedButton(
                           color: ColorTheme.of(context)!.secondaryColor,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
                           onPressed: () {
                             FocusScope.of(context).unfocus();
-                            Future salt = _storage.read(key: "Password");
+                            final Future salt = _storage.read(key: 'Password');
                             salt.then((value) {
                               if (textController.text == value) {
                                 Navigator.push(
@@ -211,21 +213,22 @@ class _AuthScreenState extends State<AuthScreen> {
                               } else {
                                 final snackBar = SnackBar(
                                     content: Text(AppLocalizations.of(context)!
-                                        .translate("String2")));
+                                        .translate('String2')));
 
                                 scaffoldKey.currentState!
                                   ..showSnackBar(snackBar);
                               }
                             });
                           },
-                          child: new Text(
-                              AppLocalizations.of(context)!.translate("String3"),
+                          child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('String3'),
                               style: TextStyle(
                                   color: ColorTheme.of(context)!.baseColor)),
                         ),
                       ),
-                      new Expanded(
-                        child: new Container(),
+                      Expanded(
+                        child: Container(),
                       )
                     ],
                   ),

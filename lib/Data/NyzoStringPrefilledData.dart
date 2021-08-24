@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:math';
 import 'dart:typed_data';
@@ -13,20 +11,20 @@ class NyzoStringPrefilledData implements NyzoString {
   Uint8List? _senderData;
 
   NyzoStringPrefilledData(Uint8List receiverIdentifier, Uint8List senderData) {
-    this._receiverIdentifier = receiverIdentifier;
+    _receiverIdentifier = receiverIdentifier;
     if (senderData.length <= 32) {
-      this._senderData = senderData;
+      _senderData = senderData;
     } else {
-      this._senderData!.setRange(0, 32, senderData.getRange(0, 32));
+      _senderData!.setRange(0, 32, senderData.getRange(0, 32));
     }
   }
 
   Uint8List? getReceiverIdentifier() {
-    return this._receiverIdentifier;
+    return _receiverIdentifier;
   }
 
   Uint8List? getSenderData() {
-    return this._senderData;
+    return _senderData;
   }
 
   @override
@@ -35,11 +33,11 @@ class NyzoStringPrefilledData implements NyzoString {
     final bytes = Uint8List(length);
     var bi = 0;
     final buffer = bytes.buffer;
-    for (var eachByte in this._receiverIdentifier!) {
+    for (var eachByte in _receiverIdentifier!) {
       buffer.asByteData().setUint8(bi++, eachByte);
     }
-    buffer.asByteData().setUint8(bi++, this._senderData!.length);
-    for (var eachByte in this._senderData!) {
+    buffer.asByteData().setUint8(bi++, _senderData!.length);
+    for (var eachByte in _senderData!) {
       buffer.asByteData().setUint8(bi++, eachByte);
     }
     return bytes;
@@ -51,11 +49,11 @@ class NyzoStringPrefilledData implements NyzoString {
   }
 
   static NyzoStringPrefilledData fromByteBuffer(ByteBuffer buffer) {
-    var receiverIdentifier =
+    final receiverIdentifier =
         Uint8List.fromList(buffer.asUint8List().getRange(0, 32).toList());
-    int senderDataLength = min(buffer.asByteData().getUint8(32), 32);
-    var senderData = Uint8List.fromList(
+    final int senderDataLength = min(buffer.asByteData().getUint8(32), 32);
+    final senderData = Uint8List.fromList(
         buffer.asUint8List().getRange(33, 33 + senderDataLength).toList());
-    return new NyzoStringPrefilledData(receiverIdentifier, senderData);
+    return NyzoStringPrefilledData(receiverIdentifier, senderData);
   }
 }

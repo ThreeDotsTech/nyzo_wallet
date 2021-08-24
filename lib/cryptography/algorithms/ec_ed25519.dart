@@ -1,4 +1,3 @@
-
 // Copyright 2019-2020 Gohilla Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,14 +20,12 @@ import 'package:nyzo_wallet/cryptography/private_key.dart';
 import 'package:nyzo_wallet/cryptography/public_key.dart';
 import 'package:nyzo_wallet/cryptography/signature_algorithm.dart';
 
-
-
 /// _Ed25519_ ([RFC 8032](https://tools.ietf.org/html/rfc8032)) signature
 /// algorithm.
 ///
 /// An example:
 /// ```
-/// 
+///
 ///
 /// Future<void> main() async {
 ///   // Sign
@@ -203,7 +200,7 @@ class _Ed25519 extends SignatureAlgorithm {
     var y = _bytesToBigInt(s);
     final sign = y >> 255;
     y &= (BigInt.one << 255) - BigInt.one;
-    var x = _recoverX(y, sign);
+    final x = _recoverX(y, sign);
     if (x == null) {
       return null;
     } else {
@@ -247,7 +244,7 @@ class _Ed25519 extends SignatureAlgorithm {
     if (y >= _constantP) {
       return null;
     }
-    var x2 = (y * y - BigInt.one) * _modpInv(_constantD * y * y + BigInt.one);
+    final x2 = (y * y - BigInt.one) * _modpInv(_constantD * y * y + BigInt.one);
     if (x2 == BigInt.zero) {
       if (sign == BigInt.one) {
         return null;
@@ -278,7 +275,7 @@ class _Ed25519 extends SignatureAlgorithm {
     final hash = sha512.hashSync(secret).bytes;
     var a = _bytesToBigInt(hash.sublist(0, 32));
     a &= (BigInt.one << 254) - BigInt.from(8);
-    a |= (BigInt.one << 254);
+    a |= BigInt.one << 254;
     return _ExpandedSecret(a, hash.sublist(32));
   }
 

@@ -1,4 +1,3 @@
-
 // Copyright 2019-2020 Gohilla Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +13,6 @@
 // limitations under the License.
 
 import 'dart:convert';
-
-
 
 import 'package:meta/meta.dart';
 import 'package:nyzo_wallet/cryptography/secret_key.dart';
@@ -50,7 +47,7 @@ class Mac {
 ///
 /// An example of using [Hmac] with [sha256]:
 /// ```
-/// 
+///
 ///
 /// Future<void> main() {
 ///   final secretKey = SecretKey([1,2,3]);

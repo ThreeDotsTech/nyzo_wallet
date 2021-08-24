@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:convert';
 import 'dart:ui';
@@ -25,7 +23,7 @@ import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class SendWindow extends StatefulWidget {
-  SendWindow(this.password, this.address);
+  const SendWindow(this.password, this.address);
   final String password;
   final String address;
   @override
@@ -108,17 +106,17 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   }
 
   showPickerDialog(BuildContext context, List<Contact> contacts) {
-    List<PickerItem<String>> pickerItemList = [];
+    final List<PickerItem<String>> pickerItemList = [];
     for (var contact in contacts) {
       pickerItemList
           .add(PickerItem(text: Text(contact.name), value: contact.address));
     }
-    new Picker(
+    Picker(
         adapter: PickerDataAdapter<String>(data: pickerItemList),
         hideHeader: true,
-        title: new Text(AppLocalizations.of(context)!.translate("String20")),
+        title: Text(AppLocalizations.of(context)!.translate('String20')),
         onConfirm: (Picker picker, List value) {
-          if (picker.getSelectedValues().length != 0) {
+          if (picker.getSelectedValues().isNotEmpty) {
             walletWindowState!.textControllerAddress.text =
                 picker.getSelectedValues()[0];
           }
@@ -146,7 +144,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                         !focusNodeData.hasFocus
                     ? Center(
                         child: Text(
-                          AppLocalizations.of(context)!.translate("String21"),
+                          AppLocalizations.of(context)!.translate('String21'),
                           style: TextStyle(
                               color: ColorTheme.of(context)!.secondaryColor,
                               fontWeight: FontWeight.w600,
@@ -172,24 +170,24 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                           child: RaisedButton(
                             color: ColorTheme.of(context)!.baseColor,
                             elevation: 0,
-                            shape: new RoundedRectangleBorder(
+                            shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                     color: !sendRECEIVE
-                                        ? Color(0xFF666666)
+                                        ? const Color(0xFF666666)
                                         : ColorTheme.of(context)!.baseColor!),
-                                borderRadius: new BorderRadius.circular(100.0)),
+                                borderRadius: BorderRadius.circular(100.0)),
                             child: Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(50))),
                                 child: Text(
                                     AppLocalizations.of(context)!
-                                        .translate("String22"),
+                                        .translate('String22'),
                                     style: TextStyle(
                                         color: !sendRECEIVE
                                             ? ColorTheme.of(context)!
                                                 .secondaryColor
-                                            : Color(0xFF666666)))),
+                                            : const Color(0xFF666666)))),
                             onPressed: () {
                               setState(() {
                                 sendRECEIVE = false;
@@ -206,24 +204,24 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                           child: RaisedButton(
                             color: ColorTheme.of(context)!.baseColor,
                             elevation: 0,
-                            shape: new RoundedRectangleBorder(
+                            shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                     color: sendRECEIVE
-                                        ? Color(0xFF666666)
+                                        ? const Color(0xFF666666)
                                         : ColorTheme.of(context)!.baseColor!),
-                                borderRadius: new BorderRadius.circular(100.0)),
+                                borderRadius: BorderRadius.circular(100.0)),
                             child: Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(50))),
                                 child: Text(
                                   AppLocalizations.of(context)!
-                                      .translate("String23"),
+                                      .translate('String23'),
                                   style: TextStyle(
                                       color: sendRECEIVE
                                           ? ColorTheme.of(context)!
                                               .secondaryColor
-                                          : Color(0xFF666666)),
+                                          : const Color(0xFF666666)),
                                 )),
                             onPressed: () {
                               setState(() {
@@ -251,7 +249,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       const EdgeInsets.fromLTRB(20, 1, 0, 12),
                                   child: Text(
                                     AppLocalizations.of(context)!
-                                        .translate("String24"),
+                                        .translate('String24'),
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
@@ -271,19 +269,18 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   Expanded(
                                     child: Container(
                                       child: RaisedButton(
-                                        shape: new RoundedRectangleBorder(
+                                        shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                new BorderRadius.circular(
-                                                    30.0)),
+                                                BorderRadius.circular(30.0)),
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
                                         onPressed: () {
                                           Clipboard.setData(
-                                              new ClipboardData(text: address));
+                                              ClipboardData(text: address));
                                           final snackBar = SnackBar(
                                               content: Text(
                                                   AppLocalizations.of(context)!
-                                                      .translate("String25")));
+                                                      .translate('String25')));
                                           Scaffold.of(context)
                                               .showSnackBar(snackBar);
                                         },
@@ -329,7 +326,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 0, 10),
                                   child: Text(
-                                    "Nyzo",
+                                    'Nyzo',
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
@@ -353,32 +350,33 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     walletWindowState!.textControllerAmount,
                                 keyboardType: TextInputType.number,
                                 maxLines: 1,
-                                scrollPadding: EdgeInsets.all(00),
-                                validator: (String? val) => walletWindowState!
-                                            .textControllerAmount.text ==
-                                        ""
-                                    ? AppLocalizations.of(context)!
-                                        .translate("String67")
-                                    : double.tryParse(walletWindowState!
-                                                .textControllerAmount.text) ==
-                                            null
+                                scrollPadding: const EdgeInsets.all(00),
+                                validator: (String? val) =>
+                                    walletWindowState!.textControllerAmount.text ==
+                                            ''
                                         ? AppLocalizations.of(context)!
-                                            .translate("String89")
+                                            .translate('String67')
                                         : double.tryParse(walletWindowState!
-                                                            .textControllerAmount
-                                                            .text)!
-                                                        .toInt() *
-                                                    1000000 >=
-                                                walletWindowState!.balance
+                                                    .textControllerAmount
+                                                    .text) ==
+                                                null
                                             ? AppLocalizations.of(context)!
-                                                .translate("String90")
-                                            : null,
+                                                .translate('String89')
+                                            : double.tryParse(walletWindowState!
+                                                                .textControllerAmount
+                                                                .text)!
+                                                            .toInt() *
+                                                        1000000 >=
+                                                    walletWindowState!.balance
+                                                ? AppLocalizations.of(context)!
+                                                    .translate('String90')
+                                                : null,
                                 style: TextStyle(
                                     color:
                                         ColorTheme.of(context)!.secondaryColor),
                                 decoration: InputDecoration(
                                   suffixIcon: RaisedButton(
-                                    shape: RoundedRectangleBorder(
+                                    shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(100))),
                                     color: Colors.transparent,
@@ -390,7 +388,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               .toString();
                                     },
                                     child: Text(
-                                      "MAX",
+                                      'MAX',
                                       style: TextStyle(
                                           color: ColorTheme.of(context)!
                                               .secondaryColor),
@@ -401,24 +399,25 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   focusedErrorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                   errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      borderSide:
-                                          BorderSide(color: Color(0x55666666))),
+                                      borderSide: const BorderSide(
+                                          color: Color(0x55666666))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      borderSide:
-                                          BorderSide(color: Color(0x55666666))),
-                                  contentPadding: EdgeInsets.all(10),
-                                  hasFloatingPlaceholder: false,
+                                      borderSide: const BorderSide(
+                                          color: Color(0x55666666))),
+                                  contentPadding: const EdgeInsets.all(10),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
                                   labelText: AppLocalizations.of(context)!
-                                      .translate("String91"),
-                                  labelStyle: TextStyle(
+                                      .translate('String91'),
+                                  labelStyle: const TextStyle(
                                       color: Color(0xFF555555),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 15),
@@ -433,7 +432,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       const EdgeInsets.fromLTRB(20, 10, 0, 10),
                                   child: Text(
                                     AppLocalizations.of(context)!
-                                        .translate("String26"),
+                                        .translate('String26'),
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
@@ -457,7 +456,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 controller:
                                     walletWindowState!.textControllerAddress,
                                 validator: (String? val) {
-                                  if (val != "") {
+                                  if (val != '') {
                                     if (val == address) {
                                       return 'This is your own address!';
                                     }
@@ -467,7 +466,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               .getType()
                                               .getPrefix() ==
                                           'pre_') {
-                                        NyzoStringPrefilledData pre =
+                                        final NyzoStringPrefilledData pre =
                                             NyzoStringPrefilledData
                                                 .fromByteBuffer(
                                                     NyzoStringEncoder.decode(
@@ -497,20 +496,21 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: ColorTheme.of(context)!.dephtColor,
-                                  contentPadding: EdgeInsets.all(10),
+                                  contentPadding: const EdgeInsets.all(10),
                                   suffixIcon: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       IconButton(
                                         icon: Image.asset(
-                                          "images/qr.png",
+                                          'images/qr.png',
                                           color: ColorTheme.of(context)!
                                               .secondaryColor,
                                         ),
                                         onPressed: () {
                                           FocusScope.of(context).unfocus();
-                                          State<StatefulWidget>? walletWindowState =
+                                          final State<StatefulWidget>?
+                                              walletWindowState =
                                               context.findAncestorStateOfType();
 
                                           /*Navigator.push(
@@ -525,7 +525,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       IconButton(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
-                                        icon: Icon(Icons.contacts),
+                                        icon: const Icon(Icons.contacts),
                                         onPressed: () {
                                           getContacts().then(
                                               (List<Contact> _contactList) {
@@ -540,29 +540,30 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       )
                                     ],
                                   ),
-                                  hasFloatingPlaceholder: false,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
                                   labelText: AppLocalizations.of(context)!
-                                      .translate("String92"),
-                                  labelStyle: TextStyle(
+                                      .translate('String92'),
+                                  labelStyle: const TextStyle(
                                       color: Color(0xFF555555),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 15),
                                   focusedErrorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                   errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      borderSide:
-                                          BorderSide(color: Color(0x55666666))),
+                                      borderSide: const BorderSide(
+                                          color: Color(0x55666666))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      borderSide:
-                                          BorderSide(color: Color(0x55666666))),
+                                      borderSide: const BorderSide(
+                                          color: Color(0x55666666))),
                                 ),
                               ),
                             ),
@@ -574,7 +575,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       const EdgeInsets.fromLTRB(20, 10, 0, 10),
                                   child: Text(
                                     AppLocalizations.of(context)!
-                                        .translate("String27"),
+                                        .translate('String27'),
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
@@ -605,30 +606,31 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           .secondaryColor),
                                   filled: true,
                                   fillColor: ColorTheme.of(context)!.dephtColor,
-                                  contentPadding: EdgeInsets.all(10),
-                                  hasFloatingPlaceholder: false,
+                                  contentPadding: const EdgeInsets.all(10),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
                                   labelText: AppLocalizations.of(context)!
-                                      .translate("String93"),
-                                  labelStyle: TextStyle(
+                                      .translate('String93'),
+                                  labelStyle: const TextStyle(
                                       color: Color(0xFF555555),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 15),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      borderSide:
-                                          BorderSide(color: Color(0x55666666))),
+                                      borderSide: const BorderSide(
+                                          color: Color(0x55666666))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
-                                      borderSide:
-                                          BorderSide(color: Color(0x55666666))),
+                                      borderSide: const BorderSide(
+                                          color: Color(0x55666666))),
                                   errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                   focusedErrorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(100),
                                       borderSide:
-                                          BorderSide(color: Colors.red)),
+                                          const BorderSide(color: Colors.red)),
                                 ),
                               ),
                             ),
@@ -646,25 +648,25 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
                                       child: RaisedButton(
-                                        shape: new RoundedRectangleBorder(
+                                        shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                new BorderRadius.circular(
-                                                    30.0)),
+                                                BorderRadius.circular(30.0)),
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
                                         textColor:
                                             ColorTheme.of(context)!.baseColor,
-                                        child: Text(AppLocalizations.of(context)!
-                                            .translate("String22")),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('String22')),
                                         onPressed: () {
                                           //var dataForm = dataFormKey.currentState;
-                                          var addressForm = walletWindowState!
+                                          final addressForm = walletWindowState!
                                               .addressFormKey.currentState;
-                                          var amountForm = walletWindowState!
+                                          final amountForm = walletWindowState!
                                               .amountFormKey.currentState;
                                           if (addressForm!.validate() &&
                                               amountForm!.validate()) {
-                                            var address = walletWindowState!
+                                            final address = walletWindowState!
                                                 .textControllerAddress.text;
                                             setState(() {
                                               _isLoading = true;
@@ -694,7 +696,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                       AppLocalizations.of(
                                                               context)!
                                                           .translate(
-                                                              "String28"),
+                                                              'String28'),
                                                       style: TextStyle(
                                                           color: ColorTheme.of(
                                                                   context)!
@@ -707,7 +709,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                             AppLocalizations.of(
                                                                     context)!
                                                                 .translate(
-                                                                    "String29")),
+                                                                    'String29')),
                                                         onPressed: () {
                                                           Navigator.pop(
                                                               context);
@@ -724,7 +726,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                             walletWindowState!
                                                 .textControllerAmount
                                                 .clear();
-                                            walletWindowState!.textControllerData
+                                            walletWindowState!
+                                                .textControllerData
                                                 .clear();
                                           }
                                         },
@@ -742,20 +745,20 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
           ),
           _isLoading
               ? Positioned(
-                  child: new Center(
+                  child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        new ClipOval(
-                          child: new BackdropFilter(
-                            filter: new ImageFilter.blur(
-                                sigmaX: 100.0, sigmaY: 100.0),
-                            child: new Container(
+                        ClipOval(
+                          child: BackdropFilter(
+                            filter:
+                                ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+                            child: Container(
                               width: 200.0,
                               height: 200.0,
-                              decoration: new BoxDecoration(
+                              decoration: BoxDecoration(
                                   color: Colors.grey.shade200.withOpacity(0)),
-                              child: new Center(
+                              child: Center(
                                 child: SpinKitChasingDots(
                                   color: ColorTheme.of(context)!.secondaryColor,
                                   size: 50.0,

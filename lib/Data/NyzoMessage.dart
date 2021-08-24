@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
@@ -46,56 +44,55 @@ class NyzoMessage {
   List? signature;
 
   NyzoMessage() {
-    this.timestamp = DateTime.now().millisecondsSinceEpoch;
-    this.sourceNodeIdentifier = new Uint8List(32);
-    this.type = 0;
-    this.content = null;
-    this.sourceNodeSignature = new Uint8List(64);
+    timestamp = DateTime.now().millisecondsSinceEpoch;
+    sourceNodeIdentifier = Uint8List(32);
+    type = 0;
+    content = null;
+    sourceNodeSignature = Uint8List(64);
   }
 
   setSourceNodeIdentifier(Uint8List newSourceNodeIdentifier) {
-    this.sourceNodeIdentifier = newSourceNodeIdentifier;
+    sourceNodeIdentifier = newSourceNodeIdentifier;
     return this;
   }
 
   setType(int newType) {
-    this.type = newType;
+    type = newType;
     return this;
   }
 
   setContent(var newContent) {
-    this.content = newContent;
+    content = newContent;
   }
 
   Uint8List getBytes(bool includeSignature) {
-    ByteBuffer byteBuffer = new ByteBuffer(1000);
+    final ByteBuffer byteBuffer = ByteBuffer(1000);
 
     var contentBytes;
     int contentSize = 110;
-    if (this.content != null) {
-      contentBytes = this.content.getBytes(true);
+    if (content != null) {
+      contentBytes = content.getBytes(true);
       contentSize += contentBytes.lengthInBytes as int;
     }
     if (includeSignature) {
       byteBuffer.putInt(contentSize);
     }
-    byteBuffer.putLong(this.timestamp!);
-    byteBuffer.putShort(this.type!);
+    byteBuffer.putLong(timestamp!);
+    byteBuffer.putShort(type!);
     if (contentBytes != null) {
       byteBuffer.putBytes(contentBytes);
     }
-    byteBuffer.putBytes(this.sourceNodeIdentifier!);
+    byteBuffer.putBytes(sourceNodeIdentifier!);
     if (includeSignature) {
-      byteBuffer.putBytes(this.sourceNodeSignature!);
+      byteBuffer.putBytes(sourceNodeSignature!);
     }
     return byteBuffer.toArray();
   }
 
   sign(Uint8List privKey) {
     final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
-    final ed25519.SignatureBase sm =
-        signingKey.sign(this.getBytes(false)).signature;
-    this.sourceNodeSignature = Uint8List.fromList(sm).sublist(0, 64);
+    final ed25519.SignatureBase sm = signingKey.sign(getBytes(false)).signature;
+    sourceNodeSignature = Uint8List.fromList(sm).sublist(0, 64);
   }
 
   fromByteBuffer(byteBuffer) {}
@@ -107,13 +104,13 @@ class NyzoMessage {
   contentForType(messageType, Uint8List byteArray, index) {
     var result;
     if (messageType == TransactionResponse6) {
-      var transactionAccepted = byteArray[index];
-      var message = stringFromArray(byteArray, index + 1);
-      result = new TransactionResponse(transactionAccepted, message);
+      final transactionAccepted = byteArray[index];
+      final message = stringFromArray(byteArray, index + 1);
+      result = TransactionResponse(transactionAccepted, message);
     } else if (messageType == PreviousHashResponse8) {
-      var height = intValueFromArray(byteArray, index, 8);
-      var hash = arrayFromArray(byteArray, index + 8, 32);
-      result = new PreviousHashResponse(height, hash);
+      final height = intValueFromArray(byteArray, index, 8);
+      final hash = arrayFromArray(byteArray, index + 8, 32);
+      result = PreviousHashResponse(height, hash);
     }
 
     return result;
@@ -131,12 +128,12 @@ class NyzoMessage {
 }
 
 String stringFromArray(Uint8List byteArray, int index) {
-  var length = byteArray[index] * 256 + byteArray[index + 1];
+  final length = byteArray[index] * 256 + byteArray[index + 1];
   return stringFromArrayWithLength(byteArray, index + 2, length);
 }
 
 String stringFromArrayWithLength(Uint8List byteArray, int index, int length) {
-  var arrayCopy = new Uint8List(length);
+  final arrayCopy = Uint8List(length);
   for (var i = 0; i < length; i++) {
     arrayCopy[i] = byteArray[i + index];
   }
@@ -175,7 +172,7 @@ int intValueFromArray(Uint8List byteArray, int index, int length) {
 }
 
 Uint8List arrayFromArray(Uint8List byteArray, int index, int length) {
-  var result = new Uint8List(length);
+  final result = Uint8List(length);
   for (var i = 0; i < length; i++) {
     result[i] = byteArray[index + i];
   }

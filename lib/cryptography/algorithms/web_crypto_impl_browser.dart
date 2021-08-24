@@ -1,4 +1,3 @@
-
 // Copyright 2019-2020 Gohilla Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +17,6 @@ import 'dart:convert';
 import 'dart:js' as js;
 import 'dart:js_util' as js;
 import 'dart:typed_data';
-
 
 import 'package:meta/meta.dart';
 import 'package:nyzo_wallet/cryptography/cipher.dart';
@@ -357,7 +355,8 @@ class _WebAesCtrCipher extends Cipher {
     var counterBytes = Uint8List(16);
     counterBytes.setAll(0, nonce.bytes);
     if (keyStreamIndex != 0) {
-      counterBytes = Uint8List.fromList(Nonce(counterBytes).increment(keyStreamIndex ~/ 16).bytes);
+      counterBytes = Uint8List.fromList(
+          Nonce(counterBytes).increment(keyStreamIndex ~/ 16).bytes);
     }
     final byteBuffer = await js.promiseToFuture<ByteBuffer>(
       web_crypto.subtle.decrypt(
@@ -429,7 +428,8 @@ class _WebAesCtrCipher extends Cipher {
     var counterBytes = Uint8List(16);
     counterBytes.setAll(0, nonce.bytes);
     if (keyStreamIndex != 0) {
-      counterBytes = Uint8List.fromList(Nonce(counterBytes).increment(keyStreamIndex ~/ 16).bytes);
+      counterBytes = Uint8List.fromList(
+          Nonce(counterBytes).increment(keyStreamIndex ~/ 16).bytes);
     }
     final byteBuffer = await js.promiseToFuture<ByteBuffer>(
       web_crypto.subtle.encrypt(
@@ -687,7 +687,7 @@ class _WebEcdh extends KeyExchangeAlgorithm {
   }
 
   static String _base64UrlEncode(List<int> data) {
-    var s = base64Url.encode(data);
+    final s = base64Url.encode(data);
 
     // Remove trailing '=' characters
     var length = s.length;
@@ -805,7 +805,7 @@ class _WebEcdsa extends SignatureAlgorithm {
   }
 
   static String _base64UrlEncode(List<int> data) {
-    var s = base64Url.encode(data);
+    final s = base64Url.encode(data);
 
     // Remove trailing '=' characters
     var length = s.length;

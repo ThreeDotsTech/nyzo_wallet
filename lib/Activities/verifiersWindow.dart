@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:math' as math;
 
@@ -37,7 +35,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
   }
 
   Future<void> refresh() async {
-    Future<List<Verifier>?> updateFuture =
+    final Future<List<Verifier>?> updateFuture =
         ColorTheme.of(context)!.updateVerifiers!();
     ColorTheme.of(context)!.getBalanceList!();
     return;
@@ -82,7 +80,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
         ),
         Center(
           child: Text(
-            AppLocalizations.of(context)!.translate("String41"),
+            AppLocalizations.of(context)!.translate('String41'),
             style: TextStyle(
                 color: ColorTheme.of(context)!.secondaryColor,
                 fontWeight: FontWeight.w600,
@@ -99,11 +97,12 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                 children: <Widget>[
                   (ColorTheme.of(context)!.verifiersList! != null &&
                           ColorTheme.of(context)!.addressesToWatch != null)
-                      ? (ColorTheme.of(context)!.verifiersList!.length != 0 ||
-                              ColorTheme.of(context)!.addressesToWatch?.length !=
-                                  0)
+                      ? (ColorTheme.of(context)!.verifiersList!.isNotEmpty ||
+                              ColorTheme.of(context)!
+                                  .addressesToWatch!
+                                  .isNotEmpty)
                           ? LiquidPullToRefresh(
-                              color: Color(0xFF403942),
+                              color: const Color(0xFF403942),
                               height: 75,
                               showChildOpacityTransition: false,
                               springAnimationDurationInMilliseconds: 250,
@@ -113,14 +112,14 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                               child: CustomScrollView(
                                 slivers: <Widget>[
                                   (ColorTheme.of(context)!
-                                              .verifiersList!
-                                              .length !=
-                                          0)
+                                          .verifiersList!
+                                          .isNotEmpty)
                                       ? makeHeader(
                                           AppLocalizations.of(context)!
-                                              .translate("String94"),
+                                              .translate('String94'),
                                           ColorTheme.of(context)!.baseColor,
-                                          ColorTheme.of(context)!.secondaryColor!)
+                                          ColorTheme.of(context)!
+                                              .secondaryColor!)
                                       : SliverList(
                                           delegate: SliverChildListDelegate(
                                               [Container()])),
@@ -130,13 +129,14 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                             Slidable(
                                               controller: slidableController,
                                               actionPane:
-                                                  SlidableDrawerActionPane(),
+                                                  const SlidableDrawerActionPane(),
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
                                                         vertical: 5),
                                                 child: ExpandablePanel(
-                                                  header: ColorTheme.of(context)!
+                                                  header: ColorTheme.of(
+                                                              context)!
                                                           .verifiersList![i]
                                                           .isValid
                                                       ? ColorTheme.of(context)!
@@ -184,7 +184,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                           fontSize:
                                                                               20.0,
                                                                         )
-                                                                      : TextStyle(
+                                                                      : const TextStyle(
                                                                           color:
                                                                               Colors.red,
                                                                           fontSize:
@@ -197,7 +197,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                               30),
                                                                       child: Image
                                                                           .asset(
-                                                                        "images/cycle.png",
+                                                                        'images/cycle.png',
                                                                         color: ColorTheme.of(context)!
                                                                             .secondaryColor,
                                                                       )),
@@ -244,7 +244,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                           fontSize:
                                                                               20.0,
                                                                         )
-                                                                      : TextStyle(
+                                                                      : const TextStyle(
                                                                           color:
                                                                               Colors.red,
                                                                           fontSize:
@@ -254,7 +254,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                       : Container(
                                                           child: ListTile(
                                                             leading: Image.asset(
-                                                                "images/communicationProblem.png",
+                                                                'images/communicationProblem.png',
                                                                 color: ColorTheme.of(
                                                                         context)!
                                                                     .secondaryColor),
@@ -276,7 +276,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                       fontSize:
                                                                           20.0,
                                                                     )
-                                                                  : TextStyle(
+                                                                  : const TextStyle(
                                                                       color: Colors
                                                                           .red,
                                                                       fontSize:
@@ -290,12 +290,12 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                               .verifiersList![i]
                                                               .isValid
                                                           ? Container(
-                                                              margin: EdgeInsets
-                                                                  .fromLTRB(
-                                                                      30,
-                                                                      20,
-                                                                      30,
-                                                                      0),
+                                                              margin: const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  30,
+                                                                  20,
+                                                                  30,
+                                                                  0),
                                                               child: Column(
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
@@ -306,8 +306,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String42") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String42') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -327,8 +327,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String43") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String43') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -348,8 +348,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String44") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String44') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -369,8 +369,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String45") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String45') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -390,8 +390,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String46") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String46') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -411,8 +411,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String47") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String47') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -432,8 +432,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String48") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String48') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -453,8 +453,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String49") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String49') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -474,8 +474,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String50") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String50') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -496,7 +496,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                         Widget>[
                                                                       Text(
                                                                         AppLocalizations.of(context)!
-                                                                            .translate("String51"),
+                                                                            .translate('String51'),
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -520,7 +520,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                         Widget>[
                                                                       Text(
                                                                         AppLocalizations.of(context)!
-                                                                            .translate("String52"),
+                                                                            .translate('String52'),
                                                                         style:
                                                                             TextStyle(
                                                                           color:
@@ -535,19 +535,19 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                               .blockVote
                                                                               .toString()
                                                                               .contains(AppLocalizations.of(context)!.translate(
-                                                                                  "String53"))
+                                                                                  'String53'))
                                                                           ? Text(
                                                                               ColorTheme.of(context)!.verifiersList![i].blockVote.toString(),
                                                                               style: TextStyle(color: ColorTheme.of(context)!.secondaryColor))
-                                                                          : createColumn(ColorTheme.of(context)!.verifiersList![i].blockVote.toString(), ";")
+                                                                          : createColumn(ColorTheme.of(context)!.verifiersList![i].blockVote.toString(), ';')
                                                                     ],
                                                                   ),
                                                                   Row(
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String54") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String54') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -567,8 +567,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String55") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String55') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -588,8 +588,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String56") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String56') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -609,8 +609,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String57") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String57') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -630,8 +630,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String58") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String58') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -651,8 +651,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String59") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String59') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -672,8 +672,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     children: <
                                                                         Widget>[
                                                                       Text(
-                                                                        AppLocalizations.of(context)!.translate("String60") +
-                                                                            " ",
+                                                                        AppLocalizations.of(context)!.translate('String60') +
+                                                                            ' ',
                                                                         style: TextStyle(
                                                                             color:
                                                                                 ColorTheme.of(context)!.secondaryColor,
@@ -697,7 +697,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                 AppLocalizations.of(
                                                                             context)!
                                                                         .translate(
-                                                                            "String61") +
+                                                                            'String61') +
                                                                     ColorTheme.of(
                                                                             context)!
                                                                         .verifiersList![
@@ -718,7 +718,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                 IconSlideAction(
                                                   caption: AppLocalizations.of(
                                                           context)!
-                                                      .translate("String62"),
+                                                      .translate('String62'),
                                                   color: ColorTheme.of(context)!
                                                       .baseColor,
                                                   icon: Icons.delete,
@@ -728,7 +728,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                         .removeAt(i);
                                                     setState(() {
                                                       saveVerifier(
-                                                          ColorTheme.of(context)!
+                                                          ColorTheme.of(
+                                                                  context)!
                                                               .verifiersList!);
                                                     });
                                                   },
@@ -740,22 +741,21 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                             .length),
                                   ),
                                   (ColorTheme.of(context)!
-                                              .addressesToWatch
-                                              ?.length !=
-                                          0)
+                                          .addressesToWatch!
+                                          .isNotEmpty)
                                       ? makeHeader(
                                           AppLocalizations.of(context)!
-                                              .translate("String95"),
+                                              .translate('String95'),
                                           ColorTheme.of(context)!.baseColor,
-                                          ColorTheme.of(context)!.secondaryColor!)
+                                          ColorTheme.of(context)!
+                                              .secondaryColor!)
                                       : SliverList(
                                           delegate: SliverChildListDelegate(
                                               [Container()]),
                                         ),
                                   (ColorTheme.of(context)!
-                                              .addressesToWatch
-                                              ?.length !=
-                                          0)
+                                          .addressesToWatch!
+                                          .isNotEmpty)
                                       ? SliverList(
                                           delegate: SliverChildBuilderDelegate(
                                               (BuildContext context, int i) =>
@@ -763,7 +763,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                     controller:
                                                         slidableController,
                                                     actionPane:
-                                                        SlidableDrawerActionPane(),
+                                                        const SlidableDrawerActionPane(),
                                                     child: Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -773,8 +773,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                           leading: Icon(
                                                             Icons
                                                                 .account_balance_wallet,
-                                                            color: ColorTheme
-                                                                    .of(context)!
+                                                            color: ColorTheme.of(
+                                                                    context)!
                                                                 .secondaryColor,
                                                           ),
                                                           trailing: Text(
@@ -823,7 +823,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     fontSize:
                                                                         20.0,
                                                                   )
-                                                                : TextStyle(
+                                                                : const TextStyle(
                                                                     color: Colors
                                                                         .red,
                                                                     fontSize:
@@ -834,15 +834,15 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                 fillColor: ColorTheme.of(
                                                                         context)!
                                                                     .dephtColor,
-                                                                focusedBorder: UnderlineInputBorder(
+                                                                focusedBorder: const UnderlineInputBorder(
                                                                     borderSide: BorderSide(
                                                                         color: Colors
                                                                             .transparent)),
-                                                                border: UnderlineInputBorder(
+                                                                border: const UnderlineInputBorder(
                                                                     borderSide: BorderSide(
                                                                         color: Colors
                                                                             .transparent)),
-                                                                enabledBorder: UnderlineInputBorder(
+                                                                enabledBorder: const UnderlineInputBorder(
                                                                     borderSide:
                                                                         BorderSide(
                                                                             color:
@@ -857,7 +857,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                             .baseColor,
                                                         icon: Icons.delete,
                                                         onTap: () {
-                                                          ColorTheme.of(context)!
+                                                          ColorTheme.of(
+                                                                  context)!
                                                               .addressesToWatch!
                                                               .removeAt(i);
                                                           setState(() {
@@ -870,9 +871,10 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                       ),
                                                     ],
                                                   ),
-                                              childCount: ColorTheme.of(context)!
-                                                  .addressesToWatch
-                                                  ?.length),
+                                              childCount:
+                                                  ColorTheme.of(context)!
+                                                      .addressesToWatch
+                                                      ?.length),
                                         )
                                       : SliverList(
                                           delegate: SliverChildListDelegate(
@@ -887,10 +889,11 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                     child: Container(),
                                   ),
                                   Image.asset(
-                                    "images/noVerifiers.png",
+                                    'images/noVerifiers.png',
                                     color:
                                         ColorTheme.of(context)!.secondaryColor,
-                                    height: walletWindowState!.screenHeight! / 6,
+                                    height:
+                                        walletWindowState!.screenHeight! / 6,
                                     //width: walletWindowState.screenHeight / 5 * 0.9,
                                   ),
                                   Padding(
@@ -898,7 +901,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                         const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                     child: Text(
                                         AppLocalizations.of(context)!
-                                            .translate("String63"),
+                                            .translate('String63'),
                                         style: TextStyle(
                                             color: ColorTheme.of(context)!
                                                 .secondaryColor,
@@ -909,9 +912,9 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                     padding: const EdgeInsets.all(0.0),
                                     child: Text(
                                         AppLocalizations.of(context)!
-                                            .translate("String64"),
+                                            .translate('String64'),
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Color(0xFF666666),
                                             fontWeight: FontWeight.w400,
                                             fontSize: 15)),
@@ -924,7 +927,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                               ),
                             )
                       : ListView.builder(
-                          padding: EdgeInsets.all(0.0),
+                          padding: const EdgeInsets.all(0.0),
                           itemCount: 8,
                           itemBuilder: (context, i) => Card(
                               color: ColorTheme.of(context)!.baseColor,
@@ -944,8 +947,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                         width: 50,
                                         height: 50,
                                       ),
-                                      title: Text(
-                                          "                                                                        ",
+                                      title: const Text(
+                                          '                                                                        ',
                                           style: TextStyle(
                                               backgroundColor: Colors.grey)),
                                     ),
@@ -962,13 +965,13 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
   }
 
   Widget createColumn(String string, String pattern) {
-    List list = string.split(pattern);
-    List<Widget> widgetList = [];
+    final List list = string.split(pattern);
+    final List<Widget> widgetList = [];
     for (var eachColumn in list) {
       widgetList.add(Text(eachColumn,
           style: TextStyle(color: ColorTheme.of(context)!.secondaryColor)));
     }
-    Column column = Column(
+    final Column column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widgetList,
     );
@@ -993,7 +996,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new SizedBox.expand(child: child);
+    return SizedBox.expand(child: child);
   }
 
   @override

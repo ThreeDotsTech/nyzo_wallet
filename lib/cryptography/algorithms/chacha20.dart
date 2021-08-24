@@ -1,4 +1,3 @@
-
 // Copyright 2019-2020 Gohilla Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,6 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
-
-
 
 import 'package:meta/meta.dart';
 import 'package:nyzo_wallet/cryptography/cipher.dart';
@@ -40,7 +37,7 @@ import 'package:nyzo_wallet/utils/rotate.dart';
 ///
 /// An example:
 /// ```dart
-/// 
+///
 ///
 /// Future<void> main() async {
 ///   final algorithm = chacha20;
@@ -659,14 +656,14 @@ class _Chacha20State extends SyncKeyStreamCipherState {
       throw ArgumentError.value(
         key,
         'key',
-        'Must ${_keyLengthInBytes} bytes',
+        'Must $_keyLengthInBytes bytes',
       );
     }
     if (nonce != null && nonce.length != _nonceLengthInBytes) {
       throw ArgumentError.value(
         nonce,
         'nonce',
-        'Must be ${_nonceLengthInBytes} bytes',
+        'Must be $_nonceLengthInBytes bytes',
       );
     }
 

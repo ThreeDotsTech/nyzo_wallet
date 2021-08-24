@@ -1,5 +1,3 @@
-
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -7,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 
 class QrCameraWindow extends StatefulWidget {
-  QrCameraWindow(this.walletWindowState);
+  const QrCameraWindow(this.walletWindowState);
   final WalletWindowState walletWindowState;
 
   @override
@@ -23,7 +21,7 @@ class _QrCameraWindowState extends State<QrCameraWindow> {
         backgroundColor: Colors.white,
         leading: IconButton(
           color: Colors.black,
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },

@@ -6,7 +6,7 @@ import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/watchedAddress.dart';
 
 class ColorTheme extends InheritedWidget {
-  ColorTheme(
+  const ColorTheme(
       {this.lightTheme,
       required this.child,
       this.update,
@@ -41,9 +41,9 @@ class ColorTheme extends InheritedWidget {
 
   @override
   bool updateShouldNotify(ColorTheme oldWidget) {
-    return ((lightTheme != oldWidget.lightTheme) ||
+    return (lightTheme != oldWidget.lightTheme) ||
         (verifiersList != oldWidget.verifiersList) ||
-        (addressesToWatch != oldWidget.addressesToWatch));
+        (addressesToWatch != oldWidget.addressesToWatch);
   }
 
   static ColorTheme? of(BuildContext context) {

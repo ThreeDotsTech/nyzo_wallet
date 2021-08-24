@@ -22,8 +22,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool lightTheme = false;
-  Color baseColor = Color(0xFFF5F5F5);
-  Color secondaryColor = Color(0xFF121212);
+  Color baseColor = const Color(0xFFF5F5F5);
+  Color secondaryColor = const Color(0xFF121212);
   Color dephtColor = Colors.white;
   Color extraColor = Colors.black87;
   Color? transparentColor = Colors.grey[300];
@@ -44,17 +44,17 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         lightTheme = value == null ? true : value;
         if (!lightTheme) {
-          baseColor = Color(0xFFF5F5F5);
+          baseColor = const Color(0xFFF5F5F5);
           dephtColor = Colors.white;
-          secondaryColor = Color(0xFF121212);
+          secondaryColor = const Color(0xFF121212);
           extraColor = Colors.black87;
           transparentColor = Colors.grey[300];
           highLightColor = Colors.grey[100];
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
         } else {
-          baseColor = Color(0xFF15151a);
-          secondaryColor = Color(0xFFF5F5F5);
-          dephtColor = Color(0xFF1b1c20);
+          baseColor = const Color(0xFF15151a);
+          secondaryColor = const Color(0xFFF5F5F5);
+          dephtColor = const Color(0xFF1b1c20);
           extraColor = Colors.black;
           transparentColor = Colors.white30;
           highLightColor = Colors.white10;
@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       balanceList: balanceList,
       updateAddressesToWatch: updateWatchAddresses,
       child: MaterialApp(
-        supportedLocales: [
+        supportedLocales: const <Locale>[
           Locale('en', 'US'),
           Locale('es', 'ES'),
           Locale('zh', 'CN'),
@@ -137,7 +137,7 @@ class _MyAppState extends State<MyApp> {
               return address[0] == eachAddress.address;
             })[1];
           } catch (e) {
-            eachAddress.balance = "0";
+            eachAddress.balance = '0';
           }
         }
       });
@@ -159,7 +159,7 @@ class _MyAppState extends State<MyApp> {
                 return address[0] == eachAddress.address;
               })[1];
             } catch (e) {
-              eachAddress.balance = "0";
+              eachAddress.balance = '0';
             }
           }
         });

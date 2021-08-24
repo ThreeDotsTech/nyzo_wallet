@@ -11,7 +11,7 @@ import 'Data/Wallet.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<HomePage> {
@@ -45,29 +45,29 @@ class _MyHomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: new Center(
+      body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: new Column(
+        child: Column(
           children: <Widget>[
-            new Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 200.0, 0.0, 0.0),
-                child: new Image.asset(
-                  "images/Logo.png",
+            Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 200.0, 0.0, 0.0),
+                child: Image.asset(
+                  'images/Logo.png',
                   color: Colors.black,
                   width: 150.0,
                 )),
-            new Padding(padding: EdgeInsets.symmetric(vertical: 30.0)),
+            const Padding(padding: const EdgeInsets.symmetric(vertical: 30.0)),
             _visibleButttons
-                ? new Column(
+                ? Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      new Padding(
-                          padding: new EdgeInsets.symmetric(horizontal: 70.0),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 70.0),
                           child: RaisedButton(
                             color: Colors.black87,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -77,17 +77,17 @@ class _MyHomePageState extends State<HomePage> {
                             },
                             child: Text(
                                 AppLocalizations.of(context)!
-                                    .translate("String65"),
-                                style: TextStyle(color: Colors.white)),
+                                    .translate('String65'),
+                                style: const TextStyle(color: Colors.white)),
                           )),
-                      new Padding(
+                      const Padding(
                           padding: EdgeInsets.symmetric(vertical: 20.0)),
-                      new Padding(
-                        padding: new EdgeInsets.symmetric(horizontal: 70.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 70.0),
                         child: RaisedButton(
                           color: Colors.black87,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -96,27 +96,27 @@ class _MyHomePageState extends State<HomePage> {
                             );
                           },
                           child: Text(
-                            AppLocalizations.of(context)!.translate("String66"),
-                            style: TextStyle(color: Colors.white),
+                            AppLocalizations.of(context)!.translate('String66'),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
                     ],
                   )
-                : new CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation(Color(0XFFD42D72)),
+                : const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Color(0XFFD42D72)),
                   ),
-            new Expanded(
-              child: new Container(),
+            Expanded(
+              child: Container(),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
-              child: new Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Text(AppLocalizations.of(context)!.translate("String39")),
-                  new Icon(Icons.favorite, color: Colors.black),
-                  new Text(AppLocalizations.of(context)!.translate("String40"))
+                  Text(AppLocalizations.of(context)!.translate('String39')),
+                  const Icon(Icons.favorite, color: Colors.black),
+                  Text(AppLocalizations.of(context)!.translate('String40'))
                 ],
               ),
             )

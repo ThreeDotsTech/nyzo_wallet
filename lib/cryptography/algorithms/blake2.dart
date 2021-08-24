@@ -1,4 +1,3 @@
-
 // Copyright 2019-2020 Gohilla Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,14 +17,11 @@ import 'dart:typed_data';
 import 'package:nyzo_wallet/cryptography/hash_algorithm.dart';
 import 'package:nyzo_wallet/utils/rotate.dart';
 
-
-
-
 /// _BLAKE2S_ hash function ([RFC 7693](https://tools.ietf.org/html/rfc7693)).
 ///
 /// An example:
 /// ```
-/// 
+///
 ///
 /// void main() {
 ///   // Create a sink
@@ -105,7 +101,7 @@ class _Blake2sSink extends HashSink {
 
   _Blake2sSink() {
     final h = _hash;
-    final iv = _initializationVector;
+    const iv = _initializationVector;
     for (var i = 0; i < 8; i++) {
       h[i] = iv[i];
     }
@@ -224,7 +220,7 @@ class _Blake2sSink extends HashSink {
     }
 
     // Initialize v[8..15]
-    final initializationVector = _initializationVector;
+    const initializationVector = _initializationVector;
     for (var i = 0; i < 8; i++) {
       v[8 + i] = initializationVector[i];
     }
@@ -240,7 +236,7 @@ class _Blake2sSink extends HashSink {
       v[14] ^= uint32mask;
     }
 
-    final sigma = _sigma;
+    const sigma = _sigma;
     for (var round = 0; round < 10; round++) {
       final sigmaStart = (round % 10) * 16;
       for (var i = 0; i < 16; i++) {
@@ -276,12 +272,12 @@ class _Blake2sSink extends HashSink {
 
   static void _g(Uint32List v, int a, int b, int c, int d, int x, int y) {
     v[a] = uint32mask & (v[a] + v[b] + x);
-    v[d] = rotateRight32((v[d] ^ v[a]), 16);
+    v[d] = rotateRight32(v[d] ^ v[a], 16);
     v[c] = uint32mask & (v[c] + v[d]);
-    v[b] = rotateRight32((v[b] ^ v[c]), 12);
+    v[b] = rotateRight32(v[b] ^ v[c], 12);
     v[a] = uint32mask & (v[a] + v[b] + y);
-    v[d] = rotateRight32((v[d] ^ v[a]), 8);
+    v[d] = rotateRight32(v[d] ^ v[a], 8);
     v[c] = uint32mask & (v[c] + v[d]);
-    v[b] = rotateRight32((v[b] ^ v[c]), 7);
+    v[b] = rotateRight32(v[b] ^ v[c], 7);
   }
 }

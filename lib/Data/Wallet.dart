@@ -1,5 +1,3 @@
-
-
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
@@ -11,7 +9,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart' as material;
 
 // Package imports:
-import "package:hex/hex.dart";
+import 'package:hex/hex.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:nyzo_wallet/cryptography/algorithms/ec_ed25519.dart';
@@ -36,16 +34,16 @@ import 'NyzoMessage.dart';
 import 'Transaction.dart';
 import 'TransactionMessage.dart';
 
-final _storage = new FlutterSecureStorage();
-final crypto = new PlatformStringCryptor();
-final r = new Random.secure();
-const CycleTransactionSignature47 = 47;
-const CycleTransactionSignatureResponse48 = 48;
+const FlutterSecureStorage _storage = const FlutterSecureStorage();
+final PlatformStringCryptor crypto = PlatformStringCryptor();
+final Random r = Random.secure();
+const int CycleTransactionSignature47 = 47;
+const int CycleTransactionSignatureResponse48 = 48;
 
 Future<bool> checkWallet() async {
-  final prefs = await SharedPreferences.getInstance();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
   bool flag;
-  String? values = prefs.getString('pubKey');
+  final String? values = prefs.getString('pubKey');
   if (values == null) {
     flag = false;
   } else {
@@ -79,17 +77,17 @@ Future createNewWallet(String password) async {
       HEX.encode(await privKey.extract()),
       key!); // We encrypt the private key using password and salt
   //Now we store the values in the device using secure_storage
-  await _storage.write(key: "salt", value: salt);
-  await _storage.write(key: "privKey", value: encryptedPrivKey);
+  await _storage.write(key: 'salt', value: salt);
+  await _storage.write(key: 'privKey', value: encryptedPrivKey);
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
   prefs.setString('pubKey', HEX.encode(pubKey.bytes));
-  await _storage.write(key: "Password", value: password);
+  await _storage.write(key: 'Password', value: password);
   setNightModeValue(true);
   setWatchSentinels(false);
   addContact(
       [],
-      Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
-          "Donate", "Help us develop this wallet."));
+      Contact('id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG',
+          'Donate', 'Help us develop this wallet.'));
   prefs.setBool('nigthMode', true);
   return [HEX.encode(await privKey.extract()), HEX.encode(pubKey.bytes)];
 }
@@ -97,14 +95,14 @@ Future createNewWallet(String password) async {
 Future<bool> importWallet(String nyzoString, String password) async {
   Uint8List hexStringAsUint8Array(String identifier) {
     identifier = identifier.split('-').join('');
-    var array = new Uint8List((identifier.length / 2).floor());
+    final array = Uint8List((identifier.length / 2).floor());
     for (var i = 0; i < array.length; i++) {
       array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
     }
     return array;
   }
 
-  String privateKeyAsString =
+  final String privateKeyAsString =
       HEX.encode(NyzoStringEncoder.decode(nyzoString).getBytes());
 
   final prefs = await SharedPreferences
@@ -113,10 +111,11 @@ Future<bool> importWallet(String nyzoString, String password) async {
   setWatchSentinels(false);
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
-  PrivateKey privateKey = PrivateKey(hexStringAsUint8Array(privateKeyAsString));
-  KeyPair keyPair = ed25519.newKeyPairFromSeedSync(
+  final PrivateKey privateKey =
+      PrivateKey(hexStringAsUint8Array(privateKeyAsString));
+  final KeyPair keyPair = ed25519.newKeyPairFromSeedSync(
       privateKey); //Creates a KeyPair from the generated Seed
-  PublicKey pubKey = keyPair.publicKey; //Set the Public Key
+  final PublicKey pubKey = keyPair.publicKey; //Set the Public Key
 
   /*here we Store our keys in the device, Secure_storage encrypts adn decrypts the content when reading and saving 
   so we dont need to take care of security, anyhow, Private key is encrypted again using user's password
@@ -128,15 +127,15 @@ Future<bool> importWallet(String nyzoString, String password) async {
       HEX.encode(await privateKey.extract()),
       key!); // We encrypt the private key using password and salt
   //Now we store the values in the device using secure_storage
-  await _storage.write(key: "salt", value: salt);
-  await _storage.write(key: "privKey", value: encryptedPrivKey);
+  await _storage.write(key: 'salt', value: salt);
+  await _storage.write(key: 'privKey', value: encryptedPrivKey);
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
   prefs.setString('pubKey', HEX.encode(pubKey.bytes));
-  await _storage.write(key: "Password", value: password);
+  await _storage.write(key: 'Password', value: password);
   addContact(
       [],
-      Contact("id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG",
-          "Donate", "Help us develop this wallet."));
+      Contact('id__88UT5xYF0PY5eN2utfiaVSqTq36V9Tg3PS.eurTw5k_QYnHKVtQG',
+          'Donate', 'Help us develop this wallet.'));
   return true;
 }
 
@@ -160,21 +159,21 @@ void setSavedBalance(double balance) async {
 Future<double> getBalance(String address) async {
   final _prefs = await SharedPreferences.getInstance();
   double _balance = _prefs.getDouble('balance') ?? 0.0;
-  String url = "https://nyzo.co/walletRefresh?id=" + address;
+  final String url = 'https://nyzo.co/walletRefresh?id=' + address;
   try {
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "accept": "*/*",
-      "Accept-Encoding": 'gzip, deflate, br',
-      "Accept-Language":
-          "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
-      "Connection": "keep-alive",
-      "DNT": "1",
-      "Referer": "https://nyzo.co/wallet",
-      "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
+    final http.Response response = await http.get(Uri.parse(url), headers: {
+      'accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language':
+          'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
+      'Connection': 'keep-alive',
+      'DNT': '1',
+      'Referer': 'https://nyzo.co/wallet',
+      'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
     });
-    var balanceMicronyzos =
-        await json.decode(response.body)["balanceMicronyzos"];
+    final balanceMicronyzos =
+        await json.decode(response.body)['balanceMicronyzos'];
     _balance = double.parse(balanceMicronyzos.toString());
   } catch (e) {
 //TODO: Correct error handling
@@ -183,64 +182,67 @@ Future<double> getBalance(String address) async {
 }
 
 Future<String> getPrivateKey(String password) async {
-  String? salt = await _storage.read(key: "salt");
-  String? encryptedPrivKey = await _storage.read(key: "privKey");
+  final String? salt = await _storage.read(key: 'salt');
+  final String? encryptedPrivKey = await _storage.read(key: 'privKey');
   //String encryptedPrivKey = prefs.getString("privKey");
   final String? key = await crypto.generateKeyFromPassword(
       password, salt!); //Get the key to encrypt our Nyzo Private key
-  String? privKey = await crypto.decrypt(encryptedPrivKey!, key!);
+  final String? privKey = await crypto.decrypt(encryptedPrivKey!, key!);
   return privKey!;
 }
 
 Future<List<Transaction>> getTransactions(String address) async {
-  List<Transaction> transactions = List<Transaction>.empty(growable: true);
+  final List<Transaction> transactions =
+      List<Transaction>.empty(growable: true);
   final _prefs = await SharedPreferences.getInstance();
   final _address = _prefs.getString('pubKey') ?? '';
-  String url = "https://nyzo.co/walletRefresh?id=" + _address;
+  final String url = 'https://nyzo.co/walletRefresh?id=' + _address;
   try {
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "accept": "*/*",
-      "Accept-Encoding": 'gzip, deflate, br',
-      "Accept-Language":
-          "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
-      "Connection": "keep-alive",
-      "DNT": "1",
-      "Referer": "https://nyzo.co/wallet",
-      "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
+    final http.Response response = await http.get(Uri.parse(url), headers: {
+      'accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language':
+          'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
+      'Connection': 'keep-alive',
+      'DNT': '1',
+      'Referer': 'https://nyzo.co/wallet',
+      'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
     });
-    var html = await json.decode(response.body)["creditsAndDebits"];
-    var document = parse(html);
+    final html = await json.decode(response.body)['creditsAndDebits'];
+    final document = parse(html);
 
-    List<Element> transactionElementList = document.getElementsByTagName("tr");
+    final List<Element> transactionElementList =
+        document.getElementsByTagName('tr');
     for (Element eachTransaction in transactionElementList) {
       if (eachTransaction.text != 'typeblockamountbalance') {
-        Transaction transaction = new Transaction();
-        if (eachTransaction.text.toString().contains("from")) {
-          transaction.type = "from";
+        final Transaction transaction = Transaction();
+        if (eachTransaction.text.toString().contains('from')) {
+          transaction.type = 'from';
         } else {
-          transaction.type = "to";
+          transaction.type = 'to';
         }
-        List transactionSlice = eachTransaction.text.toString().split(" ");
+        final List transactionSlice =
+            eachTransaction.text.toString().split(' ');
         transaction.address = eachTransaction
             .children[0].children[0].attributes.values
             .toList()[0]
             .substring(11);
         transaction.block = transactionSlice[2]
             .toString()
-            .split("(")[0]
-            .split("∩")[0]
+            .split('(')[0]
+            .split('∩')[0]
             .substring(transactionSlice[2]
                     .toString()
-                    .split("(")[0]
-                    .split("∩")[0]
+                    .split('(')[0]
+                    .split('∩')[0]
                     .length -
                 7);
-        List balanceSlice = eachTransaction.text.toString().split("∩");
+        final List balanceSlice = eachTransaction.text.toString().split('∩');
         transaction.amount = double.parse(
-            balanceSlice[1].toString().split(".")[0] +
-                "." +
-                balanceSlice[1].toString().split(".")[1].substring(0, 6));
+            balanceSlice[1].toString().split('.')[0] +
+                '.' +
+                balanceSlice[1].toString().split('.')[1].substring(0, 6));
         transactions.add(transaction);
       }
     }
@@ -253,54 +255,54 @@ Future<List<Transaction>> getTransactions(String address) async {
 }
 
 byteArrayForEncodedString(String encodedString) {
-  var characterLookup = ('0123456789' +
+  final characterLookup = ('0123456789' +
           'abcdefghijkmnopqrstuvwxyz' +
           'ABCDEFGHIJKLMNPQRSTUVWXYZ' +
           '-.~_')
       .split('');
 
-  Map<String, dynamic> characterToValueMap = Map();
+  final Map<String, dynamic> characterToValueMap = Map();
 
   for (var i = 0; i < characterLookup.length; i++) {
     characterToValueMap[characterLookup[i]] = i;
   }
 
-  var arrayLength = ((encodedString.length * 6 + 7) / 8).floor();
+  final arrayLength = ((encodedString.length * 6 + 7) / 8).floor();
 
-  var array = new Uint8List(arrayLength);
+  final array = Uint8List(arrayLength);
   for (var i = 0; i < arrayLength; i++) {
-    var leftCharacter = encodedString.split('')[(i * 8 / 6).floor()];
-    var rightCharacter = encodedString.split('')[(i * 8 / 6 + 1).floor()];
+    final leftCharacter = encodedString.split('')[(i * 8 / 6).floor()];
+    final rightCharacter = encodedString.split('')[(i * 8 / 6 + 1).floor()];
 
-    var leftValue = characterToValueMap[leftCharacter];
-    var rightValue = characterToValueMap[rightCharacter];
-    var bitOffset = (i * 2) % 6;
-    array[i] = ((((leftValue << 6) + rightValue) >> 4 - bitOffset) & 0xff);
+    final leftValue = characterToValueMap[leftCharacter];
+    final rightValue = characterToValueMap[rightCharacter];
+    final bitOffset = (i * 2) % 6;
+    array[i] = (((leftValue << 6) + rightValue) >> 4 - bitOffset) & 0xff;
   }
 
   return array;
 }
 
 encodedStringForByteArray(array) {
-  var characterLookup = ('0123456789' +
+  final characterLookup = ('0123456789' +
           'abcdefghijkmnopqrstuvwxyz' +
           'ABCDEFGHIJKLMNPQRSTUVWXYZ' +
           '-.~_')
       .split('');
 
-  Map<String, dynamic> characterToValueMap = Map();
+  final Map<String, dynamic> characterToValueMap = Map();
 
   for (var i = 0; i < characterLookup.length; i++) {
     characterToValueMap[characterLookup[i]] = i;
   }
   var index = 0;
   var bitOffset = 0;
-  var encodedString = "";
+  var encodedString = '';
   while (index < array.length) {
-    var leftByte = array[index] & 0xff;
-    var rightByte = index < array.length - 1 ? array[index + 1] & 0xff : 0;
+    final leftByte = array[index] & 0xff;
+    final rightByte = index < array.length - 1 ? array[index + 1] & 0xff : 0;
 
-    var lookupIndex =
+    final lookupIndex =
         (((leftByte << 8) + rightByte) >> (10 - bitOffset)) & 0x3f;
     encodedString += characterLookup[lookupIndex];
 
@@ -316,12 +318,12 @@ encodedStringForByteArray(array) {
 }
 
 encodeNyzoString(prefix, Uint8List? contentBytes) {
-  var prefixBytes = byteArrayForEncodedString(prefix);
+  final prefixBytes = byteArrayForEncodedString(prefix);
 
-  int checksumLength = 4 + (3 - (contentBytes!.length + 2) % 3) % 3;
-  int expandedLength = 4 + contentBytes.length + checksumLength;
+  final int checksumLength = 4 + (3 - (contentBytes!.length + 2) % 3) % 3;
+  final int expandedLength = 4 + contentBytes.length + checksumLength;
 
-  var expandedArray = new Uint8List(expandedLength);
+  final expandedArray = Uint8List(expandedLength);
   for (var i = 0; i < prefixBytes.length; i++) {
     expandedArray[i] = prefixBytes[i];
   }
@@ -330,7 +332,7 @@ encodeNyzoString(prefix, Uint8List? contentBytes) {
     expandedArray[i + 4] = contentBytes[i];
   }
 
-  var checksum =
+  final checksum =
       doubleSha256(expandedArray.sublist(0, 4 + contentBytes.length));
   for (var i = 0; i < checksumLength; i++) {
     expandedArray[expandedArray.length - checksumLength + i] = checksum[i];
@@ -340,18 +342,18 @@ encodeNyzoString(prefix, Uint8List? contentBytes) {
 }
 
 nyzoStringFromPrivateKey(byteArray) {
-  Uint8List bytes = hexStringAsUint8Array(byteArray);
+  final Uint8List bytes = hexStringAsUint8Array(byteArray);
   return encodeNyzoString('key_', bytes);
 }
 
 nyzoStringFromPublicIdentifier(byteArray) {
-  Uint8List bytes = hexStringAsUint8Array(byteArray);
+  final Uint8List bytes = hexStringAsUint8Array(byteArray);
   return encodeNyzoString('id__', bytes);
 }
 
 Future<String> _getPrivKey(String password) async {
-  String? encryptedprivKey = await _storage.read(key: "privKey");
-  String? salt = await _storage.read(key: "salt");
+  final String? encryptedprivKey = await _storage.read(key: 'privKey');
+  final String? salt = await _storage.read(key: 'salt');
   final String? key = await crypto.generateKeyFromPassword(password, salt!);
   final String? privKey = await crypto.decrypt(encryptedprivKey!, key!);
   return privKey!;
@@ -359,18 +361,18 @@ Future<String> _getPrivKey(String password) async {
 
 Future<String> send(String password, String nyzoStringPiblicId, int amount,
     int balance, String data) async {
-  String account =
+  final String account =
       HEX.encode(NyzoStringEncoder.decode(nyzoStringPiblicId).getBytes());
-  http.Client client = new http.Client();
-  String? encryptedprivKey = await _storage.read(key: "privKey");
-  String? salt = await _storage.read(key: "salt");
+  final http.Client client = http.Client();
+  final String? encryptedprivKey = await _storage.read(key: 'privKey');
+  final String? salt = await _storage.read(key: 'salt');
   final String? key = await crypto.generateKeyFromPassword(password, salt!);
   final String? privKey = await crypto.decrypt(encryptedprivKey!, key!);
-  String walletPrivateSeed = await getPrivateKey(password);
-  String recipientIdentifier = account;
-  int balanceMicronyzos = balance;
-  int micronyzosToSend = amount;
-  String senderData = data;
+  final String walletPrivateSeed = await getPrivateKey(password);
+  final String recipientIdentifier = account;
+  final int balanceMicronyzos = balance;
+  final int micronyzosToSend = amount;
+  final String senderData = data;
 
   bool specifiedTransactionIsValid() {
     return walletPrivateSeed.length == 64 &&
@@ -381,7 +383,7 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
 
   Uint8List hexStringAsUint8Array(String identifier) {
     identifier = identifier.split('-').join('');
-    var array = new Uint8List((identifier.length / 2).floor());
+    final array = Uint8List((identifier.length / 2).floor());
     for (var i = 0; i < array.length; i++) {
       array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
     }
@@ -390,7 +392,7 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   }
 
   Future<NyzoMessage> fetchPreviousHash(senderPrivateSeed) async {
-    /*var message = new NyzoMessage();
+    /*var message = NyzoMessage();
     message.setType(NyzoMessage.PreviousHashRequest7);
     message.sign(PrivateKey(hexStringAsUint8Array(senderPrivateSeed)));
     NyzoMessage result =
@@ -407,7 +409,7 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
       recipientIdentifier,
       micronyzosToSend,
       senderData) async {
-    var transaction = new TransactionMessage();
+    final transaction = TransactionMessage();
     transaction.setTimestamp(timestamp);
     transaction.setAmount(micronyzosToSend);
     transaction
@@ -416,17 +418,17 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     transaction.setPreviousBlockHash(previousBlockHash);
     transaction.setSenderData(senderData);
     transaction.sign(hexStringAsUint8Array(senderPrivateSeed));
-    var message = new NyzoMessage();
+    final message = NyzoMessage();
     message.setType(NyzoMessage.Transaction5);
     message.setContent(transaction);
     message.sign(hexStringAsUint8Array(senderPrivateSeed));
-    NyzoMessage? result =
+    final NyzoMessage? result =
         await message.send(PrivateKey(hexStringAsUint8Array(privKey!)), client);
     return result!;
   }
 
   if (specifiedTransactionIsValid()) {
-    NyzoMessage result = await fetchPreviousHash(walletPrivateSeed);
+    final NyzoMessage result = await fetchPreviousHash(walletPrivateSeed);
     if (result == null ||
         result.content == null ||
         result.content.height == null ||
@@ -434,7 +436,7 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     } else {
       if (result.content.height > 10000000000) {
       } else {
-        NyzoMessage result2 = await submitTransaction(
+        final NyzoMessage result2 = await submitTransaction(
             result.timestamp! + 7000,
             walletPrivateSeed,
             result.content.height,
@@ -456,29 +458,29 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     }
   } else {
     client.close();
-    return "Invalid Transaction";
+    return 'Invalid Transaction';
   }
   client.close();
-  return "Something went wrong";
+  return 'Something went wrong';
 }
 
 Uint8List? signBytes(List<int> bytes, PrivateKey key) {
-  KeyPair keyPair = ed25519.newKeyPairFromSeedSync(key);
-  Signature signature = ed25519.signSync(bytes, keyPair);
+  final KeyPair keyPair = ed25519.newKeyPairFromSeedSync(key);
+  final Signature signature = ed25519.signSync(bytes, keyPair);
 
   return Uint8List.fromList(signature.bytes);
 }
 
 sendMessage(NyzoMessage message) async {
   //Send NyzoMessage for the cycle transaction.
-  http.Client client = new http.Client();
-  http.Response response = await client.post(
-      Uri.parse("https://nyzo.co/messageCycleTransactionSignature"),
+  final http.Client client = http.Client();
+  final http.Response response = await client.post(
+      Uri.parse('https://nyzo.co/messageCycleTransactionSignature'),
       headers: {
-        "Content-Type": "application/octet-stream",
+        'Content-Type': 'application/octet-stream',
       },
       body: message.getBytes(true));
-  dynamic list = json.decode(response.body);
+  final dynamic list = json.decode(response.body);
   return list;
 }
 
@@ -489,20 +491,20 @@ Future<dynamic> signTransaction(String initiatorSignature,
     walletPrivateSeed = await _getPrivKey(password!);
   }
 
-  KeyPair? keyPair = walletPrivateSeed.length == 64
+  final KeyPair? keyPair = walletPrivateSeed.length == 64
       ? ed25519.newKeyPairFromSeedSync(
           PrivateKey(hexStringAsUint8Array(walletPrivateSeed)))
       : null!;
   if (keyPair == null) {
   } else {
-    var signature = new CycleTransactionSignature();
+    final signature = CycleTransactionSignature();
     signature
         .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier));
     signature.setIdentifier(keyPair.publicKey);
     signature.setSignature(
         signBytes(hexStringAsUint8Array(transactionBytes), keyPair.privateKey));
 
-    var message = new NyzoMessage();
+    final message = NyzoMessage();
     message.setType(CycleTransactionSignature47);
     message.setContent(signature);
     message.sign(Uint8List.fromList(keyPair.privateKey.extractSync()));
@@ -516,9 +518,10 @@ Future<List<Contact>> getContacts() async {
   final _contactListJson = _prefs.getString('contactList');
 
   if (_contactListJson != null) {
-    List<Contact> _contactList = [];
-    List<dynamic> _contactListDeserialized = json.decode(_contactListJson);
-    int index = _contactListDeserialized.length;
+    final List<Contact> _contactList = [];
+    final List<dynamic> _contactListDeserialized =
+        json.decode(_contactListJson);
+    final int index = _contactListDeserialized.length;
     for (var i = 0; i < index; i++) {
       _contactList.add(Contact.fromJson(_contactListDeserialized[i]));
     }
@@ -533,9 +536,10 @@ Future<List<Verifier>> getVerifiers() async {
   final _verifiersListJson = _prefs.getString('verifiersList');
 
   if (_verifiersListJson != null) {
-    List<Verifier> _verifiersList = [];
-    List<dynamic> _verifiersListDeserialized = json.decode(_verifiersListJson);
-    int index = _verifiersListDeserialized.length;
+    final List<Verifier> _verifiersList = [];
+    final List<dynamic> _verifiersListDeserialized =
+        json.decode(_verifiersListJson);
+    final int index = _verifiersListDeserialized.length;
     for (var i = 0; i < index; i++) {
       _verifiersList
           .add(await Verifier.fromJson(_verifiersListDeserialized[i]).update());
@@ -551,10 +555,10 @@ Future<List<WatchedAddress>> getWatchAddresses() async {
   final _watchAddressesListJson = _prefs.getString('watchAddressList');
 
   if (_watchAddressesListJson != null) {
-    List<WatchedAddress> _watchAddressesList = [];
-    List<dynamic> _watchAddressesListDeserialized =
+    final List<WatchedAddress> _watchAddressesList = [];
+    final List<dynamic> _watchAddressesListDeserialized =
         json.decode(_watchAddressesListJson);
-    int index = _watchAddressesListDeserialized.length;
+    final int index = _watchAddressesListDeserialized.length;
     for (var i = 0; i < index; i++) {
       _watchAddressesList
           .add(WatchedAddress.fromJson(_watchAddressesListDeserialized[i]));
@@ -568,10 +572,11 @@ Future<List<WatchedAddress>> getWatchAddresses() async {
 Future<bool> addContact(List<Contact> contactList, Contact contact) async {
   final _prefs = await SharedPreferences.getInstance();
   final _contactListJson = _prefs.getString('contactList');
-  List<Contact> _contactList = [];
+  final List<Contact> _contactList = [];
   if (_contactListJson != null) {
-    List<dynamic> _contactListDeserialized = json.decode(_contactListJson);
-    int index = _contactListDeserialized.length;
+    final List<dynamic> _contactListDeserialized =
+        json.decode(_contactListJson);
+    final int index = _contactListDeserialized.length;
     for (var i = 0; i < index; i++) {
       _contactList.add(Contact.fromJson(_contactListDeserialized[i]));
     }
@@ -586,10 +591,11 @@ Future<bool> addContact(List<Contact> contactList, Contact contact) async {
 Future<bool> addVerifier(Verifier verifier) async {
   final _prefs = await SharedPreferences.getInstance();
   final _verifiersListJson = _prefs.getString('verifiersList');
-  List<Verifier> _verifierstList = [];
+  final List<Verifier> _verifierstList = [];
   if (_verifiersListJson != null) {
-    List<dynamic> _verifiersListDeserialized = json.decode(_verifiersListJson);
-    int index = _verifiersListDeserialized.length;
+    final List<dynamic> _verifiersListDeserialized =
+        json.decode(_verifiersListJson);
+    final int index = _verifiersListDeserialized.length;
     for (var i = 0; i < index; i++) {
       _verifierstList.add(Verifier.fromJson(_verifiersListDeserialized[i]));
     }
@@ -604,11 +610,11 @@ Future<bool> addVerifier(Verifier verifier) async {
 Future<bool> addWatchAddress(WatchedAddress watchedAddres) async {
   final _prefs = await SharedPreferences.getInstance();
   final _watchAddressAsJsonList = _prefs.getString('watchAddressList');
-  List<WatchedAddress> _watchAddressList = [];
+  final List<WatchedAddress> _watchAddressList = [];
   if (_watchAddressAsJsonList != null) {
-    List<dynamic> _watchAddressesDeserialized =
+    final List<dynamic> _watchAddressesDeserialized =
         json.decode(_watchAddressAsJsonList);
-    int index = _watchAddressesDeserialized.length;
+    final int index = _watchAddressesDeserialized.length;
     for (var i = 0; i < index; i++) {
       _watchAddressList
           .add(WatchedAddress.fromJson(_watchAddressesDeserialized[i]));
@@ -623,7 +629,7 @@ Future<bool> addWatchAddress(WatchedAddress watchedAddres) async {
 
 Future<bool> saveContacts(List<Contact> contactList) async {
   final _prefs = await SharedPreferences.getInstance();
-  List<dynamic> _contactsAsJsonList = [];
+  final List<dynamic> _contactsAsJsonList = [];
   for (var eachContact in contactList) {
     _contactsAsJsonList.add(json.encode(eachContact.toJson()));
   }
@@ -633,7 +639,7 @@ Future<bool> saveContacts(List<Contact> contactList) async {
 
 Future<bool> saveVerifier(List<Verifier> verifierList) async {
   final _prefs = await SharedPreferences.getInstance();
-  List<dynamic> _verifiersAsJsonList = [];
+  final List<dynamic> _verifiersAsJsonList = [];
   for (var eachVerifier in verifierList) {
     _verifiersAsJsonList.add(json.encode(eachVerifier.toJson()));
   }
@@ -643,7 +649,7 @@ Future<bool> saveVerifier(List<Verifier> verifierList) async {
 
 Future<bool> saveWatchAddress(List<WatchedAddress> watchAddressList) async {
   final _prefs = await SharedPreferences.getInstance();
-  List<dynamic> _watchAddressAsJsonList = [];
+  final List<dynamic> _watchAddressAsJsonList = [];
   for (var eachVerifier in watchAddressList) {
     _watchAddressAsJsonList.add(json.encode(eachVerifier.toJson()));
   }
@@ -678,19 +684,19 @@ void setWatchSentinels(bool val) async {
 }
 
 Future<List<CycleTransaction>> getCycleTransactions() async {
-  String url = "https://nyzo.co/cycleTransactions";
-  List<CycleTransaction> transactions = [];
+  const String url = 'https://nyzo.co/cycleTransactions';
+  final List<CycleTransaction> transactions = [];
   try {
-    http.Response response = await http.get(Uri.parse(url));
-    Document document = parse(response.body, encoding: "utf-8");
+    final http.Response response = await http.get(Uri.parse(url));
+    final Document document = parse(response.body, encoding: 'utf-8');
 
     for (var eachTransaction
-        in document.getElementsByClassName("transaction-table")) {
+        in document.getElementsByClassName('transaction-table')) {
       //for each transaction
 
-      var transaction = CycleTransaction();
-      List valuesList = eachTransaction.getElementsByClassName(
-          "transaction-table-cell transaction-table-cell-right");
+      final transaction = CycleTransaction();
+      final List valuesList = eachTransaction.getElementsByClassName(
+          'transaction-table-cell transaction-table-cell-right');
       transaction.initiatorNickname = valuesList[0].text;
       transaction.initiatorId = valuesList[1].text;
       transaction.initiatorIdAsNyzoString = valuesList[2].text;
@@ -706,9 +712,9 @@ Future<List<CycleTransaction>> getCycleTransactions() async {
       transactions.add(transaction);
     }
     document
-        .getElementsByClassName("transaction-table")[0]
+        .getElementsByClassName('transaction-table')[0]
         .getElementsByClassName(
-            "transaction-table-cell transaction-table-cell-right")[1]
+            'transaction-table-cell transaction-table-cell-right')[1]
         .text;
     return transactions;
   } catch (e) {
@@ -717,104 +723,104 @@ Future<List<CycleTransaction>> getCycleTransactions() async {
 }
 
 Future<Verifier> getVerifierStatus(Verifier verifier) async {
-  String url = "https://nyzo.co/status?id=" + verifier.id!;
+  final String url = 'https://nyzo.co/status?id=' + verifier.id!;
   try {
-    http.Response response = await http.get(Uri.parse(url), headers: {
-      "accept": "*/*",
-      "Accept-Encoding": 'gzip, deflate, br',
-      "Accept-Language":
-          "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
-      "Connection": "keep-alive",
-      "DNT": "1",
-      "Referer": "https://nyzo.co/wallet",
-      "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
+    final http.Response response = await http.get(Uri.parse(url), headers: {
+      'accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language':
+          'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
+      'Connection': 'keep-alive',
+      'DNT': '1',
+      'Referer': 'https://nyzo.co/wallet',
+      'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
     });
     //var lmao = await json.decode(response.body)["verifier"];
-    Document document = parse(response.body, encoding: "utf-8");
+    final Document document = parse(response.body, encoding: 'utf-8');
     List? attributeElementList;
-    Map<String, String>? verifierMap = Map<String, String>();
+    final Map<String, String>? verifierMap = Map<String, String>();
 
     try {
       if (document
-              .getElementsByClassName("verifier verifier-not-producing")
-              .length !=
-          0) {
+          .getElementsByClassName('verifier verifier-not-producing')
+          .isNotEmpty) {
         attributeElementList =
-            document.getElementsByClassName("verifier verifier-not-producing");
+            document.getElementsByClassName('verifier verifier-not-producing');
         verifier.status = Verifier.NOT_PRODUCING;
-        verifier.iconBlack = material.Image.asset("images/NotProducing.png");
+        verifier.iconBlack = material.Image.asset('images/NotProducing.png');
         verifier.iconWhite = material.Image.asset(
-          "images/NotProducing.png",
+          'images/NotProducing.png',
           color: material.Colors.white,
         );
       }
     } catch (e) {}
     try {
-      if (document.getElementsByClassName("verifier verifier-active").length !=
-          0) {
+      if (document
+          .getElementsByClassName('verifier verifier-active')
+          .isNotEmpty) {
         attributeElementList =
-            document.getElementsByClassName("verifier verifier-active");
+            document.getElementsByClassName('verifier verifier-active');
         verifier.status = Verifier.ACTIVE;
-        verifier.iconBlack = material.Image.asset("images/normal.png");
-        verifier.iconWhite = material.Image.asset("images/normal.png",
+        verifier.iconBlack = material.Image.asset('images/normal.png');
+        verifier.iconWhite = material.Image.asset('images/normal.png',
             color: material.Colors.white);
       }
     } catch (e) {}
     try {
       if (document
-              .getElementsByClassName("verifier verifier-inactive")
-              .length !=
-          0) {
+          .getElementsByClassName('verifier verifier-inactive')
+          .isNotEmpty) {
         attributeElementList =
-            document.getElementsByClassName("verifier verifier-inactive");
+            document.getElementsByClassName('verifier verifier-inactive');
         verifier.status = Verifier.COMMUNICATION_PROBLEM;
         verifier.iconBlack =
-            material.Image.asset("images/communicationProblem.png");
+            material.Image.asset('images/communicationProblem.png');
         verifier.iconWhite = material.Image.asset(
-            "images/communicationProblem.png",
+            'images/communicationProblem.png',
             color: material.Colors.white);
       }
     } catch (e) {}
     try {
-      if (document.getElementsByClassName("verifier verifier-warning").length !=
-          0) {
+      if (document
+          .getElementsByClassName('verifier verifier-warning')
+          .isNotEmpty) {
         attributeElementList =
-            document.getElementsByClassName("verifier verifier-warning");
+            document.getElementsByClassName('verifier verifier-warning');
         verifier.status = Verifier.TRACKING_PROBLEM;
-        verifier.iconBlack = material.Image.asset("images/trackingProblem.png");
-        verifier.iconWhite = material.Image.asset("images/trackingProblem.png",
+        verifier.iconBlack = material.Image.asset('images/trackingProblem.png');
+        verifier.iconWhite = material.Image.asset('images/trackingProblem.png',
             color: material.Colors.white);
       }
     } catch (e) {}
 
     for (Element eachAttribute in attributeElementList!) {
-      for (String eachAttribute in eachAttribute.innerHtml.split("<br>")) {
-        List<String> tempAttributeList = eachAttribute.split(":");
+      for (String eachAttribute in eachAttribute.innerHtml.split('<br>')) {
+        final List<String> tempAttributeList = eachAttribute.split(':');
         if (tempAttributeList.length == 2) {
-          verifierMap[tempAttributeList[0]] = tempAttributeList[1];
+          verifierMap![tempAttributeList[0]] = tempAttributeList[1];
         }
       }
       verifier.isValid = true;
     }
 
-    verifier.nickname = verifierMap["nickname"];
-    verifier.iPAddress = verifierMap["IP address"];
-    verifier.lastQueried = verifierMap["last queried"];
-    verifier.version = verifierMap["version"];
-    verifier.mesh = verifierMap["mesh"];
-    verifier.cycleLength = verifierMap["cycle length"];
-    verifier.transactions = verifierMap["transactions"];
-    verifier.retentionEdge = verifierMap["retention edge"];
-    verifier.trailingEdge = verifierMap["trailing edge"];
-    verifier.frozenEdge = verifierMap["frozen edge"];
-    verifier.openEdge = verifierMap["open edge"];
-    verifier.blocksCT = verifierMap["blocks transmitted/created"];
-    verifier.blockVote = verifierMap["block vote"];
-    verifier.lastRemovalHeight = verifierMap["last removal height"];
-    verifier.receivingUDP = verifierMap["receiving UDP"];
-    verifier.transactions == "0" ? verifier.balance = 0 : verifier.balance = 0;
-    verifier.blocksCT!.split("/")[0] != " 0"
+    verifier.nickname = verifierMap!['nickname'];
+    verifier.iPAddress = verifierMap['IP address'];
+    verifier.lastQueried = verifierMap['last queried'];
+    verifier.version = verifierMap['version'];
+    verifier.mesh = verifierMap['mesh'];
+    verifier.cycleLength = verifierMap['cycle length'];
+    verifier.transactions = verifierMap['transactions'];
+    verifier.retentionEdge = verifierMap['retention edge'];
+    verifier.trailingEdge = verifierMap['trailing edge'];
+    verifier.frozenEdge = verifierMap['frozen edge'];
+    verifier.openEdge = verifierMap['open edge'];
+    verifier.blocksCT = verifierMap['blocks transmitted/created'];
+    verifier.blockVote = verifierMap['block vote'];
+    verifier.lastRemovalHeight = verifierMap['last removal height'];
+    verifier.receivingUDP = verifierMap['receiving UDP'];
+    verifier.transactions == '0' ? verifier.balance = 0 : verifier.balance = 0;
+    verifier.blocksCT!.split('/')[0] != ' 0'
         ? verifier.inCicle = true
         : verifier.inCicle = false;
 
@@ -825,24 +831,24 @@ Future<Verifier> getVerifierStatus(Verifier verifier) async {
 
 Future<List<List<String>>> getBalanceList() async {
   List<Element> attributeElementList;
-  List<List<String>> balanceList = [];
-  String url = "https://nyzo.co/balanceListPlain/L";
+  final List<List<String>> balanceList = [];
+  const String url = 'https://nyzo.co/balanceListPlain/L';
   try {
     http.head(Uri.parse(url));
-    http.Response response = await http.get(Uri.parse(url));
-    Document document = parse(response.body, encoding: "utf-8");
-    attributeElementList = document.getElementsByTagName("div");
-    attributeElementList = attributeElementList[1].getElementsByTagName("p");
+    final http.Response response = await http.get(Uri.parse(url));
+    final Document document = parse(response.body, encoding: 'utf-8');
+    attributeElementList = document.getElementsByTagName('div');
+    attributeElementList = attributeElementList[1].getElementsByTagName('p');
     for (var eachElement in attributeElementList) {
-      balanceList.add(eachElement.text.split(" "));
+      balanceList.add(eachElement.text.split(' '));
     }
     for (List<String> eachList in balanceList) {
       eachList.removeWhere((String value) {
-        return value == "";
+        return value == '';
       });
     }
     for (var eachAddress in balanceList) {
-      eachAddress[0] = eachAddress[0].split("-").join();
+      eachAddress[0] = eachAddress[0].split('-').join();
     }
     return balanceList;
   } catch (e) {}

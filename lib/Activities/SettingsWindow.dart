@@ -1,5 +1,3 @@
-
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -23,7 +21,7 @@ class SettingsWindowState extends State<SettingsWindow> {
 
   bool _switchValue = false;
   bool _nigthMode = false;
-  String version = "";
+  String version = '';
   @override
   void initState() {
     Utils.getVersion().then((String onValue) {
@@ -51,7 +49,7 @@ class SettingsWindowState extends State<SettingsWindow> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
           ),
           Expanded(
@@ -60,7 +58,7 @@ class SettingsWindowState extends State<SettingsWindow> {
           ),
           Center(
             child: Text(
-              AppLocalizations.of(context)!.translate("String30"),
+              AppLocalizations.of(context)!.translate('String30'),
               style: TextStyle(
                   color: ColorTheme.of(context)!.secondaryColor,
                   fontWeight: FontWeight.w600,
@@ -72,12 +70,12 @@ class SettingsWindowState extends State<SettingsWindow> {
             flex: 6,
             child: Container(),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
           ),
           InkWell(
             onTap: () {
-              WalletWindowState? foldingCellState =
+              final WalletWindowState? foldingCellState =
                   context.findAncestorStateOfType<WalletWindowState>();
 
               Navigator.push(
@@ -94,12 +92,12 @@ class SettingsWindowState extends State<SettingsWindow> {
                     decoration: BoxDecoration(
                         color: ColorTheme.of(context)!.baseColor,
                         borderRadius: BorderRadius.circular(5000),
-                        border: Border.all(color: Color(0xFF666666))),
+                        border: Border.all(color: const Color(0xFF666666))),
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        AppLocalizations.of(context)!.translate("String31"),
+                        AppLocalizations.of(context)!.translate('String31'),
                         style: TextStyle(
                             color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
@@ -119,15 +117,15 @@ class SettingsWindowState extends State<SettingsWindow> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text(
-                          AppLocalizations.of(context)!.translate("String32"),
-                          style: TextStyle(color: Colors.black),
+                          AppLocalizations.of(context)!.translate('String32'),
+                          style: const TextStyle(color: Colors.black),
                         ),
-                        content: Text(
-                            AppLocalizations.of(context)!.translate("String33")),
+                        content: Text(AppLocalizations.of(context)!
+                            .translate('String33')),
                         actions: <Widget>[
                           FlatButton(
                             child: Text(AppLocalizations.of(context)!
-                                .translate("String34")),
+                                .translate('String34')),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -135,7 +133,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                           FlatButton(
                             child: Text(
                               AppLocalizations.of(context)!
-                                  .translate("String35"),
+                                  .translate('String35'),
                               overflow: TextOverflow.clip,
                               style: TextStyle(
                                   fontSize: AppLocalizations.of(context)!
@@ -171,11 +169,11 @@ class SettingsWindowState extends State<SettingsWindow> {
                   decoration: BoxDecoration(
                       color: ColorTheme.of(context)!.baseColor,
                       borderRadius: BorderRadius.circular(5000),
-                      border: Border.all(color: Color(0xFF666666))),
+                      border: Border.all(color: const Color(0xFF666666))),
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      AppLocalizations.of(context)!.translate("String36"),
+                      AppLocalizations.of(context)!.translate('String36'),
                       style: TextStyle(
                           color: ColorTheme.of(context)!.secondaryColor,
                           fontWeight: FontWeight.w700,
@@ -193,14 +191,14 @@ class SettingsWindowState extends State<SettingsWindow> {
               decoration: BoxDecoration(
                   color: ColorTheme.of(context)!.baseColor,
                   borderRadius: BorderRadius.circular(5000),
-                  border: Border.all(color: Color(0xFF666666))),
+                  border: Border.all(color: const Color(0xFF666666))),
               child: Container(
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: ListTile(
                       leading: Text(
-                        AppLocalizations.of(context)!.translate("String37"),
+                        AppLocalizations.of(context)!.translate('String37'),
                         style: TextStyle(
                             color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
@@ -243,14 +241,14 @@ class SettingsWindowState extends State<SettingsWindow> {
               decoration: BoxDecoration(
                   color: ColorTheme.of(context)!.baseColor,
                   borderRadius: BorderRadius.circular(5000),
-                  border: Border.all(color: Color(0xFF666666))),
+                  border: Border.all(color: const Color(0xFF666666))),
               child: Container(
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: ListTile(
                       leading: Text(
-                        AppLocalizations.of(context)!.translate("String38"),
+                        AppLocalizations.of(context)!.translate('String38'),
                         style: TextStyle(
                             color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
@@ -262,7 +260,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                         activeColor: ColorTheme.of(context)!.secondaryColor,
                         value: _nigthMode,
                         onChanged: (bool val) {
-                          ColorTheme colorTheme = ColorTheme.of(context)!;
+                          final ColorTheme colorTheme = ColorTheme.of(context)!;
                           if (val) {
                             setState(() {
                               _nigthMode = val;
@@ -286,7 +284,7 @@ class SettingsWindowState extends State<SettingsWindow> {
           ),
           InkWell(
             onTap: () {
-              WalletWindowState? foldingCellState =
+              final WalletWindowState? foldingCellState =
                   context.findAncestorStateOfType<WalletWindowState>();
               Navigator.push(
                 context,
@@ -302,12 +300,12 @@ class SettingsWindowState extends State<SettingsWindow> {
                     decoration: BoxDecoration(
                         color: ColorTheme.of(context)!.baseColor,
                         borderRadius: BorderRadius.circular(5000),
-                        border: Border.all(color: Color(0xFF666666))),
+                        border: Border.all(color: const Color(0xFF666666))),
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        "Cycle TXs",
+                        'Cycle TXs',
                         style: TextStyle(
                             color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
@@ -323,13 +321,13 @@ class SettingsWindowState extends State<SettingsWindow> {
               decoration: BoxDecoration(
                   color: ColorTheme.of(context)!.baseColor,
                   borderRadius: BorderRadius.circular(5000),
-                  border: Border.all(color: Color(0xFF666666))),
+                  border: Border.all(color: const Color(0xFF666666))),
               child: Container(
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      "Beta v" + version,
+                      'Beta v' + version,
                       style: TextStyle(
                           color: ColorTheme.of(context)!.secondaryColor,
                           fontWeight: FontWeight.w700,
@@ -340,24 +338,23 @@ class SettingsWindowState extends State<SettingsWindow> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: new Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Text(
-                  AppLocalizations.of(context)!.translate("String39") + " ",
+                Text(
+                  AppLocalizations.of(context)!.translate('String39') + ' ',
                   style: TextStyle(
                     color: ColorTheme.of(context)!.secondaryColor,
                   ),
                 ),
-                new Icon(
+                Icon(
                   Icons.favorite,
                   color: ColorTheme.of(context)!.secondaryColor,
                   size: 15,
                 ),
-                new Text(
-                    " " + AppLocalizations.of(context)!.translate("String40"),
-                    style:
-                        TextStyle(color: ColorTheme.of(context)!.secondaryColor))
+                Text(' ' + AppLocalizations.of(context)!.translate('String40'),
+                    style: TextStyle(
+                        color: ColorTheme.of(context)!.secondaryColor))
               ],
             ),
           )
