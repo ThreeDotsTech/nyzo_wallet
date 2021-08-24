@@ -18,7 +18,6 @@ dependencies:
   # Cryptographic algorithms for encryption, digital signatures, key agreement, authentication, and hashing. AES, Chacha20, ED25519, X25519, and more. Web Crypto support
   cryptography: ^2.0.2
   
-
   # Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux  
   direct_select_flutter: ^1.1.1
 
@@ -88,6 +87,8 @@ dependencies:
   # A beautiful, clean and simple bottom navigation bar with smooth animation on click. This package is high customizable, read more bellow for more details
   titled_navigation_bar: ^5.0.0-nullsafety.0
 
+  # Flutter plugin for accepting incoming links - App/Deep Links (Android), Universal Links and Custom URL schemes (iOS)
+  uni_links: ^0.5.1
 
 dev_dependencies:
   # Automatically organize your dart imports
