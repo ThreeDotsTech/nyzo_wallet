@@ -25,7 +25,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final LocalAuthentication _localAuth = LocalAuthentication();
   final TextEditingController textController = TextEditingController();
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -80,7 +81,7 @@ class _AuthScreenState extends State<AuthScreen> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: ColorTheme.of(context)!.baseColor,
-        key: scaffoldKey,
+        key: scaffoldMessengerKey,
         resizeToAvoidBottomInset: false,
         body: Center(
           child: Container(
@@ -155,7 +156,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                   content: Text(AppLocalizations.of(context)!
                                       .translate('String2')));
 
-                              scaffoldKey.currentState!..showSnackBar(snackBar);
+                              scaffoldMessengerKey.currentState!
+                                ..showSnackBar(snackBar);
                             }
                           });
                         },
@@ -216,7 +218,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     content: Text(AppLocalizations.of(context)!
                                         .translate('String2')));
 
-                                scaffoldKey.currentState!
+                                scaffoldMessengerKey.currentState!
                                   ..showSnackBar(snackBar);
                               }
                             });

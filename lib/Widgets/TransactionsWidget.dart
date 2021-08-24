@@ -259,7 +259,7 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                                 context)!
                                                             .translate(
                                                                 'String25')));
-                                                Scaffold.of(context)
+                                                ScaffoldMessenger.of(context)
                                                     .showSnackBar(snackbar);
                                               },
                                               child: Text(
@@ -351,7 +351,8 @@ class TranSactionsWidgetState extends State<TranSactionsWidget> {
                                                                         context)!
                                                                     .translate(
                                                                         'String25')));
-                                                        Scaffold.of(context)
+                                                        ScaffoldMessenger.of(
+                                                                context)
                                                             .showSnackBar(
                                                                 snackbar);
                                                       },

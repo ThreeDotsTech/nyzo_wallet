@@ -287,7 +287,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               content: Text(
                                                   AppLocalizations.of(context)!
                                                       .translate('String25')));
-                                          Scaffold.of(context)
+                                          ScaffoldMessenger.of(context)
                                               .showSnackBar(snackBar);
                                         },
                                         child: RichText(

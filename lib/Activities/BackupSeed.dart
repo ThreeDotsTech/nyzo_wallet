@@ -17,7 +17,9 @@ class BackUpSeed extends StatefulWidget {
 class _BackUpSeedState extends State<BackUpSeed> {
   _BackUpSeedState(this._password);
   final String _password;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
   String _privKey = '';
   bool isBacked = false;
   @override
@@ -34,7 +36,7 @@ class _BackUpSeedState extends State<BackUpSeed> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ColorTheme.of(context)!.baseColor,
-        key: _scaffoldKey,
+        key: scaffoldMessengerKey,
         resizeToAvoidBottomInset: false,
         body: Container(
           padding: const EdgeInsets.all(20.0),
@@ -79,7 +81,8 @@ class _BackUpSeedState extends State<BackUpSeed> {
                             content: Text(AppLocalizations.of(context)!
                                 .translate('String5')));
 
-                        _scaffoldKey.currentState!..showSnackBar(snackBar);
+                        scaffoldMessengerKey.currentState!
+                          ..showSnackBar(snackBar);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

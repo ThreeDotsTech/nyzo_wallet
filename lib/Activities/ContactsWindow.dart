@@ -133,8 +133,9 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                                           context)!
                                                                       .translate(
                                                                           'String10')));
-                                                              Scaffold.of(
-                                                                      context)
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
                                                                   .showSnackBar(
                                                                       snackBar);
                                                             },
