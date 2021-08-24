@@ -3,10 +3,9 @@ import 'dart:math';
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:crypto/crypto.dart';
+import 'package:cryptography/cryptography.dart';
 import 'package:hex/hex.dart';
-
-import 'package:pinenacl/ed25519.dart' as ed25519;
-import 'package:pointycastle/export.dart' show Digest;
 
 // Project imports:
 import 'ByteBuffer.dart';
@@ -70,10 +69,11 @@ class TransactionMessage {
     }
   }
 
-  sign(Uint8List privKey) {
-    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
-    final ed25519.SignatureBase sm = signingKey.sign(getBytes(false)).signature;
-    signature = Uint8List.fromList(sm);
+  sign(Uint8List privKey) async {
+    final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
+    final Signature sm =
+        await Ed25519().sign(getBytes(false), keyPair: keyPair);
+    signature = Uint8List.fromList(sm.bytes);
   }
 
   getBytes(bool includeSignature) {
@@ -118,8 +118,7 @@ Uint8List hexStringAsUint8Array(String identifier) {
 }
 
 Uint8List sha256Uint8(array) {
-  final Digest sha256 = Digest('SHA-256');
-  return sha256.process(array);
+  return Uint8List.fromList(sha256.convert(array).bytes);
 }
 
 Uint8List doubleSha256(Uint8List array) {

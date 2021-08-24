@@ -6,9 +6,9 @@ import 'dart:typed_data';
 
 // Package imports:
 
+import 'package:cryptography/cryptography.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
-import 'package:pinenacl/ed25519.dart' as ed25519;
 
 // Project imports:
 import 'ByteBuffer.dart';
@@ -89,16 +89,61 @@ class NyzoMessage {
     return byteBuffer.toArray();
   }
 
-  sign(Uint8List privKey) {
-    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
-    final ed25519.SignatureBase sm = signingKey.sign(getBytes(false)).signature;
-    sourceNodeSignature = Uint8List.fromList(sm).sublist(0, 64);
+  sign(Uint8List privKey) async {
+    KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
+    SimplePublicKey pubKey =
+        await keyPair.extractPublicKey() as SimplePublicKey;
+    for (var i = 0; i < 32; i++) {
+      this.sourceNodeIdentifier![i] = pubKey.bytes[i];
+    }
+    Signature signature =
+        await Ed25519().sign(this.getBytes(false), keyPair: keyPair);
+    for (var i = 0; i < 64; i++) {
+      this.sourceNodeSignature![i] = signature.bytes[i];
+    }
   }
 
   fromByteBuffer(byteBuffer) {}
 
-  Future<NyzoMessage?> send(privKey, http.Client client) async {
-    return null;
+  Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
+    KeyPair keyPair = await Ed25519().newKeyPairFromSeed(
+        privKey); //Creates a KeyPair from the generated Seed
+    SimplePublicKey publicKey =
+        keyPair.extractPublicKey() as SimplePublicKey; //Set the Public Key
+
+    http.Response response =
+        await client.post(Uri.parse("https://nyzo.co/message"),
+            headers: {
+              "Host": "nyzo.co",
+              "Connection": "keep-alive",
+              "Origin": "https://nyzo.co",
+              "User-Agent":
+                  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
+              "DNT": "1",
+              "Content-Type": "application/octet-stream",
+              "Accept": "*/*",
+              "Referer": "https://nyzo.co/wallet?id=" +
+                  HEX.encode(publicKey.bytes), //change this to + pubKey
+              "Accept-Encoding": "gzip, deflate, br",
+              "Accept-Language":
+                  "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
+            },
+            body: this.getBytes(true));
+
+    var arrayBuffer = response.bodyBytes;
+    var byteArray = new Uint8List.fromList(arrayBuffer);
+    var response2 = new NyzoMessage();
+
+    response2.timestamp = intValueFromArray(byteArray, 4, 8);
+    response2.type = intValueFromArray(byteArray, 12, 2);
+    response2.content = contentForType(response2.type, byteArray, 14);
+    int sourceNodeIdentifierIndex =
+        14 + contentSizeForType(response2.type, byteArray, 14);
+    response2.sourceNodeIdentifier =
+        arrayFromArray(byteArray, sourceNodeIdentifierIndex, 32);
+    response2.signature =
+        arrayFromArray(byteArray, sourceNodeIdentifierIndex + 32, 64);
+    return response2;
   }
 
   contentForType(messageType, Uint8List byteArray, index) {
