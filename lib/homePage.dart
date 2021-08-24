@@ -64,10 +64,11 @@ class _MyHomePageState extends State<HomePage> {
                     children: <Widget>[
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                          child: RaisedButton(
-                            color: Colors.black87,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.black87,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0))),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -84,10 +85,11 @@ class _MyHomePageState extends State<HomePage> {
                           padding: EdgeInsets.symmetric(vertical: 20.0)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                        child: RaisedButton(
-                          color: Colors.black87,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.black87,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0))),
                           onPressed: () {
                             Navigator.push(
                               context,

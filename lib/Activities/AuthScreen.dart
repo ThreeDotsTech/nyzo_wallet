@@ -194,10 +194,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
-                        child: RaisedButton(
-                          color: ColorTheme.of(context)!.secondaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: ColorTheme.of(context)!.secondaryColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0))),
                           onPressed: () {
                             FocusScope.of(context).unfocus();
                             final Future salt = _storage.read(key: 'Password');

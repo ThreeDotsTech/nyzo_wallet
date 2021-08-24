@@ -68,10 +68,11 @@ class _BackUpSeedState extends State<BackUpSeed> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100.0)),
-                      color: ColorTheme.of(context)!.secondaryColor,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: ColorTheme.of(context)!.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100.0))),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: _privKey));
                         final snackBar = SnackBar(
@@ -100,10 +101,11 @@ class _BackUpSeedState extends State<BackUpSeed> {
                           fontSize: 15),
                     ),
                   ),
-                  RaisedButton(
-                    color: ColorTheme.of(context)!.secondaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: ColorTheme.of(context)!.secondaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.0))),
                     onPressed: () {
                       Navigator.pop(context);
                     },

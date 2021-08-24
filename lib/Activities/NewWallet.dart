@@ -171,10 +171,11 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                               valueColor:
                                   AlwaysStoppedAnimation(Color(0XFFFFFFFF))))
                       : Center(
-                          child: RaisedButton(
-                            color: Colors.black87,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.black87,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0))),
                             onPressed: () {
                               final form = formKey.currentState;
                               if (form!.validate()) {

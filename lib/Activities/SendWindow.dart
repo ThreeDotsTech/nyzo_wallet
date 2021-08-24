@@ -167,15 +167,17 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                         ),
                         Expanded(
                           flex: 2,
-                          child: RaisedButton(
-                            color: ColorTheme.of(context)!.baseColor,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: !sendRECEIVE
-                                        ? const Color(0xFF666666)
-                                        : ColorTheme.of(context)!.baseColor!),
-                                borderRadius: BorderRadius.circular(100.0)),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: ColorTheme.of(context)!.baseColor,
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: !sendRECEIVE
+                                            ? const Color(0xFF666666)
+                                            : ColorTheme.of(context)!
+                                                .baseColor!),
+                                    borderRadius:
+                                        BorderRadius.circular(100.0))),
                             child: Container(
                                 decoration: const BoxDecoration(
                                     borderRadius:
@@ -201,15 +203,17 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                         ),
                         Expanded(
                           flex: 2,
-                          child: RaisedButton(
-                            color: ColorTheme.of(context)!.baseColor,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: sendRECEIVE
-                                        ? const Color(0xFF666666)
-                                        : ColorTheme.of(context)!.baseColor!),
-                                borderRadius: BorderRadius.circular(100.0)),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: ColorTheme.of(context)!.baseColor,
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: !sendRECEIVE
+                                            ? const Color(0xFF666666)
+                                            : ColorTheme.of(context)!
+                                                .baseColor!),
+                                    borderRadius:
+                                        BorderRadius.circular(100.0))),
                             child: Container(
                                 decoration: const BoxDecoration(
                                     borderRadius:
@@ -268,12 +272,14 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 children: <Widget>[
                                   Expanded(
                                     child: Container(
-                                      child: RaisedButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0)),
-                                        color: ColorTheme.of(context)!
-                                            .secondaryColor,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: ColorTheme.of(context)!
+                                                .secondaryColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0))),
                                         onPressed: () {
                                           Clipboard.setData(
                                               ClipboardData(text: address));
@@ -375,12 +381,13 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     color:
                                         ColorTheme.of(context)!.secondaryColor),
                                 decoration: InputDecoration(
-                                  suffixIcon: RaisedButton(
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(100))),
-                                    color: Colors.transparent,
-                                    elevation: 0,
+                                  suffixIcon: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.transparent,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(100)))),
                                     onPressed: () {
                                       walletWindowState!
                                               .textControllerAmount.text =
@@ -647,14 +654,14 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     child: Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
-                                      child: RaisedButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0)),
-                                        color: ColorTheme.of(context)!
-                                            .secondaryColor,
-                                        textColor:
-                                            ColorTheme.of(context)!.baseColor,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary: ColorTheme.of(context)!
+                                                .secondaryColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0))),
                                         child: Text(
                                             AppLocalizations.of(context)!
                                                 .translate('String22')),
