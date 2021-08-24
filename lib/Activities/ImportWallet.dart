@@ -97,7 +97,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                       borderRadius: BorderRadius.circular(100),
                       borderSide: const BorderSide(color: Color(0x55666666))),
                   contentPadding: const EdgeInsets.all(10),
-                  hasFloatingPlaceholder: false,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText:
                       AppLocalizations.of(context)!.translate('String82'),
                   labelStyle: const TextStyle(

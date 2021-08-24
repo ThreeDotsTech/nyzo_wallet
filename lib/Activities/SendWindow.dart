@@ -349,7 +349,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     MediaQuery.of(context).size.width * 0.075,
                               ),
                               child: TextFormField(
-                                maxLengthEnforced: false,
+                                maxLengthEnforcement: MaxLengthEnforcement.none,
                                 focusNode: focusNodeAmount,
                                 key: walletWindowState!.amountFormKey,
                                 controller:
@@ -457,7 +457,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                               ),
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
-                                autovalidate: true,
+                                autovalidateMode: AutovalidateMode.always,
                                 focusNode: focusNodeAddress,
                                 key: walletWindowState!.addressFormKey,
                                 controller:
