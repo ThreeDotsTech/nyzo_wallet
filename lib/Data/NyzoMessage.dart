@@ -5,7 +5,6 @@ import 'dart:core';
 import 'dart:typed_data';
 
 // Package imports:
-
 import 'package:cryptography/cryptography.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +13,10 @@ import 'package:http/http.dart' as http;
 import 'ByteBuffer.dart';
 import 'PreviousHashResponse.dart';
 import 'TransactionResponse.dart';
+
+// Package imports:
+
+
 
 class NyzoMessage {
   static const Invalid0 = 0;

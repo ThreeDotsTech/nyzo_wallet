@@ -1,5 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:qr_mobile_vision/qr_camera.dart';
 
 // Project imports:

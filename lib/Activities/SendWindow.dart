@@ -386,8 +386,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         primary: Colors.transparent,
                                         elevation: 0,
                                         shape: const RoundedRectangleBorder(
-                                            borderRadius: const BorderRadius.all(
-                                                Radius.circular(100)))),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(100)))),
                                     onPressed: () {
                                       walletWindowState!
                                               .textControllerAmount.text =

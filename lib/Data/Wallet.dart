@@ -6,19 +6,18 @@ import 'dart:math';
 import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:cryptography/helpers.dart';
 import 'package:flutter/material.dart' as material;
 
 // Package imports:
-import 'package:hex/hex.dart';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:string_encryption/string_encryption.dart';
+import 'package:cryptography/helpers.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hex/hex.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:string_encryption/string_encryption.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Data/Contact.dart';
