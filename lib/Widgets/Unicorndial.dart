@@ -282,7 +282,7 @@ class _UnicornDialer extends State<UnicornDialer>
           child: Stack(
               //fit: StackFit.expand,
               alignment: Alignment.bottomCenter,
-              overflow: Overflow.visible,
+              clipBehavior: Clip.none,
               children: childButtonsList.toList()
                 ..add(Positioned(
                     right: null, bottom: null, child: mainFloatingButton))));
@@ -304,7 +304,7 @@ class _UnicornDialer extends State<UnicornDialer>
       return widget.hasBackground
           ? Stack(
               alignment: Alignment.topCenter,
-              overflow: Overflow.visible,
+              clipBehavior: Clip.none,
               children: [
                   Positioned(right: -16.0, bottom: -16.0, child: modal),
                   unicornDialWidget

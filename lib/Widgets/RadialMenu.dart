@@ -74,7 +74,7 @@ class _RadialMenuState extends State<RadialMenu>
             builder: (context, builder) {
               return Stack(
                 fit: StackFit.loose,
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   Positioned(
                       child: Transform.rotate(
@@ -84,7 +84,7 @@ class _RadialMenuState extends State<RadialMenu>
                               width: 100,
                               height: 100,
                               child: Stack(
-                                overflow: Overflow.visible,
+                                clipBehavior: Clip.none,
                                 fit: StackFit.passthrough,
                                 key: const Key('Spinnable'),
                                 alignment: Alignment.center,
