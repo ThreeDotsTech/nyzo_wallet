@@ -1,14 +1,21 @@
+
+
+// Dart imports:
+import 'dart:async';
 import 'dart:io';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:local_auth/local_auth.dart';
-import 'dart:async';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:local_auth/local_auth.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -31,13 +38,13 @@ class _AuthScreenState extends State<AuthScreen> {
         if (Platform.isIOS) {
           didAuthenticate = _localAuth.authenticateWithBiometrics(
             stickyAuth: true,
-            localizedReason: AppLocalizations.of(context).translate("String80"),
+            localizedReason: AppLocalizations.of(context)!.translate("String80"),
           );
         } else {
           didAuthenticate = _localAuth.authenticateWithBiometrics(
               stickyAuth: true,
               localizedReason:
-                  AppLocalizations.of(context).translate("String80"));
+                  AppLocalizations.of(context)!.translate("String80"));
         }
         didAuthenticate.then((value) {
           if (value) {
@@ -71,10 +78,9 @@ class _AuthScreenState extends State<AuthScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: new Scaffold(
-        backgroundColor: ColorTheme.of(context).baseColor,
+        backgroundColor: ColorTheme.of(context)!.baseColor,
         key: scaffoldKey,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         body: new Center(
           child: new Container(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -88,7 +94,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       try {
                         Future didAuthenticate =
                             _localAuth.authenticateWithBiometrics(
-                                localizedReason: AppLocalizations.of(context)
+                                localizedReason: AppLocalizations.of(context)!
                                     .translate("String80"),
                                 stickyAuth: true);
                         didAuthenticate.then((value) {
@@ -114,7 +120,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     },
                     child: Icon(Icons.fingerprint,
                         size: 75.0,
-                        color: ColorTheme.of(context).secondaryColor),
+                        color: ColorTheme.of(context)!.secondaryColor),
                   ),
                 ),
                 new Expanded(
@@ -122,10 +128,10 @@ class _AuthScreenState extends State<AuthScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       new Text(
-                          AppLocalizations.of(context).translate("String1"),
+                          AppLocalizations.of(context)!.translate("String1"),
                           textAlign: TextAlign.justify,
                           style: new TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 21.0,
                           )),
@@ -146,10 +152,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               );
                             } else {
                               final snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)
+                                  content: Text(AppLocalizations.of(context)!
                                       .translate("String2")));
 
-                              scaffoldKey.currentState..showSnackBar(snackBar);
+                              scaffoldKey.currentState!..showSnackBar(snackBar);
                             }
                           });
                         },
@@ -158,10 +164,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         obscureText: true,
                         controller: textController,
                         style: TextStyle(
-                            color: ColorTheme.of(context).secondaryColor),
+                            color: ColorTheme.of(context)!.secondaryColor),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: ColorTheme.of(context).dephtColor,
+                          fillColor: ColorTheme.of(context)!.dephtColor,
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
                               borderSide: BorderSide(color: Colors.red)),
@@ -176,7 +182,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               borderSide: BorderSide(color: Color(0x55666666))),
                           contentPadding: EdgeInsets.all(10),
                           hasFloatingPlaceholder: false,
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                               .translate("String81"),
                           labelStyle: TextStyle(
                               color: Color(0xFF555555),
@@ -187,7 +193,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: RaisedButton(
-                          color: ColorTheme.of(context).secondaryColor,
+                          color: ColorTheme.of(context)!.secondaryColor,
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0)),
                           onPressed: () {
@@ -204,18 +210,18 @@ class _AuthScreenState extends State<AuthScreen> {
                                 );
                               } else {
                                 final snackBar = SnackBar(
-                                    content: Text(AppLocalizations.of(context)
+                                    content: Text(AppLocalizations.of(context)!
                                         .translate("String2")));
 
-                                scaffoldKey.currentState
+                                scaffoldKey.currentState!
                                   ..showSnackBar(snackBar);
                               }
                             });
                           },
                           child: new Text(
-                              AppLocalizations.of(context).translate("String3"),
+                              AppLocalizations.of(context)!.translate("String3"),
                               style: TextStyle(
-                                  color: ColorTheme.of(context).baseColor)),
+                                  color: ColorTheme.of(context)!.baseColor)),
                         ),
                       ),
                       new Expanded(

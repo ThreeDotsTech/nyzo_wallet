@@ -1,12 +1,19 @@
+
+
+// Dart imports:
 import 'dart:core';
-import 'ByteBuffer.dart';
 import 'dart:typed_data';
+
+// Package imports:
 import 'package:html_unescape/html_unescape.dart';
 
-class TransactionResponse {
-  String message;
+// Project imports:
+import 'ByteBuffer.dart';
 
-  int transactionAccepted;
+class TransactionResponse {
+  String? message;
+
+  int? transactionAccepted;
 
   TransactionResponse(int transactionAccepted, String message) {
     this.transactionAccepted = transactionAccepted;
@@ -16,7 +23,7 @@ class TransactionResponse {
   getBytes(includeSignatureIgnored) {
     var buffer = new ByteBuffer(1000);
 
-    buffer.putByte(this.transactionAccepted);
+    buffer.putByte(this.transactionAccepted!);
 
     var messageBytes = stringAsUint8Array(this.message);
     buffer.putShort(messageBytes.length);

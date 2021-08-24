@@ -1,12 +1,17 @@
+
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
+import 'package:nyzo_wallet/Activities/BackupSeed.dart';
 import 'package:nyzo_wallet/Activities/CycleTransactions.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
-import 'package:nyzo_wallet/Activities/BackupSeed.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Utils.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
-import 'package:nyzo_wallet/homePage.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+import 'package:nyzo_wallet/homePage.dart';
 
 class SettingsWindow extends StatefulWidget {
   @override
@@ -14,7 +19,7 @@ class SettingsWindow extends StatefulWidget {
 }
 
 class SettingsWindowState extends State<SettingsWindow> {
-  WalletWindowState walletWindowState;
+  WalletWindowState? walletWindowState;
 
   bool _switchValue = false;
   bool _nigthMode = false;
@@ -25,14 +30,14 @@ class SettingsWindowState extends State<SettingsWindow> {
       version = onValue;
     });
     walletWindowState = context.findAncestorStateOfType<WalletWindowState>();
-    watchSentinels().then((bool val) {
+    watchSentinels().then((bool? val) {
       setState(() {
-        _switchValue = val;
+        _switchValue = val!;
       });
     });
-    getNightModeValue().then((bool value) {
+    getNightModeValue().then((bool? value) {
       setState(() {
-        _nigthMode = value;
+        _nigthMode = value!;
       });
     });
     super.initState();
@@ -55,9 +60,9 @@ class SettingsWindowState extends State<SettingsWindow> {
           ),
           Center(
             child: Text(
-              AppLocalizations.of(context).translate("String30"),
+              AppLocalizations.of(context)!.translate("String30"),
               style: TextStyle(
-                  color: ColorTheme.of(context).secondaryColor,
+                  color: ColorTheme.of(context)!.secondaryColor,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0,
                   fontSize: 35),
@@ -72,14 +77,14 @@ class SettingsWindowState extends State<SettingsWindow> {
           ),
           InkWell(
             onTap: () {
-              WalletWindowState foldingCellState =
+              WalletWindowState? foldingCellState =
                   context.findAncestorStateOfType<WalletWindowState>();
 
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        BackUpSeed(foldingCellState.password)),
+                        BackUpSeed(foldingCellState!.password)),
               );
             },
             child: Padding(
@@ -87,16 +92,16 @@ class SettingsWindowState extends State<SettingsWindow> {
               child: Container(
                 child: Container(
                     decoration: BoxDecoration(
-                        color: ColorTheme.of(context).baseColor,
+                        color: ColorTheme.of(context)!.baseColor,
                         borderRadius: BorderRadius.circular(5000),
                         border: Border.all(color: Color(0xFF666666))),
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        AppLocalizations.of(context).translate("String31"),
+                        AppLocalizations.of(context)!.translate("String31"),
                         style: TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
                             fontSize: 15),
                       ),
@@ -109,19 +114,19 @@ class SettingsWindowState extends State<SettingsWindow> {
             child: Container(
               child: InkWell(
                 onTap: () {
-                  return showDialog(
+                  showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text(
-                          AppLocalizations.of(context).translate("String32"),
+                          AppLocalizations.of(context)!.translate("String32"),
                           style: TextStyle(color: Colors.black),
                         ),
                         content: Text(
-                            AppLocalizations.of(context).translate("String33")),
+                            AppLocalizations.of(context)!.translate("String33")),
                         actions: <Widget>[
                           FlatButton(
-                            child: Text(AppLocalizations.of(context)
+                            child: Text(AppLocalizations.of(context)!
                                 .translate("String34")),
                             onPressed: () {
                               Navigator.pop(context);
@@ -129,11 +134,11 @@ class SettingsWindowState extends State<SettingsWindow> {
                           ),
                           FlatButton(
                             child: Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                   .translate("String35"),
                               overflow: TextOverflow.clip,
                               style: TextStyle(
-                                  fontSize: AppLocalizations.of(context)
+                                  fontSize: AppLocalizations.of(context)!
                                               .locale
                                               .languageCode ==
                                           'nl'
@@ -152,9 +157,9 @@ class SettingsWindowState extends State<SettingsWindow> {
                                 MaterialPageRoute(
                                     builder: (context) => HomePage()),
                               );
-                              ColorTheme.of(context).update();
-                              ColorTheme.of(context).updateAddressesToWatch();
-                              ColorTheme.of(context).updateVerifiers();
+                              ColorTheme.of(context)!.update!();
+                              ColorTheme.of(context)!.updateAddressesToWatch!();
+                              ColorTheme.of(context)!.updateVerifiers!();
                             },
                           ),
                         ],
@@ -164,15 +169,15 @@ class SettingsWindowState extends State<SettingsWindow> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                      color: ColorTheme.of(context).baseColor,
+                      color: ColorTheme.of(context)!.baseColor,
                       borderRadius: BorderRadius.circular(5000),
                       border: Border.all(color: Color(0xFF666666))),
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      AppLocalizations.of(context).translate("String36"),
+                      AppLocalizations.of(context)!.translate("String36"),
                       style: TextStyle(
-                          color: ColorTheme.of(context).secondaryColor,
+                          color: ColorTheme.of(context)!.secondaryColor,
                           fontWeight: FontWeight.w700,
                           fontSize: 15),
                     ),
@@ -186,7 +191,7 @@ class SettingsWindowState extends State<SettingsWindow> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                  color: ColorTheme.of(context).baseColor,
+                  color: ColorTheme.of(context)!.baseColor,
                   borderRadius: BorderRadius.circular(5000),
                   border: Border.all(color: Color(0xFF666666))),
               child: Container(
@@ -195,16 +200,16 @@ class SettingsWindowState extends State<SettingsWindow> {
                     padding: const EdgeInsets.all(15.0),
                     child: ListTile(
                       leading: Text(
-                        AppLocalizations.of(context).translate("String37"),
+                        AppLocalizations.of(context)!.translate("String37"),
                         style: TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
                             fontSize: 15),
                       ),
                       trailing: Switch(
                         inactiveTrackColor:
-                            ColorTheme.of(context).transparentColor,
-                        activeColor: ColorTheme.of(context).secondaryColor,
+                            ColorTheme.of(context)!.transparentColor,
+                        activeColor: ColorTheme.of(context)!.secondaryColor,
                         value: _switchValue,
                         onChanged: (bool val) {
                           if (val) {
@@ -212,18 +217,18 @@ class SettingsWindowState extends State<SettingsWindow> {
                               _switchValue = val;
                             });
                             setWatchSentinels(val);
-                            walletWindowState.setState(() {
-                              walletWindowState.sentinels = true;
-                              walletWindowState.pageIndex = 4;
+                            walletWindowState!.setState(() {
+                              walletWindowState!.sentinels = true;
+                              walletWindowState!.pageIndex = 4;
                             });
                           } else {
                             setState(() {
                               _switchValue = val;
                             });
                             setWatchSentinels(val);
-                            walletWindowState.setState(() {
-                              walletWindowState.sentinels = false;
-                              walletWindowState.pageIndex = 3;
+                            walletWindowState!.setState(() {
+                              walletWindowState!.sentinels = false;
+                              walletWindowState!.pageIndex = 3;
                             });
                           }
                         },
@@ -236,7 +241,7 @@ class SettingsWindowState extends State<SettingsWindow> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                  color: ColorTheme.of(context).baseColor,
+                  color: ColorTheme.of(context)!.baseColor,
                   borderRadius: BorderRadius.circular(5000),
                   border: Border.all(color: Color(0xFF666666))),
               child: Container(
@@ -245,33 +250,33 @@ class SettingsWindowState extends State<SettingsWindow> {
                     padding: const EdgeInsets.all(15.0),
                     child: ListTile(
                       leading: Text(
-                        AppLocalizations.of(context).translate("String38"),
+                        AppLocalizations.of(context)!.translate("String38"),
                         style: TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
                             fontSize: 15),
                       ),
                       trailing: Switch(
                         inactiveTrackColor:
-                            ColorTheme.of(context).transparentColor,
-                        activeColor: ColorTheme.of(context).secondaryColor,
+                            ColorTheme.of(context)!.transparentColor,
+                        activeColor: ColorTheme.of(context)!.secondaryColor,
                         value: _nigthMode,
                         onChanged: (bool val) {
-                          ColorTheme colorTheme = ColorTheme.of(context);
+                          ColorTheme colorTheme = ColorTheme.of(context)!;
                           if (val) {
                             setState(() {
                               _nigthMode = val;
                             });
                             setNightModeValue(val);
 
-                            colorTheme.update();
+                            colorTheme.update!();
                           } else {
                             setState(() {
                               _nigthMode = val;
                             });
                             setNightModeValue(val);
 
-                            colorTheme.update();
+                            colorTheme.update!();
                           }
                         },
                       ),
@@ -281,13 +286,13 @@ class SettingsWindowState extends State<SettingsWindow> {
           ),
           InkWell(
             onTap: () {
-              WalletWindowState foldingCellState =
+              WalletWindowState? foldingCellState =
                   context.findAncestorStateOfType<WalletWindowState>();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        CycleTxScreen(foldingCellState.password)),
+                        CycleTxScreen(foldingCellState!.password)),
               );
             },
             child: Padding(
@@ -295,7 +300,7 @@ class SettingsWindowState extends State<SettingsWindow> {
               child: Container(
                 child: Container(
                     decoration: BoxDecoration(
-                        color: ColorTheme.of(context).baseColor,
+                        color: ColorTheme.of(context)!.baseColor,
                         borderRadius: BorderRadius.circular(5000),
                         border: Border.all(color: Color(0xFF666666))),
                     width: double.infinity,
@@ -304,7 +309,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                       child: Text(
                         "Cycle TXs",
                         style: TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.w700,
                             fontSize: 15),
                       ),
@@ -316,7 +321,7 @@ class SettingsWindowState extends State<SettingsWindow> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                  color: ColorTheme.of(context).baseColor,
+                  color: ColorTheme.of(context)!.baseColor,
                   borderRadius: BorderRadius.circular(5000),
                   border: Border.all(color: Color(0xFF666666))),
               child: Container(
@@ -326,7 +331,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                     child: Text(
                       "Beta v" + version,
                       style: TextStyle(
-                          color: ColorTheme.of(context).secondaryColor,
+                          color: ColorTheme.of(context)!.secondaryColor,
                           fontWeight: FontWeight.w700,
                           fontSize: 15),
                     ),
@@ -339,20 +344,20 @@ class SettingsWindowState extends State<SettingsWindow> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Text(
-                  AppLocalizations.of(context).translate("String39") + " ",
+                  AppLocalizations.of(context)!.translate("String39") + " ",
                   style: TextStyle(
-                    color: ColorTheme.of(context).secondaryColor,
+                    color: ColorTheme.of(context)!.secondaryColor,
                   ),
                 ),
                 new Icon(
                   Icons.favorite,
-                  color: ColorTheme.of(context).secondaryColor,
+                  color: ColorTheme.of(context)!.secondaryColor,
                   size: 15,
                 ),
                 new Text(
-                    " " + AppLocalizations.of(context).translate("String40"),
+                    " " + AppLocalizations.of(context)!.translate("String40"),
                     style:
-                        TextStyle(color: ColorTheme.of(context).secondaryColor))
+                        TextStyle(color: ColorTheme.of(context)!.secondaryColor))
               ],
             ),
           )

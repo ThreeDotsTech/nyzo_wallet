@@ -1,5 +1,10 @@
+
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Activities/ImportWallet2.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
@@ -47,7 +52,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
         //resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           elevation: 0.0,
-          backgroundColor:  Colors.transparent,
+          backgroundColor: Colors.transparent,
           leading: new IconButton(
             color: Colors.black,
             onPressed: () {
@@ -65,7 +70,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
                       child: new Text(
-                          AppLocalizations.of(context).translate("String14"),
+                          AppLocalizations.of(context)!.translate("String14"),
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -79,39 +84,36 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                 controller: privKeytextController,
                 style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
-                              filled: true,
-                              fillColor: ColorTheme.of(context).dephtColor,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(color: Colors.red)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                  borderSide:
-                                      BorderSide(color: Color(0x55666666))),
-                              contentPadding: EdgeInsets.all(10),
-                              hasFloatingPlaceholder: false,
-                              labelText: AppLocalizations.of(context)
-                                  .translate("String82"),
-                              labelStyle: TextStyle(
-                                  color: Color(0xFF555555),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
-                validator: (String val) {
-                  if (val.length != 56) {
-                    return AppLocalizations.of(context).translate("String70");
+                  filled: true,
+                  fillColor: ColorTheme.of(context)!.dephtColor,
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: BorderSide(color: Colors.red)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: BorderSide(color: Colors.red)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: BorderSide(color: Color(0x55666666))),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      borderSide: BorderSide(color: Color(0x55666666))),
+                  contentPadding: EdgeInsets.all(10),
+                  hasFloatingPlaceholder: false,
+                  labelText: AppLocalizations.of(context)!.translate("String82"),
+                  labelStyle: TextStyle(
+                      color: Color(0xFF555555),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
+                ),
+                validator: (String? val) {
+                  if (val!.length != 56) {
+                    return AppLocalizations.of(context)!.translate("String70");
                   }
                   try {
                     NyzoStringEncoder.decode(val);
                   } catch (e) {
-                    return e.errMsg();
+                    return e.toString();
                   }
                   return null;
                 },
@@ -131,12 +133,12 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                             borderRadius: new BorderRadius.circular(30.0)),
                         onPressed: () {
                           final form = formKey.currentState;
-                          if (form.validate()) {
+                          if (form!.validate()) {
                             _performWalletCreation();
                           }
                         },
                         child: new Text(
-                            AppLocalizations.of(context).translate("String15"),
+                            AppLocalizations.of(context)!.translate("String15"),
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),

@@ -1,5 +1,10 @@
+
+
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -8,15 +13,16 @@ class AppLocalizations {
 
   AppLocalizations(this.locale);
 
-  static AppLocalizations of(BuildContext context) {
+  static AppLocalizations? of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationDelegate();
+  static LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationDelegate();
 
-  Map<String, String> _localizedStrings;
+  Map<String, String>? _localizedStrings;
 
-  Future<bool> load() async {
+  Future<bool?> load() async {
     String jsonString =
         await rootBundle.loadString("lang/${locale.languageCode}.json");
     Map<String, dynamic> jsonMap = json.decode(jsonString);
@@ -27,7 +33,7 @@ class AppLocalizations {
   }
 
   String translate(String key) {
-    return _localizedStrings[key];
+    return _localizedStrings![key]!;
   }
 }
 
@@ -36,7 +42,8 @@ class _AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'es', 'zh','nl','de','fr','hr','ru','cs'].contains(locale.languageCode);
+    return ['en', 'es', 'zh', 'nl', 'de', 'fr', 'hr', 'ru', 'cs']
+        .contains(locale.languageCode);
   }
 
   @override

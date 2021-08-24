@@ -1,7 +1,12 @@
+
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
-import 'package:flutter/services.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class BackUpSeed extends StatefulWidget {
@@ -30,10 +35,9 @@ class _BackUpSeedState extends State<BackUpSeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorTheme.of(context).baseColor,
+        backgroundColor: ColorTheme.of(context)!.baseColor,
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         body: new Container(
           padding: EdgeInsets.all(20.0),
           child: Column(
@@ -43,18 +47,18 @@ class _BackUpSeedState extends State<BackUpSeed> {
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
                       child: new Text(
-                          AppLocalizations.of(context).translate("String4"),
+                          AppLocalizations.of(context)!.translate("String4"),
                           style: new TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
                           )))),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  AppLocalizations.of(context).translate("String100"),
+                  AppLocalizations.of(context)!.translate("String100"),
                   style: new TextStyle(
-                    color: ColorTheme.of(context).secondaryColor,
+                    color: ColorTheme.of(context)!.secondaryColor,
                     fontSize: 15.0,
                   ),
                   textAlign: TextAlign.justify,
@@ -69,21 +73,21 @@ class _BackUpSeedState extends State<BackUpSeed> {
                     child: RaisedButton(
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(100.0)),
-                      color: ColorTheme.of(context).secondaryColor,
+                      color: ColorTheme.of(context)!.secondaryColor,
                       onPressed: () {
                         Clipboard.setData(new ClipboardData(text: _privKey));
                         final snackBar = SnackBar(
-                            content: Text(AppLocalizations.of(context)
+                            content: Text(AppLocalizations.of(context)!
                                 .translate("String5")));
 
-                        _scaffoldKey.currentState..showSnackBar(snackBar);
+                        _scaffoldKey.currentState!..showSnackBar(snackBar);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           _privKey,
                           style: TextStyle(
-                              color: ColorTheme.of(context).baseColor,
+                              color: ColorTheme.of(context)!.baseColor,
                               fontSize: 15),
                         ),
                       ),
@@ -92,23 +96,23 @@ class _BackUpSeedState extends State<BackUpSeed> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
                     child: Text(
-                      AppLocalizations.of(context).translate("String6"),
+                      AppLocalizations.of(context)!.translate("String6"),
                       style: TextStyle(
-                          color: ColorTheme.of(context).secondaryColor,
+                          color: ColorTheme.of(context)!.secondaryColor,
                           fontSize: 15),
                     ),
                   ),
                   RaisedButton(
-                    color: ColorTheme.of(context).secondaryColor,
+                    color: ColorTheme.of(context)!.secondaryColor,
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30.0)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     child: new Text(
-                        AppLocalizations.of(context).translate("String7"),
+                        AppLocalizations.of(context)!.translate("String7"),
                         style:
-                            TextStyle(color: ColorTheme.of(context).baseColor)),
+                            TextStyle(color: ColorTheme.of(context)!.baseColor)),
                   ),
                 ],
               ),

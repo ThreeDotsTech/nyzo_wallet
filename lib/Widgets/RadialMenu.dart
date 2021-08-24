@@ -1,12 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-import 'package:vector_math/vector_math.dart' show radians;
+// Dart imports:
 import 'dart:math';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:vector_math/vector_math.dart' show radians;
+
+// Project imports:
+import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'TransactionsWidget.dart';
 
 class RadialMenu extends StatefulWidget {
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   RadialMenu({this.width, this.height});
   @override
   _RadialMenuState createState() =>
@@ -15,13 +22,13 @@ class RadialMenu extends StatefulWidget {
 
 class _RadialMenuState extends State<RadialMenu>
     with SingleTickerProviderStateMixin {
-  final width;
-  final height;
+  final double? width;
+  final double? height;
   _RadialMenuState({this.width, this.height});
   int activeWindow = 3;
-  Tween<double> _tween;
-  Animation<double> _animation;
-  AnimationController _controller;
+  Tween<double>? _tween;
+  Animation<double>? _animation;
+  AnimationController? _controller;
   double radi = 500;
 
   @override
@@ -30,14 +37,14 @@ class _RadialMenuState extends State<RadialMenu>
     _controller =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _tween = Tween(begin: 0.0, end: 360.0);
-    _animation = _tween.animate(
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+    _animation = _tween!.animate(
+        CurvedAnimation(parent: _controller!, curve: Curves.fastOutSlowIn));
   }
 
   Widget menuButton(Icon icon, String tag, VoidCallback onPressed) {
     return Container(
-      width: width / 7,
-      height: width / 7,
+      width: width! / 7,
+      height: width! / 7,
       child: FloatingActionButton(
         child: icon,
         onPressed: onPressed,
@@ -47,11 +54,11 @@ class _RadialMenuState extends State<RadialMenu>
   }
 
   _animate(double end) {
-    this._tween.begin = this._tween.end;
-    this._controller.reset();
-    this._tween.end = end;
+    this._tween!.begin = this._tween!.end;
+    this._controller!.reset();
+    this._tween!.end = end;
 
-    this._controller.forward();
+    this._controller!.forward();
   }
 
   @override
@@ -63,7 +70,7 @@ class _RadialMenuState extends State<RadialMenu>
       child: Column(
         children: <Widget>[
           AnimatedBuilder(
-            animation: _animation,
+            animation: _animation!,
             builder: (context, builder) {
               return Stack(
                 fit: StackFit.loose,
@@ -71,7 +78,7 @@ class _RadialMenuState extends State<RadialMenu>
                 children: <Widget>[
                   Positioned(
                       child: Transform.rotate(
-                          angle: radians(_animation.value),
+                          angle: radians(_animation!.value),
                           child: Container(
                               color: Color(0xffa4a4a4),
                               width: 100,
@@ -162,23 +169,28 @@ class _RadialMenuState extends State<RadialMenu>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              menuButton(Icon(Icons.settings), 	AppLocalizations.of(context).translate("String30"), () {
+              menuButton(Icon(Icons.settings),
+                  AppLocalizations.of(context)!.translate("String30"), () {
                 activeWindow = 4;
                 _animate(360 * 4 / 5 - 90);
               }),
-              menuButton(Icon(Icons.contacts), 	AppLocalizations.of(context).translate("String8"), () {
+              menuButton(Icon(Icons.contacts),
+                  AppLocalizations.of(context)!.translate("String8"), () {
                 activeWindow = 3;
                 _animate(360 * 3 / 5 - 90);
               }),
-              menuButton(Icon(Icons.history), 	AppLocalizations.of(context).translate("String72"), () {
+              menuButton(Icon(Icons.history),
+                  AppLocalizations.of(context)!.translate("String72"), () {
                 activeWindow = 0;
                 _animate(0.0 - 90);
               }),
-              menuButton(Icon(Icons.send), 	AppLocalizations.of(context).translate("String22"), () {
+              menuButton(Icon(Icons.send),
+                  AppLocalizations.of(context)!.translate("String22"), () {
                 activeWindow = 1;
                 _animate(360 * 1 / 5 - 90);
               }),
-              menuButton(Icon(Icons.call_received), 	AppLocalizations.of(context).translate("String23"), () {
+              menuButton(Icon(Icons.call_received),
+                  AppLocalizations.of(context)!.translate("String23"), () {
                 activeWindow = 2;
                 _animate(360 * 2 / 5 - 90);
               })

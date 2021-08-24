@@ -1,12 +1,17 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/watchedAddress.dart';
+import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'Data/Wallet.dart';
 import 'homePage.dart';
-import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,11 +26,11 @@ class _MyAppState extends State<MyApp> {
   Color secondaryColor = Color(0xFF121212);
   Color dephtColor = Colors.white;
   Color extraColor = Colors.black87;
-  Color transparentColor = Colors.grey[300];
-  Color highLightColor = Colors.grey[100];
-  List<Verifier> verifiersList;
-  List<WatchedAddress> addressesToWatch;
-  List<List<String>> balanceList;
+  Color? transparentColor = Colors.grey[300];
+  Color? highLightColor = Colors.grey[100];
+  List<Verifier>? verifiersList;
+  List<WatchedAddress>? addressesToWatch;
+  List<List<String>>? balanceList;
   @override
   void initState() {
     downloadBalanceList();
@@ -35,10 +40,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void updateTheme() {
-    getNightModeValue().then((bool value) {
+    getNightModeValue().then((bool? value) {
       setState(() {
-        value ??= false;
-        lightTheme = value;
+        lightTheme = value == null ? true : value;
         if (!lightTheme) {
           baseColor = Color(0xFFF5F5F5);
           dephtColor = Colors.white;
@@ -69,8 +73,8 @@ class _MyAppState extends State<MyApp> {
       secondaryColor: secondaryColor,
       extraColor: extraColor,
       dephtColor: dephtColor,
-      transparentColor: transparentColor,
-      highLigthColor: highLightColor,
+      transparentColor: transparentColor!,
+      highLigthColor: highLightColor!,
       verifiersList: verifiersList,
       updateVerifiers: setVerifiers,
       addressesToWatch: addressesToWatch,
@@ -96,8 +100,8 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
         ],
         localeListResolutionCallback:
-            (List<Locale> locales, Iterable<Locale> supportedLocales) {
-          for (var eachLocale in locales) {
+            (List<Locale>? locales, Iterable<Locale> supportedLocales) {
+          for (var eachLocale in locales!) {
             for (var eachSupportedLocale in supportedLocales) {
               if (eachLocale.languageCode == eachSupportedLocale.languageCode) {
                 return eachSupportedLocale;
@@ -113,7 +117,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<List<Verifier>> setVerifiers() async {
+  Future<List<Verifier>?> setVerifiers() async {
     getVerifiers().then((List<Verifier> _verifiersList) {
       setState(() {
         verifiersList = _verifiersList;
@@ -126,10 +130,10 @@ class _MyAppState extends State<MyApp> {
     getWatchAddresses().then((List<WatchedAddress> _list) {
       setState(() {
         addressesToWatch = _list;
-        for (var eachAddress in addressesToWatch) {
+        for (var eachAddress in addressesToWatch!) {
           try {
             eachAddress.balance =
-                balanceList.firstWhere((List<String> address) {
+                balanceList!.firstWhere((List<String> address) {
               return address[0] == eachAddress.address;
             })[1];
           } catch (e) {
@@ -148,10 +152,10 @@ class _MyAppState extends State<MyApp> {
       getWatchAddresses().then((List<WatchedAddress> _list) {
         setState(() {
           addressesToWatch = _list;
-          for (var eachAddress in addressesToWatch) {
+          for (var eachAddress in addressesToWatch!) {
             try {
               eachAddress.balance =
-                  balanceList.firstWhere((List<String> address) {
+                  balanceList!.firstWhere((List<String> address) {
                 return address[0] == eachAddress.address;
               })[1];
             } catch (e) {

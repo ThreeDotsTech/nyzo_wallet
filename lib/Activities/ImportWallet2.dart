@@ -1,5 +1,10 @@
+
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
@@ -48,7 +53,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
         MaterialPageRoute(
             builder: (context) => WalletWindow(textController1.text)),
       );
-      ColorTheme.of(context).update();
+      ColorTheme.of(context)!.update!();
 
       ///this.dispose();
     });
@@ -82,7 +87,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
                       child: new Text(
-                          AppLocalizations.of(context).translate("String16"),
+                          AppLocalizations.of(context)!.translate("String16"),
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -99,7 +104,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: ColorTheme.of(context).dephtColor,
+                      fillColor: ColorTheme.of(context)!.dephtColor,
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
                           borderSide: BorderSide(color: Colors.red)),
@@ -115,7 +120,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                       contentPadding: EdgeInsets.all(10),
                       hasFloatingPlaceholder: false,
                       labelText:
-                          AppLocalizations.of(context).translate("String81"),
+                          AppLocalizations.of(context)!.translate("String81"),
                       labelStyle: TextStyle(
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w600,
@@ -133,7 +138,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     style: TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: ColorTheme.of(context).dephtColor,
+                      fillColor: ColorTheme.of(context)!.dephtColor,
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
                           borderSide: BorderSide(color: Colors.red)),
@@ -149,18 +154,18 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                       contentPadding: EdgeInsets.all(10),
                       hasFloatingPlaceholder: false,
                       labelText:
-                          AppLocalizations.of(context).translate("String84"),
+                          AppLocalizations.of(context)!.translate("String84"),
                       labelStyle: TextStyle(
                           color: Color(0xFF555555),
                           fontWeight: FontWeight.w600,
                           fontSize: 15),
                     ),
                     validator: (val) => val != textController1.text
-                        ? AppLocalizations.of(context).translate("String85")
+                        ? AppLocalizations.of(context)!.translate("String85")
                         : val == ''
-                            ? AppLocalizations.of(context).translate("String86")
-                            : val.length < 6
-                                ? AppLocalizations.of(context)
+                            ? AppLocalizations.of(context)!.translate("String86")
+                            : val!.length < 6
+                                ? AppLocalizations.of(context)!
                                     .translate("String101")
                                 : null,
                   ),
@@ -179,12 +184,12 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                                 borderRadius: new BorderRadius.circular(30.0)),
                             onPressed: () {
                               final form = formKey.currentState;
-                              if (form.validate()) {
+                              if (form!.validate()) {
                                 _performWalletCreation();
                               }
                             },
                             child: new Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                     .translate("String17"),
                                 style: TextStyle(color: Colors.white)),
                           ),

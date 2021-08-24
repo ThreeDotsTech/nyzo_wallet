@@ -1,7 +1,13 @@
+
+
+// Dart imports:
 import 'dart:collection';
 import 'dart:typed_data';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/NyzoString.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPrivateSeed.dart';
@@ -65,7 +71,7 @@ class NyzoStringEncoder {
   }
 
   static NyzoString decode(String encodedString) {
-    NyzoString result;
+    NyzoString? result;
 
     // Map characters from the old encoding to the new encoding. A few characters were changed to make Nyzo
     // strings more URL-friendly.
@@ -133,7 +139,7 @@ class NyzoStringEncoder {
       throw InvalisNyzoString();
     }
 
-    return result;
+    return result!;
   }
 
   static int getOrDefault(Map map, key, value) {

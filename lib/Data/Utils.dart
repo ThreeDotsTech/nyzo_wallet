@@ -1,12 +1,16 @@
+
+
+// Dart imports:
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:package_info/package_info.dart';
 
 class Utils {
   static int addToBuffer(final ByteBuffer buffer, int index, Uint8List data,
       {final Endian endian = Endian.little,
       final int offset = 0,
-      int length,
+      int? length,
       int bits = 32}) {
     if (length != null) {
       if (length > data.length || data.length > buffer.lengthInBytes) {

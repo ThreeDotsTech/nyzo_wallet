@@ -1,4 +1,12 @@
+
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import "package:hex/hex.dart";
+
+// Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
@@ -6,14 +14,13 @@ import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Data/watchedAddress.dart';
-import "package:hex/hex.dart";
 
 class AddVerifierDialog {
   static final TextEditingController nameController = TextEditingController();
 
   static final nameFormKey = GlobalKey<FormFieldState>();
   information(BuildContext context2, String title, bool isVerifier,
-      {VoidCallback onClose}) {
+      {VoidCallback? onClose}) {
     return showDialog(
         context: context2,
         barrierDismissible: true,
@@ -33,8 +40,8 @@ class AddVerifierDialog {
                       padding: const EdgeInsets.all(8),
                       child: Text(
                         isVerifier
-                            ? AppLocalizations.of(context).translate("String96")
-                            : AppLocalizations.of(context)
+                            ? AppLocalizations.of(context)!.translate("String96")
+                            : AppLocalizations.of(context)!
                                 .translate("String98"),
                         style: TextStyle(
                             fontWeight: FontWeight.w700, fontSize: 18),
@@ -45,12 +52,12 @@ class AddVerifierDialog {
                 Container(
                     child: TextFormField(
                   validator: isVerifier
-                      ? (String val) => val == ''
-                          ? AppLocalizations.of(context).translate("String67")
+                      ? (String? val) => val == ''
+                          ? AppLocalizations.of(context)!.translate("String67")
                           : null
-                      : (String val) {
+                      : (String? val) {
                           try {
-                            NyzoStringEncoder.decode(val);
+                            NyzoStringEncoder.decode(val!);
                             if (NyzoStringEncoder.decode(val)
                                     .getType()
                                     .getPrefix() ==
@@ -63,16 +70,16 @@ class AddVerifierDialog {
                               //setState(() {
                               nameController.text = NyzoStringEncoder.encode(
                                   NyzoStringPublicIdentifier(
-                                      pre.getReceiverIdentifier()));
+                                      pre.getReceiverIdentifier()!));
                               print(NyzoStringEncoder.encode(
                                   NyzoStringPublicIdentifier(
-                                      pre.getReceiverIdentifier())));
+                                      pre.getReceiverIdentifier()!)));
 
                               //});
                             }
                           } catch (e) {
                             if (e.runtimeType == InvalisNyzoString) {
-                              return e.errMsg();
+                              return e.toString();
                             }
                           }
                           return null;
@@ -107,21 +114,21 @@ class AddVerifierDialog {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text(AppLocalizations.of(context).translate("String34")),
+                child: Text(AppLocalizations.of(context)!.translate("String34")),
                 onPressed: () {
                   nameController.text = '';
                   Navigator.pop(context);
                 },
               ),
               FlatButton(
-                child: Text(AppLocalizations.of(context).translate("String71")),
+                child: Text(AppLocalizations.of(context)!.translate("String71")),
                 onPressed: () async {
-                  nameFormKey.currentState.validate();
+                  nameFormKey.currentState!.validate();
                   isVerifier
                       ? addVerifier(Verifier.fromId(
                           nameController.text,
                         )).then((s) {
-                          onClose();
+                          onClose!();
                           Navigator.pop(context);
                           nameController.text = '';
                         })
@@ -130,7 +137,7 @@ class AddVerifierDialog {
                               NyzoStringEncoder.decode(nameController.text)
                                   .getBytes()),
                         )).then((s) {
-                          onClose();
+                          onClose!();
                           Navigator.pop(context);
                           nameController.text = '';
                         });

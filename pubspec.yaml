@@ -1,67 +1,57 @@
 name: nyzo_wallet
 description: An iOS and Android wallet for the Nyzo cryptocurrency.
 
+publish_to: 'none'
+
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.7.0+12
+version: 0.7.0+13
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^0.1.2
-  flutter_statusbarcolor: ^0.2.0
-  flutter_secure_storage: ^3.2.1+1
-  shared_preferences: ^0.5.3+4
-  flutter_string_encryption: ^0.3.1
-  local_auth: any
-  intl: ^0.16.0
-  http: ^0.12.0+2
-  ed25519_hd_key: ^1.0.1
-  html: ^0.14.0+2
-  crypto: any
-  cryptography:
-    path: packages/cryptography-1.0.0
-  html_unescape: ^1.0.1+2
-  vector_math: ^2.0.8
-  titled_navigation_bar: ^3.0.1
-  shimmer: ^1.0.0
-  liquid_pull_to_refresh: ^1.1.0
-  flutter_slidable: "^0.5.3"
-  expandable:
-    path: packages/expandable-3.0.0+1
-  reorderables: ^0.2.12
-  qr_flutter:
-    git:
-      url: git://github.com/lukef/qr.flutter.git
-  qr_mobile_vision: ^0.3.1
-  unicorndial:
-    path: packages/unicorndial-1.1.5
-  flutter_picker: ^1.0.13
+  # A Dart library implementing cryptographic algorithms and primitives, modeled on the BouncyCastle library
+  pointycastle: ^3.3.1
+  cupertino_icons: ^1.0.3
+  flutter_secure_storage: ^4.2.1
+  shared_preferences: ^2.0.6
+  string_encryption: ^2.0.3
+  local_auth: ^1.1.6
+  intl: ^0.17.0
+  http: ^0.13.3
+  pinenacl: ^0.3.3
+  html: ^0.15.0
+  crypto: ^3.0.1
+  html_unescape: ^2.0.0
+  vector_math: ^2.1.0
+  titled_navigation_bar: ^5.0.0-nullsafety.0
+  shimmer: ^2.0.0
+  liquid_pull_to_refresh: ^3.0.0
+  flutter_slidable: ^0.6.0
+  expandable: ^5.0.1
+  reorderables: ^0.4.1
+  qr_flutter: ^4.0.0
+  flutter_picker: ^2.0.2
   flutter_localizations:
     sdk: flutter
-  auto_size_text: ^2.1.0
-  package_info: ^0.4.0+13
-  direct_select_flutter: ^1.0.5
-  flutter_spinkit: "^4.1.1"
-
-
-
-
-
+  auto_size_text: ^3.0.0-nullsafety.0
+  package_info: ^2.0.2
+  direct_select_flutter: ^1.1.1
+  flutter_spinkit: ^5.0.0
+  hex: ^0.2.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-
+  # Automatically organize your dart imports
+  import_sorter: ^4.6.0
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -73,9 +63,24 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   fonts:
-    - family: WaletFont
+    - family: Montserrat
       fonts:
-        - asset: fonts/WalletFont.ttf
+        - asset: fonts/Montserrat-Black.ttf
+        - asset: fonts/Montserrat-BlackItalic.ttf
+        - asset: fonts/Montserrat-Bold.ttf
+        - asset: fonts/Montserrat-BoldItalic.ttf
+        - asset: fonts/Montserrat-ExtraBold.ttf
+        - asset: fonts/Montserrat-ExtraBoldItalic.ttf
+        - asset: fonts/Montserrat-ExtraLight.ttf
+        - asset: fonts/Montserrat-ExtraLightItalic.ttf
+        - asset: fonts/Montserrat-Italic.ttf
+        - asset: fonts/Montserrat-Light.ttf
+        - asset: fonts/Montserrat-LightItalic.ttf
+        - asset: fonts/Montserrat-Medium.ttf
+        - asset: fonts/Montserrat-MediumItalic.ttf
+        - asset: fonts/Montserrat-Regular.ttf
+        - asset: fonts/Montserrat-SemiBold.ttf
+        - asset: fonts/Montserrat-SemiBoldItalic.ttf
 
   assets:
     - images/Logo.png
@@ -88,6 +93,8 @@ flutter:
     - images/NotProducing.png
     - images/trackingProblem.png
     - images/cycle.png
+    - images/nyzo-logo-white.png
+    - images/bg-home-red-black.png
 
     - lang/en.json
     - lang/zh.json

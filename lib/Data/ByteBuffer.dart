@@ -1,11 +1,14 @@
+
+
+// Dart imports:
 import 'dart:core';
-import 'dart:typed_data';
 import 'dart:math';
+import 'dart:typed_data';
 
 class ByteBuffer {
-  int index;
+  int? index;
 
-  Uint8List array;
+  Uint8List? array;
 
   ByteBuffer(maximumSize) {
     this.index = 0;
@@ -14,21 +17,21 @@ class ByteBuffer {
 
   putBytes(List<int> bytes) {
     for (var i = 0; i < bytes.length; i++) {
-      this.array[this.index++] = bytes[i];
+      this.array![this.index! + 1] = bytes[i];
     }
   }
 
   putByte(int byte) {
-    this.array[this.index++] = byte;
+    this.array![this.index! + 1] = byte;
   }
 
-  putIntegerValue(int value, int length) {
+  putIntegerValue(int value, int? length) {
     value = value.floor();
-    for (var i = 0; i < length; i++) {
-      this.array[this.index + length - 1 - i] = value % 256;
+    for (var i = 0; i < length!; i++) {
+      this.array![this.index! + length - 1 - i] = value % 256;
       value = (value / 256).floor();
     }
-    this.index += length;
+    this.index = this.index! + length;
   }
 
   putShort(int value) {
@@ -44,9 +47,9 @@ class ByteBuffer {
   }
 
   Uint8List toArray() {
-    var result = new Uint8List(this.index);
-    for (var i = 0; i < this.index; i++) {
-      result[i] = this.array[i];
+    var result = new Uint8List(this.index!);
+    for (var i = 0; i < this.index!; i++) {
+      result[i] = this.array![i];
     }
 
     return result;

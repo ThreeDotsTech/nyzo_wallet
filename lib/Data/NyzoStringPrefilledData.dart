@@ -1,41 +1,45 @@
+
+
+// Dart imports:
 import 'dart:math';
 import 'dart:typed_data';
 
+// Project imports:
 import 'package:nyzo_wallet/Data/NyzoString.dart';
 import 'package:nyzo_wallet/Data/NyzoType.dart';
 
 class NyzoStringPrefilledData implements NyzoString {
-  Uint8List _receiverIdentifier;
-  Uint8List _senderData;
+  Uint8List? _receiverIdentifier;
+  Uint8List? _senderData;
 
   NyzoStringPrefilledData(Uint8List receiverIdentifier, Uint8List senderData) {
     this._receiverIdentifier = receiverIdentifier;
     if (senderData.length <= 32) {
       this._senderData = senderData;
     } else {
-      this._senderData.setRange(0, 32, senderData.getRange(0, 32));
+      this._senderData!.setRange(0, 32, senderData.getRange(0, 32));
     }
   }
 
-  Uint8List getReceiverIdentifier() {
+  Uint8List? getReceiverIdentifier() {
     return this._receiverIdentifier;
   }
 
-  Uint8List getSenderData() {
+  Uint8List? getSenderData() {
     return this._senderData;
   }
 
   @override
   Uint8List getBytes() {
-    final length = 32 + 1 + _senderData.length;
+    final length = 32 + 1 + _senderData!.length;
     final bytes = Uint8List(length);
     var bi = 0;
     final buffer = bytes.buffer;
-    for (var eachByte in this._receiverIdentifier) {
+    for (var eachByte in this._receiverIdentifier!) {
       buffer.asByteData().setUint8(bi++, eachByte);
     }
-    buffer.asByteData().setUint8(bi++, this._senderData.length);
-    for (var eachByte in this._senderData) {
+    buffer.asByteData().setUint8(bi++, this._senderData!.length);
+    for (var eachByte in this._senderData!) {
       buffer.asByteData().setUint8(bi++, eachByte);
     }
     return bytes;

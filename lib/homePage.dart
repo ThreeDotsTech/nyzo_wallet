@@ -1,11 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-import 'Data/Wallet.dart';
-import 'Activities/NewWallet.dart';
 import 'Activities/AuthScreen.dart';
 import 'Activities/ImportWallet.dart';
+import 'Activities/NewWallet.dart';
+import 'Data/Wallet.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,20 +15,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
-  bool _walletCreated;
+  bool? _walletCreated;
   bool _visibleButttons = false;
-
-  changeStatusColor(Color color) async {
-    try {
-      await FlutterStatusbarcolor.setStatusBarColor(color);
-    } on PlatformException catch (e) {}
-  }
 
   @override
   void initState() {
     checkWallet().then((bool flag) {
       _walletCreated = flag;
-      _walletCreated
+      _walletCreated!
           ? setState(() {
               //if it does, go to the password activity
               Navigator.push(
@@ -38,8 +34,6 @@ class _MyHomePageState extends State<HomePage> {
               _visibleButttons = true;
             });
     });
-    //SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-    changeStatusColor(Colors.transparent);
     super.initState();
     //prevent the screen from rotating
     SystemChrome.setPreferredOrientations([
@@ -51,7 +45,6 @@ class _MyHomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       body: new Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -83,7 +76,7 @@ class _MyHomePageState extends State<HomePage> {
                               );
                             },
                             child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                     .translate("String65"),
                                 style: TextStyle(color: Colors.white)),
                           )),
@@ -103,7 +96,7 @@ class _MyHomePageState extends State<HomePage> {
                             );
                           },
                           child: Text(
-                            AppLocalizations.of(context).translate("String66"),
+                            AppLocalizations.of(context)!.translate("String66"),
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -121,9 +114,9 @@ class _MyHomePageState extends State<HomePage> {
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Text(AppLocalizations.of(context).translate("String39")),
+                  new Text(AppLocalizations.of(context)!.translate("String39")),
                   new Icon(Icons.favorite, color: Colors.black),
-                  new Text(AppLocalizations.of(context).translate("String40"))
+                  new Text(AppLocalizations.of(context)!.translate("String40"))
                 ],
               ),
             )

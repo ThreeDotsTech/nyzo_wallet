@@ -1,9 +1,12 @@
+
+
+// Project imports:
 import 'package:nyzo_wallet/Data/Wallet.dart';
 
 class WatchedAddress {
-  String address;
-  String balance;
-  String nickname;
+  String? address;
+  String? balance;
+  String? nickname;
 
   WatchedAddress._fromAddress(this.address);
   static WatchedAddress fromAddress(String address) {

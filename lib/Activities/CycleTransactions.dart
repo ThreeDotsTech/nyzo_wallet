@@ -1,13 +1,22 @@
+
+
+// Dart imports:
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Package imports:
 import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CycleTxScreen extends StatefulWidget {
   CycleTxScreen(this.password);
@@ -22,12 +31,12 @@ DirectSelectItem<CycleTransaction> getDropDownMenuItem(CycleTransaction value) {
       value: value,
       itemBuilder: (context, value) {
         if (value.receiverNickname == null) {
-          return Text(value.receiverId.substring(0, 3) +
+          return Text(value.receiverId!.substring(0, 3) +
               "..." +
-              value.receiverId.substring(
-                  value.receiverId.length - 4, value.receiverId.length));
+              value.receiverId!.substring(
+                  value.receiverId!.length - 4, value.receiverId!.length));
         }
-        return Text(value.receiverNickname);
+        return Text(value.receiverNickname!);
       });
 }
 
@@ -48,8 +57,8 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
   TextEditingController textEditingController = TextEditingController();
   _CycleTxScreenState(this._password);
   final String _password;
-  List<CycleTransaction> txList;
-  CycleTransaction currentTx;
+  List<CycleTransaction>? txList;
+  CycleTransaction? currentTx;
   bool _loading = true;
   int selectedIndex = 0;
   @override
@@ -59,8 +68,8 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
         _loading = false;
         txList = list;
         if (txList != null) {
-          if (txList.length != 0) {
-            currentTx = txList[0];
+          if (txList!.length != 0) {
+            currentTx = txList![0];
           }
         }
       });
@@ -97,14 +106,14 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
             child: Text(
               text1,
               style: TextStyle(
-                  color: ColorTheme.of(context).secondaryColor,
+                  color: ColorTheme.of(context)!.secondaryColor,
                   fontWeight: FontWeight.bold),
             ),
           ),
           Flexible(
               child: Text(
             text2,
-            style: TextStyle(color: ColorTheme.of(context).secondaryColor),
+            style: TextStyle(color: ColorTheme.of(context)!.secondaryColor),
             textAlign: TextAlign.right,
           ))
         ],
@@ -114,21 +123,21 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!ColorTheme.of(context).lightTheme) {
+    if (!ColorTheme.of(context)!.lightTheme!) {
       setState(() {
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
       });
     }
     return DirectSelectContainer(
       child: Scaffold(
-        backgroundColor: ColorTheme.of(context).baseColor,
+        backgroundColor: ColorTheme.of(context)!.baseColor,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: ColorTheme.of(context).secondaryColor,
+              color: ColorTheme.of(context)!.secondaryColor,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -140,7 +149,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: txList != null
-                  ? txList.length != 0
+                  ? txList!.length != 0
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
@@ -149,7 +158,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                 "Cycle TX",
                                 style: TextStyle(
                                     color:
-                                        ColorTheme.of(context).secondaryColor,
+                                        ColorTheme.of(context)!.secondaryColor,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0,
                                     fontSize: 35),
@@ -175,7 +184,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                             });
                                           },
                                           defaultItemIndex: selectedIndex,
-                                          values: txList,
+                                          values: txList!,
                                           itemBuilder: (CycleTransaction tx) =>
                                               getDropDownMenuItem(tx),
                                           focusedItemDecoration:
@@ -189,75 +198,75 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                               ),
                             ),
                             Card(
-                              color: ColorTheme.of(context).dephtColor,
+                              color: ColorTheme.of(context)!.dephtColor,
                               child: Container(
                                 padding: EdgeInsets.all(15),
                                 child: Column(
                                   children: <Widget>[
                                     _getRow("initiator nickname",
-                                        currentTx.initiatorNickname),
+                                        currentTx!.initiatorNickname!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow("initiator ID",
-                                        currentTx.initiatorIdAsNyzoString),
+                                        currentTx!.initiatorIdAsNyzoString!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("amount", currentTx.ammount),
+                                    _getRow("amount", currentTx!.ammount!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow("receiver nickname",
-                                        currentTx.receiverNickname),
+                                        currentTx!.receiverNickname!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow("receiver ID",
-                                        currentTx.receiverIdAsNyzoString),
+                                        currentTx!.receiverIdAsNyzoString!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow(
-                                        "sender data", currentTx.senderData),
+                                        "sender data", currentTx!.senderData!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow("initiator signature",
-                                        currentTx.initiatorSignature),
+                                        currentTx!.initiatorSignature!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow(
-                                        "Total Votes", currentTx.totalVotes),
+                                        "Total Votes", currentTx!.totalVotes!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow("Votes Against",
-                                        currentTx.votesAgainst),
+                                        currentTx!.votesAgainst!),
                                     Divider(
                                       color:
-                                          ColorTheme.of(context).highLigthColor,
+                                          ColorTheme.of(context)!.highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow("Votes for Tx",
-                                        currentTx.votesForTransaction),
+                                        currentTx!.votesForTransaction!),
                                   ],
                                 ),
                               ),
@@ -267,7 +276,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 RaisedButton(
-                                  color: ColorTheme.of(context).secondaryColor,
+                                  color: ColorTheme.of(context)!.secondaryColor,
                                   shape: new RoundedRectangleBorder(
                                       borderRadius:
                                           new BorderRadius.circular(30.0)),
@@ -292,7 +301,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               title: Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .translate("String28"),
                                                 style: TextStyle(
                                                     color: Colors.black),
@@ -316,7 +325,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                   },
                                 ),
                                 RaisedButton(
-                                  color: ColorTheme.of(context).secondaryColor,
+                                  color: ColorTheme.of(context)!.secondaryColor,
                                   shape: new RoundedRectangleBorder(
                                       borderRadius:
                                           new BorderRadius.circular(30.0)),
@@ -446,7 +455,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                           child: Text(
                             "No TXs available",
                             style: TextStyle(
-                                color: ColorTheme.of(context).secondaryColor,
+                                color: ColorTheme.of(context)!.secondaryColor,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0,
                                 fontSize: 35),
@@ -465,7 +474,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                   "Fetching TXs",
                                   style: TextStyle(
                                       color:
-                                          ColorTheme.of(context).secondaryColor,
+                                          ColorTheme.of(context)!.secondaryColor,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0,
                                       fontSize: 35),
@@ -483,7 +492,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                 child: new Center(
                                   child: SpinKitChasingDots(
                                     color:
-                                        ColorTheme.of(context).secondaryColor,
+                                        ColorTheme.of(context)!.secondaryColor,
                                     size: 50.0,
                                   ),
                                 ),

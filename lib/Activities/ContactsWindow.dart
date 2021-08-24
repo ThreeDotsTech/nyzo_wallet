@@ -1,15 +1,22 @@
+
+
+// Flutter imports:
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:expandable/expandable.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:shimmer/shimmer.dart';
+
+// Project imports:
+import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:expandable/expandable.dart';
 import 'package:nyzo_wallet/Widgets/Dialog.dart';
-import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 
 class ContactsWindow extends StatefulWidget {
   final List<Contact> _contacts;
@@ -20,11 +27,11 @@ class ContactsWindow extends StatefulWidget {
 
 class ContactsWindowState extends State<ContactsWindow> {
   ContactsWindowState(this.contactsList);
-  List<Contact> contactsList;
+  List<Contact>? contactsList;
   final SlidableController slidableController = SlidableController();
   final ExpandableController expandableController = ExpandableController();
   AddContactDialog floatingdialog = new AddContactDialog();
-  WalletWindowState walletWindowState;
+  WalletWindowState? walletWindowState;
 
   @override
   void initState() {
@@ -46,9 +53,9 @@ class ContactsWindowState extends State<ContactsWindow> {
         ),
         Center(
           child: Text(
-            AppLocalizations.of(context).translate("String8"),
+            AppLocalizations.of(context)!.translate("String8"),
             style: TextStyle(
-                color: ColorTheme.of(context).secondaryColor,
+                color: ColorTheme.of(context)!.secondaryColor,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0,
                 fontSize: 35),
@@ -62,7 +69,7 @@ class ContactsWindowState extends State<ContactsWindow> {
               child: Stack(
                 children: <Widget>[
                   contactsList != null
-                      ? contactsList.length != 0
+                      ? contactsList!.length != 0
                           ? ListView.builder(
                               padding: EdgeInsets.all(0.0),
                               itemCount: contactsList?.length,
@@ -73,17 +80,17 @@ class ContactsWindowState extends State<ContactsWindow> {
                                       header: ListTile(
                                         leading: Icon(
                                           Icons.person,
-                                          color: ColorTheme.of(context)
+                                          color: ColorTheme.of(context)!
                                               .secondaryColor,
                                         ),
-                                        title: Text(contactsList[i].name,
+                                        title: Text(contactsList![i].name,
                                             style: TextStyle(
-                                              color: ColorTheme.of(context)
+                                              color: ColorTheme.of(context)!
                                                   .secondaryColor,
                                               fontSize: 20.0,
                                             )),
                                       ),
-                                      collapsed: null,
+                                   
                                       expanded: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -101,7 +108,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                     CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Text(
-                                                    AppLocalizations.of(context)
+                                                    AppLocalizations.of(context)!
                                                         .translate("String9"),
                                                     style: TextStyle(
                                                         color:
@@ -119,12 +126,12 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                             ..onTap = () {
                                                               Clipboard.setData(
                                                                   new ClipboardData(
-                                                                      text: contactsList[
+                                                                      text: contactsList![
                                                                               i]
                                                                           .address));
                                                               final snackBar = SnackBar(
                                                                   content: Text(AppLocalizations.of(
-                                                                          context)
+                                                                          context)!
                                                                       .translate(
                                                                           "String10")));
                                                               Scaffold.of(
@@ -134,9 +141,9 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                             },
                                                       style: TextStyle(
                                                           color: ColorTheme.of(
-                                                                  context)
+                                                                  context)!
                                                               .secondaryColor),
-                                                      text: contactsList[i]
+                                                      text: contactsList![i]
                                                           .address,
                                                     ),
                                                   ),
@@ -145,7 +152,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                         .fromLTRB(0, 15, 0, 0),
                                                     child: Text(
                                                       AppLocalizations.of(
-                                                              context)
+                                                              context)!
                                                           .translate(
                                                               "String11"),
                                                       style: TextStyle(
@@ -158,7 +165,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                     decoration: InputDecoration(
                                                       filled: true,
                                                       fillColor:
-                                                          ColorTheme.of(context)
+                                                          ColorTheme.of(context)!
                                                               .dephtColor,
                                                       focusedErrorBorder:
                                                           OutlineInputBorder(
@@ -199,17 +206,17 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                     ),
                                                     style: TextStyle(
                                                         color: ColorTheme.of(
-                                                                context)
+                                                                context)!
                                                             .secondaryColor),
                                                     initialValue:
-                                                        contactsList[i].notes,
+                                                        contactsList![i].notes,
                                                     textAlign: TextAlign.center,
                                                     onFieldSubmitted:
                                                         (String newData) {
-                                                      contactsList[i].notes =
+                                                      contactsList![i].notes =
                                                           newData;
                                                       saveContacts(
-                                                          contactsList);
+                                                          contactsList!);
                                                       getContacts().then(
                                                           (List<Contact>
                                                               _contactList) {
@@ -233,15 +240,15 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                           icon: Icon(
                                                             Icons.delete,
                                                             color: ColorTheme
-                                                                    .of(context)
+                                                                    .of(context)!
                                                                 .secondaryColor,
                                                           ),
                                                           onPressed: () {
-                                                            contactsList
+                                                            contactsList!
                                                                 .removeAt(i);
                                                             setState(() {
                                                               saveContacts(
-                                                                  contactsList);
+                                                                  contactsList!);
                                                             });
                                                           },
                                                         ),
@@ -256,23 +263,23 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                           icon: Icon(
                                                             Icons.send,
                                                             color: ColorTheme
-                                                                    .of(context)
+                                                                    .of(context)!
                                                                 .secondaryColor,
                                                           ),
                                                           onPressed: () {
-                                                            walletWindowState
+                                                            walletWindowState!
                                                                     .textControllerAddress
                                                                     .text =
-                                                                contactsList[i]
+                                                                contactsList![i]
                                                                     .address;
-                                                            walletWindowState
+                                                            walletWindowState!
                                                                     .textControllerData
                                                                     .text =
-                                                                contactsList[i]
+                                                                contactsList![i]
                                                                     .notes;
-                                                            walletWindowState
+                                                            walletWindowState!
                                                                 .setState(() {
-                                                              walletWindowState
+                                                              walletWindowState!
                                                                   .pageIndex = 2;
                                                             });
                                                           },
@@ -285,25 +292,21 @@ class ContactsWindowState extends State<ContactsWindow> {
                                             ),
                                           ),
                                         ],
-                                      ),
-                                      tapHeaderToExpand: true,
-                                      hasIcon: true,
-                                      iconColor:
-                                          ColorTheme.of(context).secondaryColor,
+                                      ), collapsed: SizedBox(),
                                     ),
                                     actions: <Widget>[
                                       IconSlideAction(
                                         caption: 'Send',
-                                        color: ColorTheme.of(context).baseColor,
+                                        color: ColorTheme.of(context)!.baseColor,
                                         icon: Icons.send,
                                         onTap: () {
-                                          walletWindowState
+                                          walletWindowState!
                                               .textControllerAddress
-                                              .text = contactsList[i].address;
-                                          walletWindowState.textControllerData
-                                              .text = contactsList[i].notes;
-                                          walletWindowState.setState(() {
-                                            walletWindowState.pageIndex = 2;
+                                              .text = contactsList![i].address;
+                                          walletWindowState!.textControllerData
+                                              .text = contactsList![i].notes;
+                                          walletWindowState!.setState(() {
+                                            walletWindowState!.pageIndex = 2;
                                           });
                                         },
                                       )
@@ -311,12 +314,12 @@ class ContactsWindowState extends State<ContactsWindow> {
                                     secondaryActions: <Widget>[
                                       IconSlideAction(
                                         caption: 'Delete',
-                                        color: ColorTheme.of(context).baseColor,
+                                        color: ColorTheme.of(context)!.baseColor,
                                         icon: Icons.delete,
                                         onTap: () {
-                                          contactsList.removeAt(i);
+                                          contactsList!.removeAt(i);
                                           setState(() {
-                                            saveContacts(contactsList);
+                                            saveContacts(contactsList!);
                                           });
                                         },
                                       ),
@@ -332,15 +335,15 @@ class ContactsWindowState extends State<ContactsWindow> {
                                   Image.asset(
                                     "images/noContacts.png",
                                     color:
-                                        ColorTheme.of(context).secondaryColor,
-                                    height: walletWindowState.screenHeight / 6,
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    height: walletWindowState!.screenHeight! / 6,
                                     //width: walletWindowState.screenHeight / 5 * 0.9,
                                   ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                     child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .translate("String12"),
                                         style: TextStyle(
                                             color: Color(0xFF555555),
@@ -350,7 +353,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                                   Padding(
                                     padding: const EdgeInsets.all(0.0),
                                     child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                             .translate("String13"),
                                         style: TextStyle(
                                             color: Color(0xFF666666),
@@ -373,9 +376,9 @@ class ContactsWindowState extends State<ContactsWindow> {
                                 height: 60.0,
                                 child: Shimmer.fromColors(
                                   baseColor:
-                                      ColorTheme.of(context).transparentColor,
+                                      ColorTheme.of(context)!.transparentColor!,
                                   highlightColor:
-                                      ColorTheme.of(context).highLigthColor,
+                                      ColorTheme.of(context)!.highLigthColor!,
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: ListTile(
@@ -397,20 +400,20 @@ class ContactsWindowState extends State<ContactsWindow> {
                     right: MediaQuery.of(context).size.height / 100,
                     child: FloatingActionButton(
                       elevation: 5,
-                      backgroundColor: ColorTheme.of(context).baseColor,
-                      foregroundColor: ColorTheme.of(context).secondaryColor,
+                      backgroundColor: ColorTheme.of(context)!.baseColor,
+                      foregroundColor: ColorTheme.of(context)!.secondaryColor,
                       onPressed: () {
                         floatingdialog.information(
                             context,
-                            AppLocalizations.of(context).translate("String69"),
-                            contactsList, onClose: () {
+                            AppLocalizations.of(context)!.translate("String69"),
+                            contactsList!, onClose: () {
                           getContacts().then((List<Contact> _contactList) {
                             setState(() {
                               contactsList = _contactList;
                             });
                           });
                         });
-                        //contactsList.add(addcontact);
+                        //contactsList!.add(addcontact);
                       },
                       child: Container(
                           height: double.infinity,

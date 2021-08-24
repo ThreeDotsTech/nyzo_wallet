@@ -1,25 +1,34 @@
-import 'dart:typed_data';
+
+
+// Dart imports:
 import 'dart:math';
-import 'ByteBuffer.dart';
-import 'package:cryptography/cryptography.dart';
+import 'dart:typed_data';
+
+// Package imports:
 import "package:hex/hex.dart";
 
+import 'package:pinenacl/ed25519.dart' as ed25519;
+import 'package:pointycastle/export.dart' show Digest;
+
+// Project imports:
+import 'ByteBuffer.dart';
+
 class TransactionMessage {
-  int timestamp;
+  int? timestamp;
 
-  int amount;
+  int? amount;
 
-  Uint8List recipientIdentifier;
+  Uint8List? recipientIdentifier;
 
-  int previousHashHeight;
+  int? previousHashHeight;
 
-  Uint8List previousBlockHash;
+  Uint8List? previousBlockHash;
 
-  Uint8List senderIdentifier;
+  Uint8List? senderIdentifier;
 
-  Uint8List senderData;
+  Uint8List? senderData;
 
-  Uint8List signature;
+  Uint8List? signature;
 
   TransactionMessage() {
     this.timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -42,7 +51,7 @@ class TransactionMessage {
 
   setRecipientIdentifier(recipientIdentifier) {
     for (var i = 0; i < 32; i++) {
-      this.recipientIdentifier[i] = recipientIdentifier[i];
+      this.recipientIdentifier![i] = recipientIdentifier[i];
     }
   }
 
@@ -52,28 +61,22 @@ class TransactionMessage {
 
   setPreviousBlockHash(previousBlockHash) {
     for (var i = 0; i < 32; i++) {
-      this.previousBlockHash[i] = previousBlockHash[i];
+      this.previousBlockHash![i] = previousBlockHash[i];
     }
   }
 
   setSenderData(senderData) {
     this.senderData = new Uint8List(min(senderData.length, 32));
-    for (var i = 0; i < this.senderData.length; i++) {
-      this.senderData[i] = senderData[i];
+    for (var i = 0; i < this.senderData!.length; i++) {
+      this.senderData![i] = senderData[i];
     }
   }
 
-  sign(PrivateKey privateKey) {
-    KeyPair keyPair = ed25519.newKeyPairFromSeedSync(privateKey);
-    PublicKey publicKey = keyPair.publicKey;
-    for (var i = 0; i < 32; i++) {
-      this.senderIdentifier[i] = publicKey.bytes[i];
-    }
-    Signature signature = ed25519.signSync(this.getBytes(false), keyPair);
-
-    for (var i = 0; i < this.signature.length; i++) {
-      this.signature[i] = signature.bytes[i];
-    }
+  sign(Uint8List privKey) {
+    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
+    final ed25519.SignatureBase sm =
+        signingKey.sign(this.getBytes(false)).signature;
+    this.signature = Uint8List.fromList(sm);
   }
 
   getBytes(bool includeSignature) {
@@ -82,26 +85,26 @@ class TransactionMessage {
     var buffer = new ByteBuffer(1000);
 
     buffer.putByte(2);
-    buffer.putLong(this.timestamp);
-    buffer.putLong(this.amount);
-    buffer.putBytes(this.recipientIdentifier);
+    buffer.putLong(this.timestamp!);
+    buffer.putLong(this.amount!);
+    buffer.putBytes(this.recipientIdentifier!);
 
     if (forSigning) {
-      buffer.putBytes(this.previousBlockHash);
+      buffer.putBytes(this.previousBlockHash!);
     } else {
-      buffer.putLong(this.previousHashHeight);
+      buffer.putLong(this.previousHashHeight!);
     }
-    buffer.putBytes(this.senderIdentifier);
+    buffer.putBytes(this.senderIdentifier!);
 
     if (forSigning) {
-      buffer.putBytes(doubleSha256(this.senderData));
+      buffer.putBytes(doubleSha256(this.senderData!));
     } else {
-      buffer.putByte(this.senderData.length);
-      buffer.putBytes(this.senderData);
+      buffer.putByte(this.senderData!.length);
+      buffer.putBytes(this.senderData!);
     }
 
     if (!forSigning) {
-      buffer.putBytes(this.signature);
+      buffer.putBytes(this.signature!);
     }
 
     return buffer.toArray();
@@ -118,8 +121,8 @@ Uint8List hexStringAsUint8Array(String identifier) {
 }
 
 Uint8List sha256Uint8(array) {
-  Hash hash = sha256.hashSync(array);
-  return hash.bytes;
+  final Digest sha256 = Digest('SHA-256');
+  return sha256.process(array);
 }
 
 Uint8List doubleSha256(Uint8List array) {

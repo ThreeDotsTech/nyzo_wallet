@@ -1,13 +1,21 @@
+
+
+// Dart imports:
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:typed_data';
-import 'dart:core';
 import 'dart:convert';
+import 'dart:core';
+import 'dart:typed_data';
+
+// Package imports:
+
 import 'package:hex/hex.dart';
+import 'package:http/http.dart' as http;
+import 'package:pinenacl/ed25519.dart' as ed25519;
+
+// Project imports:
 import 'ByteBuffer.dart';
-import 'TransactionResponse.dart';
 import 'PreviousHashResponse.dart';
-import 'package:cryptography/cryptography.dart';
+import 'TransactionResponse.dart';
 
 class NyzoMessage {
   static const Invalid0 = 0;
@@ -25,17 +33,17 @@ class NyzoMessage {
   static const PingResponse201 = 201;
   static const Unknown65535 = 65535;
 
-  int timestamp;
+  int? timestamp;
 
-  Uint8List sourceNodeIdentifier;
+  Uint8List? sourceNodeIdentifier;
 
-  int type;
+  int? type;
 
   var content;
 
-  Uint8List sourceNodeSignature;
+  Uint8List? sourceNodeSignature;
 
-  List signature;
+  List? signature;
 
   NyzoMessage() {
     this.timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -66,79 +74,34 @@ class NyzoMessage {
     int contentSize = 110;
     if (this.content != null) {
       contentBytes = this.content.getBytes(true);
-      contentSize += contentBytes.lengthInBytes;
+      contentSize += contentBytes.lengthInBytes as int;
     }
     if (includeSignature) {
       byteBuffer.putInt(contentSize);
     }
-    byteBuffer.putLong(this.timestamp);
-    byteBuffer.putShort(this.type);
+    byteBuffer.putLong(this.timestamp!);
+    byteBuffer.putShort(this.type!);
     if (contentBytes != null) {
       byteBuffer.putBytes(contentBytes);
     }
-    byteBuffer.putBytes(this.sourceNodeIdentifier);
+    byteBuffer.putBytes(this.sourceNodeIdentifier!);
     if (includeSignature) {
-      byteBuffer.putBytes(this.sourceNodeSignature);
+      byteBuffer.putBytes(this.sourceNodeSignature!);
     }
     return byteBuffer.toArray();
   }
 
-  sign(PrivateKey privKey) {
-    KeyPair keyPair = ed25519.newKeyPairFromSeedSync(privKey);
-    PublicKey pubKey = keyPair.publicKey;
-    for (var i = 0; i < 32; i++) {
-      this.sourceNodeIdentifier[i] = pubKey.bytes[i];
-    }
-    Signature signature = ed25519.signSync(this.getBytes(false), keyPair);
-    for (var i = 0; i < 64; i++) {
-      this.sourceNodeSignature[i] = signature.bytes[i];
-    }
+  sign(Uint8List privKey) {
+    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
+    final ed25519.SignatureBase sm =
+        signingKey.sign(this.getBytes(false)).signature;
+    this.sourceNodeSignature = Uint8List.fromList(sm).sublist(0, 64);
   }
 
   fromByteBuffer(byteBuffer) {}
 
-  Future<NyzoMessage> send(PrivateKey privKey, http.Client client) async {
-    KeyPair keyPair = ed25519.newKeyPairFromSeedSync(
-        privKey); //Creates a KeyPair from the generated Seed
-    PublicKey publicKey = keyPair.publicKey; //Set the Public Key
-
-    http.Response response = await client.post("https://nyzo.co/message",
-        headers: {
-          "Host": "nyzo.co",
-          "Connection": "keep-alive",
-          "Origin": "https://nyzo.co",
-          "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
-          "DNT": "1",
-          "Content-Type": "application/octet-stream",
-          "Accept": "*/*",
-          "Referer": "https://nyzo.co/wallet?id=" +
-              HEX.encode(publicKey.bytes), //change this to + pubKey
-          "Accept-Encoding": "gzip, deflate, br",
-          "Accept-Language":
-              "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
-        },
-        body: this.getBytes(true));
-
-    var arrayBuffer = response.bodyBytes;
-
-    if (arrayBuffer == null) {
-      return null;
-    }
-
-    var byteArray = new Uint8List.fromList(arrayBuffer);
-    var response2 = new NyzoMessage();
-
-    response2.timestamp = intValueFromArray(byteArray, 4, 8);
-    response2.type = intValueFromArray(byteArray, 12, 2);
-    response2.content = contentForType(response2.type, byteArray, 14);
-    int sourceNodeIdentifierIndex =
-        14 + contentSizeForType(response2.type, byteArray, 14);
-    response2.sourceNodeIdentifier =
-        arrayFromArray(byteArray, sourceNodeIdentifierIndex, 32);
-    response2.signature =
-        arrayFromArray(byteArray, sourceNodeIdentifierIndex + 32, 64);
-    return response2;
+  Future<NyzoMessage?> send(privKey, http.Client client) async {
+    return null;
   }
 
   contentForType(messageType, Uint8List byteArray, index) {
