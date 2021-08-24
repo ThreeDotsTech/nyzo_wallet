@@ -54,7 +54,7 @@ Future createNewWallet(String password) async {
       .getInstance(); //Create a Shared Preferences instance to save balance
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
-  Uint8List privKey = Uint8List(32);
+  final Uint8List privKey = Uint8List(32);
   KeyPair keyPair;
   SimplePublicKey pubKey;
   //Generates a 32 bytes array to use as SEED (Crypto Secure)
@@ -256,7 +256,7 @@ byteArrayForEncodedString(String encodedString) {
           '-.~_')
       .split('');
 
-  final Map<String, dynamic> characterToValueMap = Map();
+  final Map<String, dynamic> characterToValueMap = {};
 
   for (var i = 0; i < characterLookup.length; i++) {
     characterToValueMap[characterLookup[i]] = i;
@@ -285,7 +285,7 @@ encodedStringForByteArray(array) {
           '-.~_')
       .split('');
 
-  final Map<String, dynamic> characterToValueMap = Map();
+  final Map<String, dynamic> characterToValueMap = {};
 
   for (var i = 0; i < characterLookup.length; i++) {
     characterToValueMap[characterLookup[i]] = i;
@@ -387,10 +387,10 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   }
 
   Future<NyzoMessage> fetchPreviousHash(String senderPrivateSeed) async {
-    var message = NyzoMessage();
+    final message = NyzoMessage();
     message.setType(NyzoMessage.PreviousHashRequest7);
     await message.sign(hexStringAsUint8Array(senderPrivateSeed));
-    NyzoMessage result =
+    final NyzoMessage result =
         await message.send(hexStringAsUint8Array(privKey!), client);
     return result;
   }
@@ -479,9 +479,7 @@ sendMessage(NyzoMessage message) async {
 Future<dynamic> signTransaction(String? initiatorSignature,
     String? initiatorIdentifier, String? transactionBytes,
     {String? password, String? walletPrivateSeed}) async {
-  if (walletPrivateSeed == null) {
-    walletPrivateSeed = await _getPrivKey(password!);
-  }
+  walletPrivateSeed ??= await _getPrivKey(password!);
 
   final KeyPair? keyPair = walletPrivateSeed.length == 64
       ? await Ed25519()
@@ -733,7 +731,7 @@ Future<Verifier> getVerifierStatus(Verifier verifier) async {
     //var lmao = await json.decode(response.body)["verifier"];
     final Document document = parse(response.body, encoding: 'utf-8');
     List? attributeElementList;
-    final Map<String, String>? verifierMap = Map<String, String>();
+    final Map<String, String>? verifierMap = <String, String>{};
 
     try {
       if (document

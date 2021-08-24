@@ -66,7 +66,7 @@ class _RadialMenuState extends State<RadialMenu>
     return Container(
       width: width,
       height: height,
-      color: const Color(0XFF136207),
+      color: const Color(0xff136207),
       child: Column(
         children: <Widget>[
           AnimatedBuilder(

@@ -147,7 +147,7 @@ class NyzoStringEncoder {
   }
 
   static Uint8List byteArrayForEncodedString(String encodedString) {
-    final Map<String, dynamic> characterToValueMap = Map();
+    final Map<String, dynamic> characterToValueMap = {};
 
     for (var i = 0; i < characterLookup.length; i++) {
       characterToValueMap[characterLookup[i]] = i;

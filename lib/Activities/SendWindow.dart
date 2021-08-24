@@ -385,8 +385,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.transparent,
                                         elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: const BorderRadius.all(
                                                 Radius.circular(100)))),
                                     onPressed: () {
                                       walletWindowState!

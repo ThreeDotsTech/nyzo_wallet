@@ -90,13 +90,13 @@ class NyzoMessage {
   }
 
   sign(Uint8List privKey) async {
-    KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
-    SimplePublicKey pubKey =
+    final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
+    final SimplePublicKey pubKey =
         await keyPair.extractPublicKey() as SimplePublicKey;
     for (var i = 0; i < 32; i++) {
       this.sourceNodeIdentifier![i] = pubKey.bytes[i];
     }
-    Signature signature =
+    final Signature signature =
         await Ed25519().sign(this.getBytes(false), keyPair: keyPair);
     for (var i = 0; i < 64; i++) {
       this.sourceNodeSignature![i] = signature.bytes[i];
@@ -106,38 +106,38 @@ class NyzoMessage {
   fromByteBuffer(byteBuffer) {}
 
   Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
-    KeyPair keyPair = await Ed25519().newKeyPairFromSeed(
+    final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(
         privKey); //Creates a KeyPair from the generated Seed
-    SimplePublicKey publicKey =
+    final SimplePublicKey publicKey =
         keyPair.extractPublicKey() as SimplePublicKey; //Set the Public Key
 
-    http.Response response =
-        await client.post(Uri.parse("https://nyzo.co/message"),
+    final http.Response response =
+        await client.post(Uri.parse('https://nyzo.co/message'),
             headers: {
-              "Host": "nyzo.co",
-              "Connection": "keep-alive",
-              "Origin": "https://nyzo.co",
-              "User-Agent":
-                  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
-              "DNT": "1",
-              "Content-Type": "application/octet-stream",
-              "Accept": "*/*",
-              "Referer": "https://nyzo.co/wallet?id=" +
+              'Host': 'nyzo.co',
+              'Connection': 'keep-alive',
+              'Origin': 'https://nyzo.co',
+              'User-Agent':
+                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
+              'DNT': '1',
+              'Content-Type': 'application/octet-stream',
+              'Accept': '*/*',
+              'Referer': 'https://nyzo.co/wallet?id=' +
                   HEX.encode(publicKey.bytes), //change this to + pubKey
-              "Accept-Encoding": "gzip, deflate, br",
-              "Accept-Language":
-                  "en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2",
+              'Accept-Encoding': 'gzip, deflate, br',
+              'Accept-Language':
+                  'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
             },
             body: this.getBytes(true));
 
-    var arrayBuffer = response.bodyBytes;
-    var byteArray = new Uint8List.fromList(arrayBuffer);
-    var response2 = new NyzoMessage();
+    final arrayBuffer = response.bodyBytes;
+    final byteArray = new Uint8List.fromList(arrayBuffer);
+    final response2 = new NyzoMessage();
 
     response2.timestamp = intValueFromArray(byteArray, 4, 8);
     response2.type = intValueFromArray(byteArray, 12, 2);
     response2.content = contentForType(response2.type, byteArray, 14);
-    int sourceNodeIdentifierIndex =
+    final int sourceNodeIdentifierIndex =
         14 + contentSizeForType(response2.type, byteArray, 14);
     response2.sourceNodeIdentifier =
         arrayFromArray(byteArray, sourceNodeIdentifierIndex, 32);

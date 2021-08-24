@@ -169,7 +169,7 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                       ? const Center(
                           child: CircularProgressIndicator(
                               valueColor:
-                                  AlwaysStoppedAnimation(Color(0XFFFFFFFF))))
+                                  AlwaysStoppedAnimation(Color(0xffffffff))))
                       : Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(

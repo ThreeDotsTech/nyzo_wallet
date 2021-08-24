@@ -44,18 +44,15 @@ class UnicornButton extends FloatingActionButton {
                     ),
                   ]
                 : null,
-            color: labelBackgroundColor == null
-                ? Colors.white
-                : labelBackgroundColor,
+            color: labelBackgroundColor ?? Colors.white,
             borderRadius: BorderRadius.circular(3.0)), //color: Colors.white,
         padding: const EdgeInsets.all(9.0),
         child: Text(labelText!,
             style: TextStyle(
                 fontSize: labelFontSize,
                 fontWeight: FontWeight.bold,
-                color: labelColor == null
-                    ? const Color.fromRGBO(119, 119, 119, 1.0)
-                    : labelColor)));
+                color:
+                    labelColor ?? const Color.fromRGBO(119, 119, 119, 1.0))));
   }
 
   Widget build(BuildContext context) {

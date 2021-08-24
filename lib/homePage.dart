@@ -58,56 +58,55 @@ class _MyHomePageState extends State<HomePage> {
                   width: 150.0,
                 )),
             const Padding(padding: const EdgeInsets.symmetric(vertical: 30.0)),
-            _visibleButttons
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.black87,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0))),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NewWalletScreen()),
-                              );
-                            },
-                            child: Text(
-                                AppLocalizations.of(context)!
-                                    .translate('String65'),
-                                style: const TextStyle(color: Colors.white)),
-                          )),
-                      const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20.0)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.black87,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0))),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ImportWalletScreen()),
-                            );
-                          },
-                          child: Text(
-                            AppLocalizations.of(context)!.translate('String66'),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
+            if (_visibleButttons)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.black87,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0))),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NewWalletScreen()),
+                          );
+                        },
+                        child: Text(
+                            AppLocalizations.of(context)!.translate('String65'),
+                            style: const TextStyle(color: Colors.white)),
+                      )),
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 20.0)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.black87,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0))),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ImportWalletScreen()),
+                        );
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.translate('String66'),
+                        style: const TextStyle(color: Colors.white),
                       ),
-                    ],
-                  )
-                : const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Color(0XFFD42D72)),
+                    ),
                   ),
+                ],
+              )
+            else
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Color(0xffd42d72)),
+              ),
             Expanded(
               child: Container(),
             ),

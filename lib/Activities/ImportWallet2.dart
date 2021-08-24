@@ -179,7 +179,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                       ? const Center(
                           child: CircularProgressIndicator(
                               valueColor:
-                                  AlwaysStoppedAnimation(Color(0XFFFFFFFF))))
+                                  AlwaysStoppedAnimation(Color(0xffffffff))))
                       : Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(

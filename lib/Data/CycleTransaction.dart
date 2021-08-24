@@ -1,4 +1,3 @@
-
 class CycleTransaction {
   String? initiatorNickname;
   String? initiatorId;
