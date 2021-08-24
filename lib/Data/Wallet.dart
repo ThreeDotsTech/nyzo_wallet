@@ -477,8 +477,8 @@ sendMessage(NyzoMessage message) async {
   return list;
 }
 
-Future<dynamic> signTransaction(String initiatorSignature,
-    String initiatorIdentifier, String transactionBytes,
+Future<dynamic> signTransaction(String? initiatorSignature,
+    String? initiatorIdentifier, String? transactionBytes,
     {String? password, String? walletPrivateSeed}) async {
   if (walletPrivateSeed == null) {
     walletPrivateSeed = await _getPrivKey(password!);
@@ -492,10 +492,10 @@ Future<dynamic> signTransaction(String initiatorSignature,
   } else {
     final signature = CycleTransactionSignature();
     signature
-        .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier));
+        .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier!));
     signature.setIdentifier(keyPair.extractPublicKey());
     signature.setSignature(await signBytes(
-        hexStringAsUint8Array(transactionBytes),
+        hexStringAsUint8Array(transactionBytes!),
         hexStringAsUint8Array(walletPrivateSeed)));
 
     final message = NyzoMessage();

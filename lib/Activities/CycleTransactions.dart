@@ -10,6 +10,7 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
@@ -269,27 +270,30 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                 ),
                               ),
                             ),
-                            /* Row(
+                            /*Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                RaisedButton(
-                                  color: ColorTheme.of(context)!.secondaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.0)),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary:
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                  ),
                                   child: Text("Sign",
                                       style: TextStyle(
-                                          color: ColorTheme.of(context)
+                                          color: ColorTheme.of(context)!
                                               .baseColor)),
                                   onPressed: () {
                                     setState(() {
                                       _loading = true;
                                     });
                                     signTransaction(
-                                      currentTx.initiatorSignature,
-                                      currentTx.initiatorId,
-                                      currentTx.bytes,
+                                      currentTx!.initiatorSignature,
+                                      currentTx!.initiatorId,
+                                      currentTx!.bytes,
                                       password: _password,
                                     ).then((var json) {
                                       setState(() {
@@ -306,9 +310,9 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                               ),
                                               content: Text(json["message"]),
                                               actions: <Widget>[
-                                                FlatButton(
+                                                TextButton(
                                                   child: Text(AppLocalizations
-                                                          .of(context)
+                                                          .of(context)!
                                                       .translate("String29")),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -322,14 +326,17 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                     });
                                   },
                                 ),
-                                RaisedButton(
-                                  color: ColorTheme.of(context)!.secondaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.0)),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary:
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                  ),
                                   child: Text("Bulk Signing",
                                       style: TextStyle(
-                                          color: ColorTheme.of(context)
+                                          color: ColorTheme.of(context)!
                                               .baseColor)),
                                   onPressed: () {
                                     showDialog(
@@ -367,7 +374,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                                         filled: true,
                                                         fillColor:
                                                             ColorTheme.of(
-                                                                    context)
+                                                                    context)!
                                                                 .dephtColor,
                                                         focusedErrorBorder:
                                                             OutlineInputBorder(
@@ -422,22 +429,23 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                               ),
                                             ),
                                             actions: <Widget>[
-                                              FlatButton(
+                                              TextButton(
                                                 child: Text("Cancel"),
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
                                               ),
-                                              FlatButton(
+                                              TextButton(
                                                 child: Text("Sign"),
-                                                onPressed: () {/*
+                                                onPressed: () {
+                                                  /*
                                                   signTransactionWithKeyList(
                                                       textEditingController
                                                           .text,
-                                                      currentTx
+                                                      currentTx!
                                                           .initiatorSignature,
-                                                      currentTx.initiatorId,
-                                                      currentTx.bytes);*/
+                                                      currentTx!.initiatorId,
+                                                      currentTx!.bytes);*/
                                                 },
                                               )
                                             ],
