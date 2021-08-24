@@ -516,17 +516,17 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         ),
                                         onPressed: () {
                                           FocusScope.of(context).unfocus();
-                                          final State<StatefulWidget>?
+                                          final WalletWindowState?
                                               walletWindowState =
                                               context.findAncestorStateOfType();
 
-                                          /*Navigator.push(
+                                          Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     QrCameraWindow(
                                                         walletWindowState)),
-                                          );*/
+                                          );
                                         },
                                       ),
                                       IconButton(

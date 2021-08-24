@@ -10,7 +10,6 @@ import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';

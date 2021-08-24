@@ -34,11 +34,11 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
     super.initState();
   }
 
-  Future<void> refresh() async {
-    final Future<List<Verifier>?> updateFuture =
+  Future<List<Verifier>> refresh() async {
+    Future<List<Verifier>> updateFuture =
         ColorTheme.of(context)!.updateVerifiers!();
     ColorTheme.of(context)!.getBalanceList!();
-    return;
+    return updateFuture;
   }
 
   SliverPersistentHeader makeHeader(
