@@ -711,7 +711,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                     ),
                                                     content: Text(result),
                                                     actions: <Widget>[
-                                                      FlatButton(
+                                                      TextButton(
                                                         child: Text(
                                                             AppLocalizations.of(
                                                                     context)!

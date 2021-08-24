@@ -123,14 +123,14 @@ class SettingsWindowState extends State<SettingsWindow> {
                         content: Text(AppLocalizations.of(context)!
                             .translate('String33')),
                         actions: <Widget>[
-                          FlatButton(
+                          TextButton(
                             child: Text(AppLocalizations.of(context)!
                                 .translate('String34')),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
-                          FlatButton(
+                          TextButton(
                             child: Text(
                               AppLocalizations.of(context)!
                                   .translate('String35'),

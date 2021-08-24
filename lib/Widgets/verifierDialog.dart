@@ -113,7 +113,7 @@ class AddVerifierDialog {
               ],
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String34')),
                 onPressed: () {
@@ -121,7 +121,7 @@ class AddVerifierDialog {
                   Navigator.pop(context);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String71')),
                 onPressed: () async {

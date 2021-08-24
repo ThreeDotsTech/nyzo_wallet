@@ -62,7 +62,7 @@ class AddContactDialog {
               ),
             )),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String34')),
                 onPressed: () {
@@ -70,7 +70,7 @@ class AddContactDialog {
                   Navigator.pop(context);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String15')),
                 onPressed: () {
@@ -158,7 +158,7 @@ class AddContactDialog {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String34')),
                 onPressed: () {
@@ -167,7 +167,7 @@ class AddContactDialog {
                   Navigator.pop(context);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String15')),
                 onPressed: () {
@@ -237,7 +237,7 @@ class AddContactDialog {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String34')),
                 onPressed: () {
@@ -247,7 +247,7 @@ class AddContactDialog {
                   Navigator.pop(context);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child:
                     Text(AppLocalizations.of(context)!.translate('String71')),
                 onPressed: () async {
