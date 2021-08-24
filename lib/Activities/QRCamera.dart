@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:qr_mobile_vision/qr_camera.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
@@ -28,17 +29,16 @@ class _QrCameraWindowState extends State<QrCameraWindow> {
         ),
       ),
       body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        /*child: QrCamera(qrCodeCallback: (String scanned) {
-          widget.walletWindowState.textControllerAddress.text = scanned;
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: QrCamera(qrCodeCallback: (String? scanned) {
+            widget.walletWindowState.textControllerAddress.text = scanned!;
 
-          if (!hasScanned) {
-            Navigator.pop(context);
-            hasScanned = true;
-          }
-        })*/
-      ),
+            if (!hasScanned) {
+              Navigator.pop(context);
+              hasScanned = true;
+            }
+          })),
     );
   }
 }
