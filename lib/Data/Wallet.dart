@@ -423,8 +423,7 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
 
   if (specifiedTransactionIsValid()) {
     final NyzoMessage result = await fetchPreviousHash(walletPrivateSeed);
-    if (result == null ||
-        result.content == null ||
+    if (result.content == null ||
         result.content.height == null ||
         result.content.hash == null) {
     } else {
