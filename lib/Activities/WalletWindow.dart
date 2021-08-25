@@ -10,7 +10,7 @@ import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 import 'package:nyzo_wallet/Activities/ContactsWindow.dart';
 import 'package:nyzo_wallet/Activities/SendWindow.dart';
 import 'package:nyzo_wallet/Activities/SettingsWindow.dart';
-import 'package:nyzo_wallet/Activities/verifiersWindow.dart';
+import 'package:nyzo_wallet/Activities/VerifiersWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Transaction.dart';
@@ -18,7 +18,7 @@ import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/TransactionsWidget.dart';
 import 'package:nyzo_wallet/Widgets/Unicorndial.dart';
-import 'package:nyzo_wallet/Widgets/verifierDialog.dart';
+import 'package:nyzo_wallet/Widgets/VerifierDialog.dart';
 
 class WalletWindow extends StatefulWidget {
   final _password;

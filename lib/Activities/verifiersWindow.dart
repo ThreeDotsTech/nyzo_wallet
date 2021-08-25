@@ -16,7 +16,7 @@ import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
-import 'package:nyzo_wallet/Widgets/verifierDialog.dart';
+import 'package:nyzo_wallet/Widgets/VerifierDialog.dart';
 
 class VerifiersWindow extends StatefulWidget {
   @override

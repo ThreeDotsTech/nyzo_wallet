@@ -8,7 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 // Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
-import 'package:nyzo_wallet/Data/watchedAddress.dart';
+import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'Data/Wallet.dart';
 import 'homePage.dart';

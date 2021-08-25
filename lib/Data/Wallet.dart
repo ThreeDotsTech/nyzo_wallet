@@ -25,7 +25,7 @@ import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/CycleTransactionSignature.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
-import 'package:nyzo_wallet/Data/watchedAddress.dart';
+import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 import 'NyzoMessage.dart';
 import 'Transaction.dart';
 import 'TransactionMessage.dart';
@@ -81,7 +81,7 @@ Future createNewWallet(String password) async {
   setWatchSentinels(false);
   addContact(
       [],
-      Contact('id__88z0UBr0BTIzhxr02n66QMxycIYt3UhoCotqKQTuGf_tYMsBmXV8',
+      Contact('id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I',
           'Donate', 'Help us develop this wallet.'));
   prefs.setBool('nigthMode', true);
   return [HEX.encode(privKey), HEX.encode(pubKey.bytes)];
@@ -128,7 +128,7 @@ Future<bool> importWallet(String nyzoString, String password) async {
   await _storage.write(key: 'Password', value: password);
   addContact(
       [],
-      Contact('id__88z0UBr0BTIzhxr02n66QMxycIYt3UhoCotqKQTuGf_tYMsBmXV8',
+      Contact('id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I',
           'Donate', 'Help us develop this wallet.'));
   return true;
 }
@@ -489,7 +489,7 @@ Future<dynamic> signTransaction(String? initiatorSignature,
     final signature = CycleTransactionSignature();
     signature
         .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier!));
-    signature.setIdentifier(keyPair.extractPublicKey());
+    signature.setIdentifier(await keyPair.extractPublicKey());
     signature.setSignature(await signBytes(
         hexStringAsUint8Array(transactionBytes!),
         hexStringAsUint8Array(walletPrivateSeed)));

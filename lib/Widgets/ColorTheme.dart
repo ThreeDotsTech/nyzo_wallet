@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Data/Verifier.dart';
-import 'package:nyzo_wallet/Data/watchedAddress.dart';
+import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 
 class ColorTheme extends InheritedWidget {
   const ColorTheme(

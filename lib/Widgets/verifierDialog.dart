@@ -11,7 +11,7 @@ import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
-import 'package:nyzo_wallet/Data/watchedAddress.dart';
+import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 
 class AddVerifierDialog {
   static final TextEditingController nameController = TextEditingController();
