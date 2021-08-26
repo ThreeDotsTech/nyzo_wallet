@@ -523,6 +523,28 @@ Future<List<Contact>> getContacts() async {
   }
 }
 
+Future<Contact> getContact(String? address) async {
+  final _prefs = await SharedPreferences.getInstance();
+  final _contactListJson = _prefs.getString('contactList');
+  final bool contactFound = false;
+  if (_contactListJson != null) {
+    final List<dynamic> _contactListDeserialized =
+        json.decode(_contactListJson);
+    final int index = _contactListDeserialized.length;
+    for (var i = 0; i < index; i++) {
+      Contact _contact = Contact.fromJson(_contactListDeserialized[i]);
+      if (_contact.address.toUpperCase() == address!.toUpperCase()) {
+        return _contact;
+      }
+    }
+    if (!contactFound) {
+      throw Exception;
+    }
+  } else {
+    throw Exception;
+  }
+}
+
 Future<List<Verifier>> getVerifiers() async {
   final _prefs = await SharedPreferences.getInstance();
   final _verifiersListJson = _prefs.getString('verifiersList');
