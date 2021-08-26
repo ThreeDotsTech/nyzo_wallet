@@ -43,25 +43,25 @@ class NyzoMessage {
   List? signature;
 
   NyzoMessage() {
-    timestamp = DateTime.now().millisecondsSinceEpoch;
-    sourceNodeIdentifier = Uint8List(32);
-    type = 0;
-    content = null;
-    sourceNodeSignature = Uint8List(64);
+    this.timestamp = DateTime.now().millisecondsSinceEpoch;
+    this.sourceNodeIdentifier = Uint8List(32);
+    this.type = 0;
+    this.content = null;
+    this.sourceNodeSignature = Uint8List(64);
   }
 
   NyzoMessage setSourceNodeIdentifier(Uint8List newSourceNodeIdentifier) {
-    sourceNodeIdentifier = newSourceNodeIdentifier;
+    this.sourceNodeIdentifier = newSourceNodeIdentifier;
     return this;
   }
 
   NyzoMessage setType(int newType) {
-    type = newType;
+    this.type = newType;
     return this;
   }
 
   void setContent(var newContent) {
-    content = newContent;
+    this.content = newContent;
   }
 
   Uint8List getBytes(bool includeSignature) {
@@ -69,21 +69,22 @@ class NyzoMessage {
 
     var contentBytes;
     int contentSize = 110;
-    if (content != null) {
-      contentBytes = content.getBytes(true);
+    print("NyzoMessage.getBytes this.content: " + this.content.toString());
+    if (this.content != null) {
+      contentBytes = this.content.getBytes(true);
       contentSize += contentBytes.lengthInBytes as int;
     }
     if (includeSignature) {
       byteBuffer.putInt(contentSize);
     }
-    byteBuffer.putLong(timestamp!);
-    byteBuffer.putShort(type!);
+    byteBuffer.putLong(this.timestamp!);
+    byteBuffer.putShort(this.type!);
     if (contentBytes != null) {
       byteBuffer.putBytes(contentBytes);
     }
-    byteBuffer.putBytes(sourceNodeIdentifier!);
+    byteBuffer.putBytes(this.sourceNodeIdentifier!);
     if (includeSignature) {
-      byteBuffer.putBytes(sourceNodeSignature!);
+      byteBuffer.putBytes(this.sourceNodeSignature!);
     }
     return byteBuffer.toArray();
   }
@@ -93,23 +94,22 @@ class NyzoMessage {
     final SimplePublicKey pubKey =
         await keyPair.extractPublicKey() as SimplePublicKey;
     for (int i = 0; i < 32; i++) {
-      sourceNodeIdentifier![i] = pubKey.bytes[i];
+      this.sourceNodeIdentifier![i] = pubKey.bytes[i];
     }
     final Signature signature =
-        await Ed25519().sign(getBytes(false), keyPair: keyPair);
+        await Ed25519().sign(this.getBytes(false), keyPair: keyPair);
     for (int i = 0; i < 64; i++) {
-      sourceNodeSignature![i] = signature.bytes[i];
+      this.sourceNodeSignature![i] = signature.bytes[i];
     }
+    print("this.sourceNodeSignature: " + this.sourceNodeSignature!.toString());
   }
-
-  fromByteBuffer(byteBuffer) {}
 
   Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
     final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(
         privKey); //Creates a KeyPair from the generated Seed
     final SimplePublicKey publicKey = await keyPair.extractPublicKey()
         as SimplePublicKey; //Set the Public Key
-
+    print("NyzoMessage.send: this.getBytes(true): " + this.getBytes(true).toString());
     final http.Response response =
         await client.post(Uri.parse('https://nyzo.co/message'),
             headers: {
@@ -127,10 +127,18 @@ class NyzoMessage {
               'Accept-Language':
                   'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
             },
-            body: getBytes(true));
-
+            body: this.getBytes(true));
+    print("response.statusCode: " + response.statusCode.toString());
+    print("response.reasonPhrase: " + response.reasonPhrase!);
     final Uint8List arrayBuffer = response.bodyBytes;
+    print("response.bodyBytes: " + response.bodyBytes.toString());
+
+     if (arrayBuffer == null) {
+      return null!;
+    }
+
     final Uint8List byteArray = Uint8List.fromList(arrayBuffer);
+    print("byteArray: " + byteArray.toString());
     final NyzoMessage response2 = NyzoMessage();
 
     response2.timestamp = intValueFromArray(byteArray, 4, 8);
@@ -161,7 +169,7 @@ class NyzoMessage {
   }
 
   int contentSizeForType(int? messageType, Uint8List byteArray, int index) {
-    var contentSize = 0;
+    int contentSize = 0;
     if (messageType == TransactionResponse6) {
       contentSize = 3 + intValueFromArray(byteArray, index + 1, 2);
     } else if (messageType == PreviousHashResponse8) {
@@ -206,7 +214,7 @@ String hexStringFromArrayWithDashes(
 }
 
 int intValueFromArray(Uint8List byteArray, int index, int length) {
-  var timestamp = 0;
+  int timestamp = 0;
   for (int i = index; i < index + length; i++) {
     timestamp *= 256;
     timestamp += byteArray[i];
@@ -217,7 +225,7 @@ int intValueFromArray(Uint8List byteArray, int index, int length) {
 
 Uint8List arrayFromArray(Uint8List byteArray, int index, int length) {
   final Uint8List result = Uint8List(length);
-  for (var i = 0; i < length; i++) {
+  for (int i = 0; i < length; i++) {
     result[i] = byteArray[index + i];
   }
 
