@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
+import 'package:uni_links/uni_links.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
@@ -28,9 +28,18 @@ class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  // Initial deep link
+  String initialDeepLink = '';
+  // Deep link changes
+  StreamSubscription? _deepLinkSub;
+
   @override
   void initState() {
+    // Register Stream
+    _registerStream();
+
     super.initState();
+
     Future<Duration?>.delayed(const Duration(seconds: 1), () async {
       try {
         Future didAuthenticate = _localAuth.authenticate(
@@ -41,13 +50,12 @@ class _AuthScreenState extends State<AuthScreen> {
         didAuthenticate.then((value) {
           if (value) {
             final Future salt = _storage.read(key: 'Password');
-            salt.then((value) {
+            salt.then((value) async {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => WalletWindow(
-                          value,
-                        )),
+                    builder: (BuildContext context) =>
+                        WalletWindow(value, initialDeepLink)),
               );
             });
           }
@@ -61,6 +69,15 @@ class _AuthScreenState extends State<AuthScreen> {
         } else if (e.code == auth_error.notEnrolled) {
         } else if (e.code == auth_error.passcodeNotSet) {
         } else if (e.code == auth_error.otherOperatingSystem) {}
+      }
+    });
+
+    // Get initial deep link
+    getInitialLink().then((String? initialLink) {
+      if (initialLink != null) {
+        setState(() {
+          initialDeepLink = initialLink;
+        });
       }
     });
   }
@@ -96,8 +113,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WalletWindow(
+                                    builder: (BuildContext context) =>
+                                        WalletWindow(
                                           value,
+                                          initialDeepLink,
                                         )),
                               );
                             });
@@ -130,16 +149,15 @@ class _AuthScreenState extends State<AuthScreen> {
                         height: 40.0,
                       ),
                       TextFormField(
-                        onFieldSubmitted: (text) {
+                        onFieldSubmitted: (String text) {
                           final Future salt = _storage.read(key: 'Password');
                           salt.then((value) {
                             if (text == value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WalletWindow(
-                                          value,
-                                        )),
+                                    builder: (context) =>
+                                        WalletWindow(value, initialDeepLink)),
                               );
                             } else {
                               final snackBar = SnackBar(
@@ -179,7 +197,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           labelText: AppLocalizations.of(context)!
                               .translate('String81'),
                           labelStyle: const TextStyle(
-                              color: const Color(0xFF555555),
+                              color: Color(0xFF555555),
                               fontWeight: FontWeight.w600,
                               fontSize: 15),
                         ),
@@ -199,12 +217,11 @@ class _AuthScreenState extends State<AuthScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WalletWindow(
-                                            value,
-                                          )),
+                                      builder: (BuildContext context) =>
+                                          WalletWindow(value, initialDeepLink)),
                                 );
                               } else {
-                                final snackBar = SnackBar(
+                                final SnackBar snackBar = SnackBar(
                                     content: Text(AppLocalizations.of(context)!
                                         .translate('String2')));
 
@@ -232,5 +249,29 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       ),
     );
+  }
+
+  // Register Stream
+  void _registerStream() {
+    // Deep link has been updated
+    _deepLinkSub = linkStream.listen((String? link) {
+      if (link != null) {
+        setState(() {
+          initialDeepLink = link;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _destroyStream();
+    super.dispose();
+  }
+
+  void _destroyStream() {
+    if (_deepLinkSub != null) {
+      _deepLinkSub!.cancel();
+    }
   }
 }

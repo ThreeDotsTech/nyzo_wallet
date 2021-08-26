@@ -45,7 +45,10 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => WalletWindow(textController1.text)),
+            builder: (context) => WalletWindow(
+                  textController1.text,
+                  '',
+                )),
       );
     });
   }

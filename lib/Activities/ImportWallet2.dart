@@ -49,7 +49,10 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => WalletWindow(textController1.text)),
+            builder: (context) => WalletWindow(
+                  textController1.text,
+                  '',
+                )),
       );
       ColorTheme.of(context)!.update!();
 

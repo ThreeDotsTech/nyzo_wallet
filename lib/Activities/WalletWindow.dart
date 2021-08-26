@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +8,7 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:intl/intl.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
+import 'package:uni_links/uni_links.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Activities/ContactsWindow.dart';
@@ -19,16 +23,22 @@ import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/TransactionsWidget.dart';
 import 'package:nyzo_wallet/Widgets/Unicorndial.dart';
 import 'package:nyzo_wallet/Widgets/VerifierDialog.dart';
+import 'package:nyzo_wallet/nyzo_url.dart';
 
 class WalletWindow extends StatefulWidget {
-  final _password;
-  const WalletWindow(this._password);
+  const WalletWindow(this._password, this._initialDeepLink);
+
+  final String _password;
+  final String _initialDeepLink;
+
   @override
-  WalletWindowState createState() => WalletWindowState(_password);
+  WalletWindowState createState() =>
+      WalletWindowState(_password, _initialDeepLink);
 }
 
-class WalletWindowState extends State<WalletWindow> {
-  WalletWindowState(this.password);
+class WalletWindowState extends State<WalletWindow>
+    with WidgetsBindingObserver {
+  WalletWindowState(this.password, this.initialDeepLink);
   ContactsWindow contactsWindow = ContactsWindow(contactsList!);
   TranSactionsWidget tranSactionsWidgetInstance =
       TranSactionsWidget(List<Transaction>.empty(growable: true));
@@ -42,18 +52,23 @@ class WalletWindowState extends State<WalletWindow> {
   static List<Transaction>? transactions;
   static List<Contact>? contactsList = List<Contact>.empty(growable: true);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var f = NumberFormat('###.0#', 'en_US');
+  NumberFormat f = NumberFormat('###.0#', 'en_US');
   bool _compactFormat = true;
   int pageIndex = 0;
 
   bool sentinels = false;
 
-  final textControllerAmount = TextEditingController();
-  final textControllerAddress = TextEditingController();
-  final textControllerData = TextEditingController();
-  final amountFormKey = GlobalKey<FormFieldState>();
-  final addressFormKey = GlobalKey<FormFieldState>();
-  final dataFormKey = GlobalKey<FormFieldState>();
+  // Initial deep link
+  String initialDeepLink = '';
+  // Deep link changes
+  StreamSubscription? _deepLinkSub;
+
+  final TextEditingController textControllerAmount = TextEditingController();
+  final TextEditingController textControllerAddress = TextEditingController();
+  final TextEditingController textControllerData = TextEditingController();
+  final GlobalKey<FormFieldState> amountFormKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> addressFormKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> dataFormKey = GlobalKey<FormFieldState>();
 
   AddVerifierDialog floatingdialog = AddVerifierDialog();
 
@@ -63,6 +78,10 @@ class WalletWindowState extends State<WalletWindow> {
 
   @override
   void initState() {
+    // Register Stream
+    _registerStream();
+    WidgetsBinding.instance!.addObserver(this);
+
     //The first thing we do is load the last balance saved on disk.
     getSavedBalance().then((double _balance) {
       setState(() {
@@ -82,7 +101,7 @@ class WalletWindowState extends State<WalletWindow> {
       //load the wallet's address from disk
       setState(() {
         _address = address;
-        //Now that we have the address, we instantialize  the send window.
+        //Now that we have the address, we instantialize the send window.
         sendWindowInstance =
             SendWindow(password, nyzoStringFromPublicIdentifier(_address));
 
@@ -109,6 +128,11 @@ class WalletWindowState extends State<WalletWindow> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
+    if (initialDeepLink.isNotEmpty) {
+      handleDeepLink(initialDeepLink);
+      initialDeepLink = '';
+    }
   }
 
   changeFormat() {
@@ -317,5 +341,66 @@ class WalletWindowState extends State<WalletWindow> {
         ),
       ),
     );
+  }
+
+  // Register Stream
+  void _registerStream() {
+    // Deep link has been updated
+    _deepLinkSub = linkStream.listen((String? link) {
+      if (link != null) {
+        setState(() {
+          initialDeepLink = link;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _destroyStream();
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  void _destroyStream() {
+    if (_deepLinkSub != null) {
+      _deepLinkSub!.cancel();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Handle websocket connection when app is in background
+    // terminate it to be eco-friendly
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (initialDeepLink.isNotEmpty) {
+          handleDeepLink(initialDeepLink);
+          initialDeepLink = '';
+        }
+        super.didChangeAppLifecycleState(state);
+        break;
+      default:
+        super.didChangeAppLifecycleState(state);
+        break;
+    }
+  }
+
+  Future<void> handleDeepLink(String link) async {
+    final NyzoUrl nyzoUrl = await NyzoUrl().getInfo(Uri.decodeFull(link));
+
+    setState(() {
+      if (nyzoUrl.amount != null) {
+        textControllerAmount.text = nyzoUrl.amount!;
+      }
+      if (nyzoUrl.data != null) {
+        textControllerData.text = nyzoUrl.data!;
+      }
+      if (nyzoUrl.address != null) {
+        textControllerAddress.text = nyzoUrl.address!;
+      }
+      FocusScope.of(context).requestFocus(FocusNode());
+      pageIndex = 2;
+    });
   }
 }
