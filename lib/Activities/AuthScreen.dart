@@ -33,21 +33,11 @@ class _AuthScreenState extends State<AuthScreen> {
     super.initState();
     Future<Duration?>.delayed(const Duration(seconds: 1), () async {
       try {
-        Future didAuthenticate;
-        if (Platform.isIOS) {
-          didAuthenticate = _localAuth.authenticate(
-            biometricOnly: true,
-            stickyAuth: true,
-            localizedReason:
-                AppLocalizations.of(context)!.translate('String80'),
-          );
-        } else {
-          didAuthenticate = _localAuth.authenticate(
-              biometricOnly: true,
-              stickyAuth: true,
-              localizedReason:
-                  AppLocalizations.of(context)!.translate('String80'));
-        }
+        Future didAuthenticate = _localAuth.authenticate(
+          biometricOnly: true,
+          stickyAuth: true,
+          localizedReason: AppLocalizations.of(context)!.translate('String80'),
+        );
         didAuthenticate.then((value) {
           if (value) {
             final Future salt = _storage.read(key: 'Password');
@@ -169,7 +159,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             color: ColorTheme.of(context)!.secondaryColor),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: ColorTheme.of(context)!.dephtColor,
+                          fillColor: ColorTheme.of(context)!.depthColor,
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
                               borderSide: const BorderSide(color: Colors.red)),
