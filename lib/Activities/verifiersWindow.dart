@@ -876,7 +876,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                           filled: false,
                                                           fillColor: ColorTheme
                                                                   .of(context)!
-                                                              .dephtColor,
+                                                              .depthColor,
                                                           focusedBorder: const UnderlineInputBorder(
                                                               borderSide: BorderSide(
                                                                   color: Colors

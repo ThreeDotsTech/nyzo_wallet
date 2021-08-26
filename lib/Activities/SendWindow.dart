@@ -351,7 +351,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 ),
                               ),
                               filled: true,
-                              fillColor: ColorTheme.of(context)!.dephtColor,
+                              fillColor: ColorTheme.of(context)!.depthColor,
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide:
@@ -445,7 +445,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 color: ColorTheme.of(context)!.secondaryColor),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: ColorTheme.of(context)!.dephtColor,
+                              fillColor: ColorTheme.of(context)!.depthColor,
                               contentPadding: const EdgeInsets.all(10),
                               suffixIcon: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -551,7 +551,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   color:
                                       ColorTheme.of(context)!.secondaryColor),
                               filled: true,
-                              fillColor: ColorTheme.of(context)!.dephtColor,
+                              fillColor: ColorTheme.of(context)!.depthColor,
                               contentPadding: const EdgeInsets.all(10),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.never,

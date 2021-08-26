@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
   bool lightTheme = false;
   Color baseColor = const Color(0xFFF5F5F5);
   Color secondaryColor = const Color(0xFF121212);
-  Color dephtColor = Colors.white;
+  Color depthColor = Colors.white;
   Color extraColor = Colors.black87;
   Color? transparentColor = Colors.grey[300];
   Color? highLightColor = Colors.grey[100];
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
         lightTheme = value ?? true;
         if (!lightTheme) {
           baseColor = const Color(0xFFF5F5F5);
-          dephtColor = Colors.white;
+          depthColor = Colors.white;
           secondaryColor = const Color(0xFF121212);
           extraColor = Colors.black87;
           transparentColor = Colors.grey[300];
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         } else {
           baseColor = const Color(0xFF15151a);
           secondaryColor = const Color(0xFFF5F5F5);
-          dephtColor = const Color(0xFF1b1c20);
+          depthColor = const Color(0xFF1b1c20);
           extraColor = Colors.black;
           transparentColor = Colors.white30;
           highLightColor = Colors.white10;
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
       baseColor: baseColor,
       secondaryColor: secondaryColor,
       extraColor: extraColor,
-      dephtColor: dephtColor,
+      depthColor: depthColor,
       transparentColor: transparentColor!,
       highLigthColor: highLightColor!,
       verifiersList: verifiersList,

@@ -11,7 +11,7 @@ class ColorTheme extends InheritedWidget {
       required this.child,
       this.update,
       this.baseColor,
-      this.dephtColor,
+      this.depthColor,
       this.secondaryColor,
       this.extraColor,
       this.transparentColor,
@@ -27,7 +27,7 @@ class ColorTheme extends InheritedWidget {
   final bool? lightTheme;
   final Function? update;
   final Color? baseColor;
-  final Color? dephtColor;
+  final Color? depthColor;
   final Color? secondaryColor;
   final Color? extraColor;
   final Color? transparentColor;

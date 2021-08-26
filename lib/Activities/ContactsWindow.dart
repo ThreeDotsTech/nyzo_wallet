@@ -166,7 +166,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                       filled: true,
                                                       fillColor: ColorTheme.of(
                                                               context)!
-                                                          .dephtColor,
+                                                          .depthColor,
                                                       focusedErrorBorder:
                                                           OutlineInputBorder(
                                                               borderRadius:

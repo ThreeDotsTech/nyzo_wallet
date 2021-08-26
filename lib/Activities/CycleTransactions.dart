@@ -196,7 +196,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                               ),
                             ),
                             Card(
-                              color: ColorTheme.of(context)!.dephtColor,
+                              color: ColorTheme.of(context)!.depthColor,
                               child: Container(
                                 padding: const EdgeInsets.all(15),
                                 child: Column(
@@ -374,7 +374,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                                         fillColor:
                                                             ColorTheme.of(
                                                                     context)!
-                                                                .dephtColor,
+                                                                .depthColor,
                                                         focusedErrorBorder:
                                                             OutlineInputBorder(
                                                                 borderRadius:

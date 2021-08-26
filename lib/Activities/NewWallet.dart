@@ -92,7 +92,7 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: ColorTheme.of(context)!.dephtColor,
+                      fillColor: ColorTheme.of(context)!.depthColor,
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
                           borderSide: const BorderSide(color: Colors.red)),
@@ -128,7 +128,7 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: ColorTheme.of(context)!.dephtColor,
+                      fillColor: ColorTheme.of(context)!.depthColor,
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(100),
                           borderSide: const BorderSide(color: Colors.red)),
