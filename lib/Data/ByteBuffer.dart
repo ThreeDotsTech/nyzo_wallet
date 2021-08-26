@@ -15,12 +15,14 @@ class ByteBuffer {
 
   putBytes(List<int> bytes) {
     for (var i = 0; i < bytes.length; i++) {
-      array![index! + 1] = bytes[i];
+      array![index!] = bytes[i];
+      index = index! + 1;
     }
   }
 
   putByte(int byte) {
-    array![index! + 1] = byte;
+    array![index!] = byte;
+    index = index! + 1;
   }
 
   putIntegerValue(int value, int? length) {
