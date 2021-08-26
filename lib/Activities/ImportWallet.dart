@@ -79,7 +79,6 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                 autofocus: false,
                 obscureText: true,
                 maxLength: 56,
-                
                 controller: privKeytextController,
                 style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(

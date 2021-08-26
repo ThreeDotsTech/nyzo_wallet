@@ -266,7 +266,8 @@ Uint8List byteArrayForEncodedString(String encodedString) {
   final Uint8List array = Uint8List(arrayLength);
   for (int i = 0; i < arrayLength; i++) {
     final String leftCharacter = encodedString.split('')[(i * 8 / 6).floor()];
-    final String rightCharacter = encodedString.split('')[(i * 8 / 6 + 1).floor()];
+    final String rightCharacter =
+        encodedString.split('')[(i * 8 / 6 + 1).floor()];
 
     final leftValue = characterToValueMap[leftCharacter];
     final rightValue = characterToValueMap[rightCharacter];
@@ -359,23 +360,14 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
       HEX.encode(NyzoStringEncoder.decode(nyzoStringPiblicId).getBytes());
   final http.Client client = http.Client();
   final String? encryptedprivKey = await _storage.read(key: 'privKey');
-  print("encryptedprivKey: " + encryptedprivKey!);
   final String? salt = await _storage.read(key: 'salt');
-  print("salt: " + salt!);
   final String? key = await crypto.generateKeyFromPassword(password, salt!);
-  print("key: " + key!);
   final String? privKey = await crypto.decrypt(encryptedprivKey!, key!);
-  print("privKey: " + privKey!);
   final String walletPrivateSeed = await getPrivateKey(password);
-  print("walletPrivateSeed: " + walletPrivateSeed);
   final String recipientIdentifier = account;
-  print("recipientIdentifier: " + recipientIdentifier);
   final int balanceMicronyzos = balance;
-  print("balanceMicronyzos: " + balanceMicronyzos.toString());
   final int micronyzosToSend = amount;
-  print("micronyzosToSend: " + micronyzosToSend.toString());
   final String senderData = data;
-  print("senderData: " + senderData);
 
   bool specifiedTransactionIsValid() {
     return walletPrivateSeed.length == 64 &&
@@ -431,7 +423,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
 
   if (specifiedTransactionIsValid()) {
     final NyzoMessage result = await fetchPreviousHash(walletPrivateSeed);
-    print("result.content: " + result.content.toString());
     if (result.content == null ||
         result.content.height == null ||
         result.content.hash == null) {
@@ -446,7 +437,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
             recipientIdentifier,
             micronyzosToSend,
             utf8.encode(senderData));
-            print("result2.content: " + result2.content);
         if (result2.content == null) {
           return 'There was a problem communicating with the server. To protect yourself ' +
               'against possible coin theft, please wait to resubmit this transaction. Refer ' +
@@ -455,7 +445,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
               'than other blockchains against this type of potential vulnerability.';
         } else {
           client.close();
-          print("result2.content.message: " + result2.content.message);
           return result2.content.message;
         }
       }
@@ -477,7 +466,6 @@ Future<Uint8List?> signBytes(List<int> bytes, Uint8List key) async {
 sendMessage(NyzoMessage message) async {
   //Send NyzoMessage for the cycle transaction.
   final http.Client client = http.Client();
-  print("sendMessage: message.getBytes(true): " + message.getBytes(true).toString());
   final http.Response response = await client.post(
       Uri.parse('https://nyzo.co/messageCycleTransactionSignature'),
       headers: {

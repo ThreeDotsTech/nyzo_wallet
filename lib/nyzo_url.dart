@@ -18,7 +18,7 @@ class NyzoUrl {
 
   NyzoUrl getInfo(String link) {
     NyzoUrl _nyzoUrl = new NyzoUrl();
-    print("link: " + link);   
+    print("link: " + link);
     return _nyzoUrl;
   }
 }

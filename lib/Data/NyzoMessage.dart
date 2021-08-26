@@ -69,7 +69,6 @@ class NyzoMessage {
 
     var contentBytes;
     int contentSize = 110;
-    print("NyzoMessage.getBytes this.content: " + this.content.toString());
     if (this.content != null) {
       contentBytes = this.content.getBytes(true);
       contentSize += contentBytes.lengthInBytes as int;
@@ -101,7 +100,6 @@ class NyzoMessage {
     for (int i = 0; i < 64; i++) {
       this.sourceNodeSignature![i] = signature.bytes[i];
     }
-    print("this.sourceNodeSignature: " + this.sourceNodeSignature!.toString());
   }
 
   Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
@@ -109,7 +107,6 @@ class NyzoMessage {
         privKey); //Creates a KeyPair from the generated Seed
     final SimplePublicKey publicKey = await keyPair.extractPublicKey()
         as SimplePublicKey; //Set the Public Key
-    print("NyzoMessage.send: this.getBytes(true): " + this.getBytes(true).toString());
     final http.Response response =
         await client.post(Uri.parse('https://nyzo.co/message'),
             headers: {
@@ -128,17 +125,8 @@ class NyzoMessage {
                   'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
             },
             body: this.getBytes(true));
-    print("response.statusCode: " + response.statusCode.toString());
-    print("response.reasonPhrase: " + response.reasonPhrase!);
     final Uint8List arrayBuffer = response.bodyBytes;
-    print("response.bodyBytes: " + response.bodyBytes.toString());
-
-     if (arrayBuffer == null) {
-      return null!;
-    }
-
     final Uint8List byteArray = Uint8List.fromList(arrayBuffer);
-    print("byteArray: " + byteArray.toString());
     final NyzoMessage response2 = NyzoMessage();
 
     response2.timestamp = intValueFromArray(byteArray, 4, 8);
