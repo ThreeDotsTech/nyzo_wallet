@@ -599,8 +599,12 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(30.0))),
-                                    child: Text(AppLocalizations.of(context)!
-                                        .translate('String22')),
+                                    child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('String22'),
+                                        style: TextStyle(
+                                            color: ColorTheme.of(context)!
+                                                .baseColor)),
                                     onPressed: () {
                                       //var dataForm = dataFormKey.currentState;
                                       final FormFieldState? addressForm =
