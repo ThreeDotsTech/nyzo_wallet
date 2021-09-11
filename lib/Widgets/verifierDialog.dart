@@ -77,7 +77,7 @@ class AddVerifierDialog {
                               //});
                             }
                           } catch (e) {
-                            if (e.runtimeType == InvalisNyzoString) {
+                            if (e.runtimeType == InvalidNyzoString) {
                               return e.toString();
                             }
                           }

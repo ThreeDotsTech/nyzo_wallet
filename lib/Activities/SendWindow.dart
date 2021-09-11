@@ -436,7 +436,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         utf8.decode(pre.getSenderData()!);
                                   }
                                 } catch (e) {
-                                  return InvalisNyzoString().errMsg();
+                                  return InvalidNyzoString().errMsg();
                                 }
                               }
                               return null;
