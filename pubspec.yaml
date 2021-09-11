@@ -12,6 +12,12 @@ dependencies:
   # Flutter widget that automatically resizes text to fit perfectly within its bounds
   auto_size_text: ^3.0.0-nullsafety.0
 
+  # Utilities for accessing binary data and bit manipulation in Dart and Flutter.
+  binary:
+    git:
+      url: https://github.com/redDwarf03/binary.dart.git
+      ref: master
+
   # Implementations of SHA, MD5, and HMAC cryptographic functions
   crypto: ^3.0.1
 
@@ -80,6 +86,9 @@ dependencies:
 
   # A package provides an easy way to add shimmer effect in Flutter project
   shimmer: ^2.0.0
+
+  # Dart implementation of sprintf. Provides simple printf like formatting such as sprintf("hello %s", ["world"]);
+  sprintf: ^6.0.0
 
   # Cross-platform string encryption using common best-practices.
   string_encryption: ^2.0.3

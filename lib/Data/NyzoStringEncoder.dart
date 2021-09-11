@@ -57,11 +57,11 @@ class NyzoStringEncoder {
       expandedArray[i++] = eachInt;
     }
 
-    // Compute the checks um and add the appropriate number of bytes to the end of the array.
+    // Compute the checksum and add the appropriate number of bytes to the end of the array.
     final Uint8List checksum =
         doubleSha256(expandedArray.sublist(0, 4 + contentBytes.length));
 
-    for (var j = 0; j < checksumLength; j++) {
+    for (int j = 0; j < checksumLength; j++) {
       expandedArray[i++] = checksum[j];
     }
 
@@ -87,7 +87,7 @@ class NyzoStringEncoder {
     try {
       type = NyzoStringType.forPrefix(encodedString.substring(0, 4));
     } catch (e) {
-      throw InvalisNyzoString();
+      throw InvalidNyzoString();
     }
 
     // If the type is valid, continue.
@@ -118,8 +118,8 @@ class NyzoStringEncoder {
           // Make the object from the content array.
           switch (type.getPrefix()) {
             case NyzoStringType.PrefilledData:
-              result = NyzoStringPrefilledData(contentBytes.sublist(0, 32),
-                  contentBytes.sublist(33, contentBytes.length));
+              result =
+                  NyzoStringPrefilledData.fromByteBuffer(contentBytes.buffer);
               break;
             case NyzoStringType.PrivateSeed:
               result = NyzoStringPrivateSeed(contentBytes);
@@ -129,13 +129,13 @@ class NyzoStringEncoder {
               break;
           }
         } else {
-          throw InvalisNyzoString();
+          throw InvalidNyzoString();
         }
       } else {
-        throw InvalisNyzoString();
+        throw InvalidNyzoString();
       }
     } else {
-      throw InvalisNyzoString();
+      throw InvalidNyzoString();
     }
 
     return result!;
@@ -149,16 +149,17 @@ class NyzoStringEncoder {
   static Uint8List byteArrayForEncodedString(String encodedString) {
     final Map<String, dynamic> characterToValueMap = {};
 
-    for (var i = 0; i < characterLookup.length; i++) {
+    for (int i = 0; i < characterLookup.length; i++) {
       characterToValueMap[characterLookup[i]] = i;
     }
 
-    final arrayLength = ((encodedString.length * 6 + 7) / 8).floor();
+    final int arrayLength = ((encodedString.length * 6 + 7) / 8).floor();
 
-    final array = Uint8List(arrayLength);
-    for (var i = 0; i < arrayLength; i++) {
-      final leftCharacter = encodedString.split('')[(i * 8 / 6).floor()];
-      final rightCharacter = encodedString.split('')[(i * 8 / 6 + 1).floor()];
+    final Uint8List array = Uint8List(arrayLength);
+    for (int i = 0; i < arrayLength; i++) {
+      final String leftCharacter = encodedString.split('')[(i * 8 / 6).floor()];
+      final String rightCharacter =
+          encodedString.split('')[(i * 8 / 6 + 1).floor()];
 
       final leftValue = characterToValueMap[leftCharacter];
       final rightValue = characterToValueMap[rightCharacter];
@@ -197,6 +198,6 @@ class NyzoStringEncoder {
   }
 }
 
-class InvalisNyzoString implements Exception {
+class InvalidNyzoString implements Exception {
   String errMsg() => 'Invalid Nyzo String';
 }

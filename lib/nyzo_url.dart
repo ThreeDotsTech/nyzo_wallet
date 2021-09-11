@@ -1,12 +1,8 @@
-// Dart imports:
-import 'dart:convert';
-
-// Package imports:
-import 'package:hex/hex.dart';
-
 // Project imports:
-import 'package:nyzo_wallet/Data/Contact.dart';
-import 'package:nyzo_wallet/Data/Wallet.dart';
+import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
+import 'package:nyzo_wallet/Data/NyzoStringPrefilledData.dart';
+import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
+import 'package:nyzo_wallet/Data/Utils.dart';
 
 class NyzoUrl {
   NyzoUrl(
@@ -30,48 +26,17 @@ class NyzoUrl {
 
   Future<NyzoUrl> getInfo(String link) async {
     final NyzoUrl _nyzoUrl = NyzoUrl();
-    String checksum;
     link = link.replaceAll('nyzo://', '');
-    final List<String> params = link.split('/');
 
-    // format url based b64urlsafe
-    if (params.isNotEmpty) {
-      action = params[0];
-    }
-    if (action == 'pre') {
-      // Prefilled transactions
-      // nyzo://pre/recipient/amount/b64_data/b64_checksum
-      if (params.length > 1) {
-        address = params[1];
-      }
-      if (params.length > 2) {
-        amount = params[2];
-      }
-      if (params.length > 3) {
-        data = String.fromCharCodes(base64Url.decode(params[3]));
-      }
-      if (params.length > 4) {
-        // TODO : Verify checksum
-        checksum = HEX.encode(base64Url.decode(params[4]));
-      }
-      _nyzoUrl.action = action ?? '';
-      _nyzoUrl.address = address ?? '';
-      if (_nyzoUrl.address!.isNotEmpty) {
-        try {
-          final Contact _contact = await getContact(_nyzoUrl.address);
-          _nyzoUrl.contactName = _contact.name;
-        } on Exception {
-          _nyzoUrl.contactName = '';
-        }
-      }
-      _nyzoUrl.amount = amount ?? '0';
-      _nyzoUrl.data = data ?? '';
-
-      // TODO: Implement with tokens management
-      _nyzoUrl.isTokenToSend = false;
-      _nyzoUrl.tokenToSendQty = 0;
-      _nyzoUrl.tokenName = '';
-    }
+    final NyzoStringPrefilledData _nyzoStringPrefilledData =
+        NyzoStringEncoder.decode(link) as NyzoStringPrefilledData;
+    _nyzoUrl.address = NyzoStringEncoder.encode(NyzoStringPublicIdentifier(
+        _nyzoStringPrefilledData.getReceiverIdentifier()!));
+    _nyzoUrl.data =
+        Utils.senderDataForDisplay(_nyzoStringPrefilledData.getSenderData()!);
+    _nyzoUrl.amount = _nyzoStringPrefilledData.getAmount() == null
+        ? '0'
+        : (_nyzoStringPrefilledData.getAmount()! ~/ 1000000).toString();
     return _nyzoUrl;
   }
 }
