@@ -57,7 +57,7 @@ class _MyHomePageState extends State<HomePage> {
                   color: Colors.black,
                   width: 150.0,
                 )),
-            const Padding(padding: const EdgeInsets.symmetric(vertical: 30.0)),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 30.0)),
             if (_visibleButttons)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

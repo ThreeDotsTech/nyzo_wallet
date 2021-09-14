@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -24,6 +25,8 @@ import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/CycleTransactionSignature.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
+import 'package:nyzo_wallet/Data/Token.dart';
+import 'package:nyzo_wallet/Data/TokensBalancesResponse.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 import 'NyzoMessage.dart';
@@ -173,6 +176,32 @@ Future<double> getBalance(String address) async {
 //TODO: Correct error handling
   }
   return _balance;
+}
+
+Future<List<Token>> getTokensBalance(String address) async {
+  List<Token> tokensList = List<Token>.empty(growable: true);
+
+  HttpClient httpClient = new HttpClient();
+  try {
+    HttpClientRequest request = await httpClient
+        .getUrl(Uri.parse('https://tokens.nyzo.today/api/balances/' + address));
+    request.headers.set('content-type', 'application/json');
+    HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      String reply = await response.transform(utf8.decoder).join();
+      TokensBalancesResponse tokensBalanceGetResponse =
+          tokensBalancesResponseFromJson(reply);
+
+      for (int i = 0; i < tokensBalanceGetResponse.tokensList!.length; i++) {
+        Token token = new Token(
+            name: tokensBalanceGetResponse.tokensList![i].name,
+            amount: tokensBalanceGetResponse.tokensList![i].amount,
+            comment: tokensBalanceGetResponse.tokensList![i].comment);
+        tokensList.add(token);
+      }
+    }
+  } catch (e) {}
+  return tokensList;
 }
 
 Future<String> getPrivateKey(String password) async {

@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:intl/intl.dart';
-import 'package:nyzo_wallet/Activities/MyTokensWindow.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -18,6 +17,7 @@ import 'package:nyzo_wallet/Activities/SettingsWindow.dart';
 import 'package:nyzo_wallet/Activities/VerifiersWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
+import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -41,7 +41,6 @@ class WalletWindowState extends State<WalletWindow>
     with WidgetsBindingObserver {
   WalletWindowState(this.password, this.initialDeepLink);
   ContactsWindow contactsWindow = ContactsWindow(contactsList!);
-  MyTokensWindow myTokensWindow = MyTokensWindow(contactsList!);
   TransactionsWidget tranSactionsWidgetInstance =
       TransactionsWidget(List<Transaction>.empty(growable: true));
   VerifiersWindow? verifiersWindow;
@@ -50,6 +49,7 @@ class WalletWindowState extends State<WalletWindow>
   String password;
   double? screenHeight;
   int balance = 0;
+  List<Token> myTokensList = List<Token>.empty(growable: true);
   String _address = '';
   static List<Transaction>? transactions;
   static List<Contact>? contactsList = List<Contact>.empty(growable: true);
@@ -117,6 +117,11 @@ class WalletWindowState extends State<WalletWindow>
             transactions = _transactions!.cast<Transaction>();
           });
         }); //set the address
+        getTokensBalance(_address).then((_tokensBalance) {
+          setState(() {
+            myTokensList = _tokensBalance;
+          });
+        });
       });
       getContacts().then((contactList) {
         contactsList = contactList;

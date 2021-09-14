@@ -1,32 +1,34 @@
-// @dart=2.9
-
-import 'package:intl/intl.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
+import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class MyTokensListWindow extends StatefulWidget {
-  final List<NyzoToken> listNyzoToken;
+  const MyTokensListWindow(this.tokensList) : super();
 
-  MyTokensListWindow(this.listNyzoToken) : super();
+  final List<Token> tokensList;
 
+  @override
   _MyTokensListWindowStateState createState() =>
       _MyTokensListWindowStateState();
 }
 
 class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
-  List<NyzoToken> _myNyzoTokenList = new List<NyzoToken>();
-  List<NyzoToken> _myNyzoTokenListForDisplay = new List<NyzoToken>();
+  final List<Token> _myTokenList = List<Token>.empty(growable: true);
+  List<Token> _myTokenListForDisplay = List<Token>.empty(growable: true);
 
   @override
   void initState() {
     //
 
     setState(() {
-      _myNyzoTokenList.addAll(widget.listNyzoToken);
-      _myNyzoTokenList.removeWhere((element) => element.tokenName == "");
-      _myNyzoTokenListForDisplay = _myNyzoTokenList;
+      _myTokenList.addAll(widget.tokensList);
+      _myTokenList.removeWhere((Token element) => element.name == '');
+      _myTokenListForDisplay = _myTokenList;
     });
     super.initState();
   }
@@ -44,7 +46,7 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 //Empty SizedBox
-                SizedBox(
+                const SizedBox(
                   width: 60,
                   height: 40,
                 ),
@@ -52,18 +54,18 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
                   children: <Widget>[
                     // Sheet handle
                     Container(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       height: 5,
                       width: MediaQuery.of(context).size.width * 0.15,
                       decoration: BoxDecoration(
-                        color: StateContainer.of(context).curTheme.text10,
+                        color: ColorTheme.of(context)!.secondaryColor,
                         borderRadius: BorderRadius.circular(100.0),
                       ),
                     ),
                   ],
                 ),
                 //Empty SizedBox
-                SizedBox(
+                const SizedBox(
                   width: 60,
                   height: 40,
                 ),
@@ -71,12 +73,12 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 Center(
                   child: Text(
-                    AppLocalizations.of(context).translate('String72'),
+                    AppLocalizations.of(context)!.translate('String102'),
                     style: TextStyle(
-                        color: ColorTheme.of(context).secondaryColor,
+                        color: ColorTheme.of(context)!.secondaryColor,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0,
                         fontSize: 35),
@@ -101,19 +103,37 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
                                   const EdgeInsets.only(left: 8.0, right: 8.0),
                               child: TextField(
                                 decoration: InputDecoration(
-                                    hintText: AppLocalization.of(context)
-                                        .searchField),
-                                onChanged: (text) {
+                                    hintText: AppLocalizations.of(context)!
+                                        .translate('String103'),
+                                    hintStyle: TextStyle(
+                                        color: ColorTheme.of(context)!
+                                            .secondaryColor,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0,
+                                        fontSize: 16),
+                                    enabledBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFF555555))),
+                                    focusedBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFF555555)))),
+                                onChanged: (String text) {
                                   text = text.toLowerCase();
                                   setState(() {
-                                    _myNyzoTokenListForDisplay =
-                                        _myNyzoTokenList.where((token) {
-                                      var tokenId =
-                                          token.tokenName.toLowerCase();
+                                    _myTokenListForDisplay =
+                                        _myTokenList.where((Token token) {
+                                      final String tokenId =
+                                          token.name!.toLowerCase();
                                       return tokenId.contains(text);
                                     }).toList();
                                   });
                                 },
+                                style: TextStyle(
+                                    color:
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0,
+                                    fontSize: 16),
                               ),
                             ),
                             // list
@@ -124,16 +144,16 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
                                   ListView.builder(
                                     physics:
                                         const AlwaysScrollableScrollPhysics(),
-                                    padding:
-                                        EdgeInsets.only(top: 15.0, bottom: 15),
-                                    itemCount:
-                                        _myNyzoTokenListForDisplay == null
-                                            ? 0
-                                            : _myNyzoTokenListForDisplay.length,
-                                    itemBuilder: (context, index) {
+                                    padding: const EdgeInsets.only(
+                                        top: 15.0, bottom: 15),
+                                    itemCount: _myTokenListForDisplay == null
+                                        ? 0
+                                        : _myTokenListForDisplay.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
                                       // Build
                                       return buildSingleToken(context,
-                                          _myNyzoTokenListForDisplay[index]);
+                                          _myTokenListForDisplay[index]);
                                     },
                                   ),
                                 ],
@@ -149,85 +169,47 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
         ));
   }
 
-  Widget buildSingleToken(BuildContext context, NyzoToken bisToken) {
+  Widget buildSingleToken(BuildContext context, Token token) {
     return Container(
-      padding: EdgeInsets.all(0.0),
+      padding: const EdgeInsets.all(0.0),
       child: Column(children: <Widget>[
-        Divider(
+        const Divider(
           height: 2,
         ),
         // Main Container
         Container(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
-          margin: new EdgeInsetsDirectional.only(start: 12.0, end: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          margin: const EdgeInsetsDirectional.only(start: 12.0, end: 20.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Expanded(
                 child: Container(
                   height: 40,
-                  margin: EdgeInsetsDirectional.only(start: 2.0),
+                  margin: const EdgeInsetsDirectional.only(start: 2.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Row(
-                            children: [
+                            children: <Widget>[
                               Text(
-                                  NumberFormat.compact(
-                                              locale: Localizations.localeOf(
-                                                      context)
-                                                  .languageCode)
-                                          .format(bisToken.tokensQuantity) +
-                                      " " +
-                                      bisToken.tokenName,
-                                  style: AppStyles.textStyleSettingItemHeader(
-                                      context)),
-                              SizedBox(
+                                token.name! + ' : ' + token.amount.toString(),
+                                style: TextStyle(
+                                    color:
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0,
+                                    fontSize: 16),
+                              ),
+                              const SizedBox(
                                 width: 5,
                               ),
-                              TokenRef().getIcon(bisToken.tokenName),
                             ],
                           ),
-                          bisToken.tokensQuantity > 0
-                              ? SizedBox(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 0.0),
-                                    child: Container(
-                                      height: 36,
-                                      width: 36,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Sheets.showAppHeightNineSheet(
-                                              context: context,
-                                              widget: SendSheet(
-                                                sendATokenActive: true,
-                                                operation:
-                                                    AddressTxsResponseResult
-                                                        .TOKEN_TRANSFER,
-                                                selectedTokenName:
-                                                    bisToken.tokenName,
-                                                localCurrency:
-                                                    StateContainer.of(context)
-                                                        .curCurrency,
-                                              ));
-                                        },
-                                        child: Icon(
-                                            FontAwesome5.arrow_circle_up,
-                                            color: StateContainer.of(context)
-                                                .curTheme
-                                                .primary),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(),
                         ],
                       )
                     ],

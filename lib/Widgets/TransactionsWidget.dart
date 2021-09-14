@@ -13,12 +13,14 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
 // Project imports:
+import 'package:nyzo_wallet/Activities/MyTokensListWindow.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+import 'package:nyzo_wallet/Widgets/SheetUtil.dart';
 
 class TransactionsWidget extends StatefulWidget {
   final List<Transaction>? _transactions;
@@ -98,7 +100,7 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
           Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,40 +132,49 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                     ),
                   ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    boxShadow: [
-                      StateContainer.of(context).curTheme.boxShadowButton
-                    ],
-                  ),
-                  height: 55,
-                  width: (MediaQuery.of(context).size.width - 158) / 3,
-                  margin:
-                      EdgeInsetsDirectional.only(start: 7, top: 0.0, end: 7.0),
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100.0)),
-                    color: StateContainer.of(context).curTheme.primary,
-                    child: Icon(Icons.scatter_plot_rounded,
-                        color: StateContainer.of(context).curTheme.background,
-                        size: 40),
-                    onPressed: () {
-                      Sheets.showAppHeightEightSheet(
-                          context: context,
-                          widget: MyTokensList(
-                              StateContainer.of(context).wallet.tokens));
-                    },
-                    highlightColor:
-                        StateContainer.of(context).wallet.tokens.length > 0
-                            ? StateContainer.of(context).curTheme.background40
-                            : Colors.transparent,
-                    splashColor:
-                        StateContainer.of(context).wallet.tokens.length > 0
-                            ? StateContainer.of(context).curTheme.background40
-                            : Colors.transparent,
-                  ),
-                ),
+                walletWindowState!.myTokensList.length > 0
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [BoxShadow(color: Colors.transparent)],
+                            ),
+                            height: 35,
+                            margin: EdgeInsetsDirectional.only(
+                                start: 7, top: 0.0, end: 7.0),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor:
+                                    ColorTheme.of(context)!.secondaryColor,
+                                elevation: 0.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0)),
+                              ),
+                              child: Icon(Icons.scatter_plot_rounded,
+                                  color: ColorTheme.of(context)!.baseColor,
+                                  size: 20),
+                              onPressed: () {
+                                Sheets.showAppHeightEightSheet(
+                                    color: ColorTheme.of(context)!.depthColor,
+                                    context: context,
+                                    widget: MyTokensListWindow(
+                                        walletWindowState!.myTokensList));
+                              },
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .translate('String102'),
+                            style: TextStyle(
+                                color: const Color(0xFF555555),
+                                letterSpacing: 0,
+                                fontSize: 15),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),
