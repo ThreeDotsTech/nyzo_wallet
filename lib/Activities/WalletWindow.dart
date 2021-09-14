@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:intl/intl.dart';
+import 'package:nyzo_wallet/Activities/MyTokensWindow.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -40,8 +41,9 @@ class WalletWindowState extends State<WalletWindow>
     with WidgetsBindingObserver {
   WalletWindowState(this.password, this.initialDeepLink);
   ContactsWindow contactsWindow = ContactsWindow(contactsList!);
-  TranSactionsWidget tranSactionsWidgetInstance =
-      TranSactionsWidget(List<Transaction>.empty(growable: true));
+  MyTokensWindow myTokensWindow = MyTokensWindow(contactsList!);
+  TransactionsWidget tranSactionsWidgetInstance =
+      TransactionsWidget(List<Transaction>.empty(growable: true));
   VerifiersWindow? verifiersWindow;
   SendWindow? sendWindowInstance;
   SettingsWindow? settingsWindow = SettingsWindow();
@@ -243,6 +245,11 @@ class WalletWindowState extends State<WalletWindow>
                         icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String102')),
+                        icon: const Icon(Icons.animation)),
+                    TitledNavigationBarItem(
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
                         title: Text(
                             AppLocalizations.of(context)!.translate('String8')),
                         icon: const Icon(Icons.contacts)),
@@ -265,19 +272,28 @@ class WalletWindowState extends State<WalletWindow>
                 : [
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: const Text('History'),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String72')),
                         icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: const Text('Contacts'),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String102')),
+                        icon: const Icon(Icons.animation)),
+                    TitledNavigationBarItem(
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(
+                            AppLocalizations.of(context)!.translate('String8')),
                         icon: const Icon(Icons.contacts)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: const Text('Transfer'),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String21')),
                         icon: const Icon(Icons.send)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: const Text('Settings'),
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String30')),
                         icon: const Icon(Icons.settings)),
                   ]),
         body: Column(
@@ -297,14 +313,34 @@ class WalletWindowState extends State<WalletWindow>
                     child: Opacity(
                         opacity: pageIndex == 1 ? 1.0 : 0.0,
                         child: IgnorePointer(
-                            child: contactsWindow, ignoring: pageIndex != 1)),
+                            child: myTokensWindow, ignoring: pageIndex != 1)),
                   ),
                   Positioned(
                     child: Opacity(
                         opacity: pageIndex == 2 ? 1.0 : 0.0,
                         child: IgnorePointer(
+                            child: contactsWindow, ignoring: pageIndex != 2)),
+                  ),
+                  Positioned(
+                    child: Opacity(
+                        opacity: pageIndex == 3 ? 1.0 : 0.0,
+                        child: IgnorePointer(
                             child: sendWindowInstance,
-                            ignoring: pageIndex != 2)),
+                            ignoring: pageIndex != 3)),
+                  ),
+                  Positioned(
+                    child: Opacity(
+                        opacity: sentinels
+                            ? pageIndex == 5
+                                ? 1.0
+                                : 0.0
+                            : pageIndex == 4
+                                ? 1.0
+                                : 0.0,
+                        child: IgnorePointer(
+                            child: settingsWindow,
+                            ignoring:
+                                sentinels ? pageIndex != 5 : pageIndex != 4)),
                   ),
                   Positioned(
                     child: Opacity(
@@ -312,27 +348,13 @@ class WalletWindowState extends State<WalletWindow>
                             ? pageIndex == 4
                                 ? 1.0
                                 : 0.0
-                            : pageIndex == 3
-                                ? 1.0
-                                : 0.0,
-                        child: IgnorePointer(
-                            child: settingsWindow,
-                            ignoring:
-                                sentinels ? pageIndex != 4 : pageIndex != 3)),
-                  ),
-                  Positioned(
-                    child: Opacity(
-                        opacity: sentinels
-                            ? pageIndex == 3
-                                ? 1.0
-                                : 0.0
-                            : pageIndex == 4
+                            : pageIndex == 5
                                 ? 1.0
                                 : 0.0,
                         child: IgnorePointer(
                             child: verifiersWindow,
                             ignoring:
-                                sentinels ? pageIndex != 3 : pageIndex != 4)),
+                                sentinels ? pageIndex != 4 : pageIndex != 5)),
                   ),
                 ],
               ),
@@ -400,7 +422,7 @@ class WalletWindowState extends State<WalletWindow>
         textControllerAddress.text = nyzoUrl.address!;
       }
       FocusScope.of(context).requestFocus(FocusNode());
-      pageIndex = 2;
+      pageIndex = 3;
     });
   }
 }

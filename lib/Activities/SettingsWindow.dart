@@ -217,7 +217,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                             setWatchSentinels(val);
                             walletWindowState!.setState(() {
                               walletWindowState!.sentinels = true;
-                              walletWindowState!.pageIndex = 4;
+                              walletWindowState!.pageIndex = 5;
                             });
                           } else {
                             setState(() {
@@ -226,7 +226,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                             setWatchSentinels(val);
                             walletWindowState!.setState(() {
                               walletWindowState!.sentinels = false;
-                              walletWindowState!.pageIndex = 3;
+                              walletWindowState!.pageIndex = 4;
                             });
                           }
                         },
