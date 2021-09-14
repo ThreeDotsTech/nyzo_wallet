@@ -113,7 +113,7 @@ class _RadialMenuState extends State<RadialMenu>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        child: const TranSactionsWidget([]),
+                                        child: const TransactionsWidget([]),
                                       ),
                                     ),
                                   ),
