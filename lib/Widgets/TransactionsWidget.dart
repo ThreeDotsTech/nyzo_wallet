@@ -129,7 +129,41 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                       ),
                     ),
                   ],
-                )
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    boxShadow: [
+                      StateContainer.of(context).curTheme.boxShadowButton
+                    ],
+                  ),
+                  height: 55,
+                  width: (MediaQuery.of(context).size.width - 158) / 3,
+                  margin:
+                      EdgeInsetsDirectional.only(start: 7, top: 0.0, end: 7.0),
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0)),
+                    color: StateContainer.of(context).curTheme.primary,
+                    child: Icon(Icons.scatter_plot_rounded,
+                        color: StateContainer.of(context).curTheme.background,
+                        size: 40),
+                    onPressed: () {
+                      Sheets.showAppHeightEightSheet(
+                          context: context,
+                          widget: MyTokensList(
+                              StateContainer.of(context).wallet.tokens));
+                    },
+                    highlightColor:
+                        StateContainer.of(context).wallet.tokens.length > 0
+                            ? StateContainer.of(context).curTheme.background40
+                            : Colors.transparent,
+                    splashColor:
+                        StateContainer.of(context).wallet.tokens.length > 0
+                            ? StateContainer.of(context).curTheme.background40
+                            : Colors.transparent,
+                  ),
+                ),
               ],
             ),
           ),

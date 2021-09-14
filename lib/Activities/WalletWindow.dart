@@ -245,11 +245,6 @@ class WalletWindowState extends State<WalletWindow>
                         icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text(AppLocalizations.of(context)!
-                            .translate('String102')),
-                        icon: const Icon(Icons.animation)),
-                    TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context)!.baseColor!,
                         title: Text(
                             AppLocalizations.of(context)!.translate('String8')),
                         icon: const Icon(Icons.contacts)),
@@ -275,11 +270,6 @@ class WalletWindowState extends State<WalletWindow>
                         title: Text(AppLocalizations.of(context)!
                             .translate('String72')),
                         icon: const Icon(Icons.history)),
-                    TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context)!.baseColor!,
-                        title: Text(AppLocalizations.of(context)!
-                            .translate('String102')),
-                        icon: const Icon(Icons.animation)),
                     TitledNavigationBarItem(
                         backgroundColor: ColorTheme.of(context)!.baseColor!,
                         title: Text(
@@ -313,34 +303,14 @@ class WalletWindowState extends State<WalletWindow>
                     child: Opacity(
                         opacity: pageIndex == 1 ? 1.0 : 0.0,
                         child: IgnorePointer(
-                            child: myTokensWindow, ignoring: pageIndex != 1)),
+                            child: contactsWindow, ignoring: pageIndex != 1)),
                   ),
                   Positioned(
                     child: Opacity(
                         opacity: pageIndex == 2 ? 1.0 : 0.0,
                         child: IgnorePointer(
-                            child: contactsWindow, ignoring: pageIndex != 2)),
-                  ),
-                  Positioned(
-                    child: Opacity(
-                        opacity: pageIndex == 3 ? 1.0 : 0.0,
-                        child: IgnorePointer(
                             child: sendWindowInstance,
-                            ignoring: pageIndex != 3)),
-                  ),
-                  Positioned(
-                    child: Opacity(
-                        opacity: sentinels
-                            ? pageIndex == 5
-                                ? 1.0
-                                : 0.0
-                            : pageIndex == 4
-                                ? 1.0
-                                : 0.0,
-                        child: IgnorePointer(
-                            child: settingsWindow,
-                            ignoring:
-                                sentinels ? pageIndex != 5 : pageIndex != 4)),
+                            ignoring: pageIndex != 2)),
                   ),
                   Positioned(
                     child: Opacity(
@@ -348,13 +318,27 @@ class WalletWindowState extends State<WalletWindow>
                             ? pageIndex == 4
                                 ? 1.0
                                 : 0.0
-                            : pageIndex == 5
+                            : pageIndex == 3
+                                ? 1.0
+                                : 0.0,
+                        child: IgnorePointer(
+                            child: settingsWindow,
+                            ignoring:
+                                sentinels ? pageIndex != 4 : pageIndex != 3)),
+                  ),
+                  Positioned(
+                    child: Opacity(
+                        opacity: sentinels
+                            ? pageIndex == 3
+                                ? 1.0
+                                : 0.0
+                            : pageIndex == 4
                                 ? 1.0
                                 : 0.0,
                         child: IgnorePointer(
                             child: verifiersWindow,
                             ignoring:
-                                sentinels ? pageIndex != 4 : pageIndex != 5)),
+                                sentinels ? pageIndex != 3 : pageIndex != 4)),
                   ),
                 ],
               ),
