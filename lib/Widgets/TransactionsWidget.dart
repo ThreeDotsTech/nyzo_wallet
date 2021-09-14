@@ -20,15 +20,15 @@ import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
-class TranSactionsWidget extends StatefulWidget {
+class TransactionsWidget extends StatefulWidget {
   final List<Transaction>? _transactions;
-  const TranSactionsWidget(this._transactions);
+  const TransactionsWidget(this._transactions);
   @override
   TranSactionsWidgetState createState() =>
       TranSactionsWidgetState(_transactions!);
 }
 
-class TranSactionsWidgetState extends State<TranSactionsWidget> {
+class TranSactionsWidgetState extends State<TransactionsWidget> {
   List<Transaction> _transactions;
   TranSactionsWidgetState(this._transactions);
   String _address = '';
