@@ -95,5 +95,12 @@
     "String100": "复制您的密钥并将其保存在安全的地方。如果您的手机有问题，您将可以使用私钥恢复Nyzo。",
     "String101": "您的密码太短",
     "String102": "My tokens",
-    "String103": "Search"
+    "String103": "Search",
+    "String104": "Token informations",
+    "String105": "Comments",
+    "String106": "Quantity",
+    "String107": "available",
+    "String108": "You don't have enough token.",
+    "String109": "This is your own address!",
+    "String110": "Please enter a receiver"
 }

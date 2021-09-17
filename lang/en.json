@@ -36,7 +36,7 @@
     "String35": "DELETE MY WALLET",
     "String36": "Delete Wallet",
     "String37": "Watch Verifiers",
-    "String38": "Night  Mode",
+    "String38": "Night Mode",
     "String39": "Made with",
     "String40": "for the community.",
     "String41": "Watch List",
@@ -95,5 +95,12 @@
     "String100": "Copy your key and place it somewhere safe. If something happens to your phone you will be able to recover your Nyzo using your Private Key.",
     "String101": "Your password is too short.",
     "String102": "My tokens",
-    "String103": "Search"
+    "String103": "Search",
+    "String104": "Token informations",
+    "String105": "Comments",
+    "String106": "Quantity",
+    "String107": "available",
+    "String108": "You don't have enough token.",
+    "String109": "This is your own address!",
+    "String110": "Please enter a receiver"
 }

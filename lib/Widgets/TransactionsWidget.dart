@@ -17,6 +17,7 @@ import 'package:nyzo_wallet/Activities/MyTokensListWindow.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
+import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -63,6 +64,11 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
       walletWindowState!.setState(() {
         walletWindowState.balance = _balance.floor();
         setSavedBalance(_balance);
+      });
+    });
+    getTokensBalance(_address).then((List<Token> _myTokensList) {
+      walletWindowState!.setState(() {
+        walletWindowState.myTokensList = _myTokensList;
       });
     });
     transactions.then((transactionsList) {

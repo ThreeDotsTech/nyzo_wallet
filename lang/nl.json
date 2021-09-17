@@ -95,5 +95,12 @@
     "String100": "Kopieer uw sleutel en bewaar deze op een veilige plek. Als er iets met uw telefoon gebeurt, kunt u uw Nyzo herstellen met uw privésleutel.",
     "String101": "Uw wachtwoord is te kort.",
     "String102": "My tokens",
-    "String103": "Search"
+    "String103": "Search",
+    "String104": "Token informations",
+    "String105": "Comments",
+    "String106": "Quantity",
+    "String107": "available",
+    "String108": "You don't have enough token.",
+    "String109": "This is your own address!",
+    "String110": "Please enter a receiver"
 }

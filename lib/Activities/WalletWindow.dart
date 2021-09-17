@@ -68,9 +68,17 @@ class WalletWindowState extends State<WalletWindow>
   final TextEditingController textControllerAmount = TextEditingController();
   final TextEditingController textControllerAddress = TextEditingController();
   final TextEditingController textControllerData = TextEditingController();
+  final TextEditingController textControllerTokenComments =
+      TextEditingController();
+  final TextEditingController textControllerTokenQuantity =
+      TextEditingController();
   final GlobalKey<FormFieldState> amountFormKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> addressFormKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> dataFormKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> tokenCommentsFormKey =
+      GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> tokenQuantityFormKey =
+      GlobalKey<FormFieldState>();
 
   AddVerifierDialog floatingdialog = AddVerifierDialog();
 
@@ -103,9 +111,13 @@ class WalletWindowState extends State<WalletWindow>
       //load the wallet's address from disk
       setState(() {
         _address = address;
+
         //Now that we have the address, we instantialize the send window.
-        sendWindowInstance =
-            SendWindow(password, nyzoStringFromPublicIdentifier(_address));
+        sendWindowInstance = SendWindow(
+          password: password,
+          address: nyzoStringFromPublicIdentifier(_address),
+          selectedTokenName: '',
+        );
 
         getBalance(_address).then((_balance) {
           //get the balance value from the network
@@ -117,9 +129,9 @@ class WalletWindowState extends State<WalletWindow>
             transactions = _transactions!.cast<Transaction>();
           });
         }); //set the address
-        getTokensBalance(_address).then((_tokensBalance) {
+        getTokensBalance(_address).then((List<Token> _myTokensList) {
           setState(() {
-            myTokensList = _tokensBalance;
+            myTokensList = _myTokensList;
           });
         });
       });

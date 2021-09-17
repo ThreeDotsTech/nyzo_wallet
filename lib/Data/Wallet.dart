@@ -193,7 +193,7 @@ Future<List<Token>> getTokensBalance(String address) async {
           tokensBalancesResponseFromJson(reply);
 
       for (int i = 0; i < tokensBalanceGetResponse.tokensList!.length; i++) {
-        Token token = new Token(
+        Token token = Token(
             name: tokensBalanceGetResponse.tokensList![i].name,
             amount: tokensBalanceGetResponse.tokensList![i].amount,
             comment: tokensBalanceGetResponse.tokensList![i].comment);

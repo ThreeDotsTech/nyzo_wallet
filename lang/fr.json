@@ -95,5 +95,12 @@
     "String100": "Copiez votre clé et mettez-la dans un endroit sûr. Si quelque chose arrive à votre téléphone, vous pouvez restaurer votre Nyzo à l'aide de votre clé privée.",
     "String101": "Votre mot de passe est trop court.",
     "String102": "Mes tokens",
-    "String103": "Recherche"
+    "String103": "Recherche",
+    "String104": "Informations sur le token",
+    "String105": "Commentaires",
+    "String106": "Quantité",
+    "String107": "disponible",
+    "String108": "Vous n'avez pas assez de token.",
+    "String109": "Il s'agit de votre propre adresse!",
+    "String110": "Merci de renseigner le destinataire"
 }

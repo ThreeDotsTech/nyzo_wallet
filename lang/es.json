@@ -95,5 +95,12 @@
     "String100": "Copia tu llave privada y guárdala en un lugar seguro. Si algo le pasa a tu teléfono podrás recuperar tu Nyzo usando tu llave privada",
     "String101": "Tu contraseña es muy corta.",
     "String102": "My tokens",
-    "String103": "Search"
+    "String103": "Search",
+    "String104": "Token informations",
+    "String105": "Comments",
+    "String106": "Quantity",
+    "String107": "available",
+    "String108": "You don't have enough token.",
+    "String109": "This is your own address!",
+    "String110": "Please enter a receiver"
 }
