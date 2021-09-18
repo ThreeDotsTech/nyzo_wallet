@@ -17,6 +17,7 @@ import 'package:hex/hex.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_encryption/string_encryption.dart';
 
@@ -202,6 +203,24 @@ Future<List<Token>> getTokensBalance(String address) async {
     }
   } catch (e) {}
   return tokensList;
+}
+
+Future<List<TokensTransactionsResponse>> getTokensTransactionsList(String address) async {
+  List<TokensTransactionsResponse> transactionsList =
+      List<TokensTransactionsResponse>.empty(growable: true);
+
+  HttpClient httpClient = new HttpClient();
+  try {
+    HttpClientRequest request = await httpClient.getUrl(
+        Uri.parse('https://tokens.nyzo.today/api/transactions/' + address));
+    request.headers.set('content-type', 'application/json');
+    HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      String reply = await response.transform(utf8.decoder).join();
+      transactionsList = tokensTransactionsResponseFromJson(reply);
+    }
+  } catch (e) {}
+  return transactionsList;
 }
 
 Future<String> getPrivateKey(String password) async {
