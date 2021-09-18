@@ -18,7 +18,7 @@ class Token {
         'comment': comment,
       };
 
-  bool isTT(String? senderData) {
+  static bool isTT(String? senderData) {
     if (senderData!.startsWith(TOKEN_TRANSFER_PREFIX + ":")) {
       return true;
     } else {

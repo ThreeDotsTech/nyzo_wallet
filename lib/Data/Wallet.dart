@@ -17,7 +17,6 @@ import 'package:hex/hex.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
-import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_encryption/string_encryption.dart';
 
@@ -28,6 +27,8 @@ import 'package:nyzo_wallet/Data/CycleTransactionSignature.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/TokensBalancesResponse.dart';
+import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
+import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 import 'NyzoMessage.dart';
@@ -205,7 +206,26 @@ Future<List<Token>> getTokensBalance(String address) async {
   return tokensList;
 }
 
-Future<List<TokensTransactionsResponse>> getTokensTransactionsList(String address) async {
+Future<TransactionsSinceResponse> getTransactionsSinceList(
+    String address) async {
+  TransactionsSinceResponse transactionsSinceResponse =
+      new TransactionsSinceResponse();
+  HttpClient httpClient = new HttpClient();
+  try {
+    HttpClientRequest request = await httpClient
+        .getUrl(Uri.parse('https://nyzo.today/api/tx_since/0/' + address));
+    request.headers.set('content-type', 'application/json');
+    HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      String reply = await response.transform(utf8.decoder).join();
+      transactionsSinceResponse = transactionsSinceResponseFromJson(reply);
+    }
+  } catch (e) {}
+  return transactionsSinceResponse;
+}
+
+Future<List<TokensTransactionsResponse>> getTokensTransactionsList(
+    String address) async {
   List<TokensTransactionsResponse> transactionsList =
       List<TokensTransactionsResponse>.empty(growable: true);
 

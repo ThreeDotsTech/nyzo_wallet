@@ -1,4 +1,4 @@
-class Token {
+class NFT {
   String? className;
   String? uid;
   double? amount;
@@ -6,9 +6,9 @@ class Token {
 
   static const NFT_TRANSFER_PREFIX = 'NT';
 
-  Token({required this.className, required this.amount, required this.comment});
+  NFT({required this.className, required this.amount, required this.comment});
 
-  Token.fromJson(Map<String, dynamic> data)
+  NFT.fromJson(Map<String, dynamic> data)
       : className = data['className'],
         uid = data['uid'],
         amount = data['amount'] == null ? 0 : double.tryParse(data['amount']),
@@ -30,13 +30,7 @@ class Token {
   }
 
   String getSenderData() {
-    return NFT_TRANSFER_PREFIX +
-        ':' +
-        className! +
-        ':' +
-        uid! +
-        ':' +
-        comment!;
+    return NFT_TRANSFER_PREFIX + ':' + className! + ':' + uid! + ':' + comment!;
   }
 
   void parseNT(String? senderData) {
