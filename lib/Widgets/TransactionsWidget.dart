@@ -173,21 +173,15 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0)),
                           ),
-                          child: 
-                          ColorTheme.of(context)!.lightTheme! ?
-                          
-                          
-                          Image.asset(
-                            'images/nytro-logo-black.png',
-                            height: 13,
-                          ) :
-                          
-                           
-                          Image.asset(
-                            'images/nytro-logo-white.png',
-                            height: 13,
-                          ) 
-                          ,
+                          child: ColorTheme.of(context)!.lightTheme!
+                              ? Image.asset(
+                                  'images/nytro-logo-black.png',
+                                  height: 13,
+                                )
+                              : Image.asset(
+                                  'images/nytro-logo-white.png',
+                                  height: 13,
+                                ),
                           onPressed: () {
                             Sheets.showAppHeightEightSheet(
                                 color: ColorTheme.of(context)!.depthColor,

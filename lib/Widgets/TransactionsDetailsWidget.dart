@@ -6,12 +6,15 @@ import 'dart:ui' as ui;
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 // Package imports:
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
+
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
@@ -20,7 +23,6 @@ import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
-import 'package:shimmer/shimmer.dart';
 
 class TransactionsDetailsWidget {
   static Widget buildTransactionsDisplay(
@@ -135,10 +137,13 @@ class TransactionsDetailsWidget {
                                                                   _transactions[
                                                                           i]
                                                                       .sender!))))));
-                                              final SnackBar snackbar = SnackBar(
-                                                  content: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .translate('String25')));
+                                              final SnackBar snackbar =
+                                                  SnackBar(
+                                                      content: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'String25')));
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(snackbar);
                                             },
@@ -190,15 +195,65 @@ class TransactionsDetailsWidget {
                                                           fontSize: 13),
                                                     ),
                                                     if (_transactions[i]
-                                                                .amountAfterFees! >
-                                                            0) Text(
-                                                            (getAmount(
-                                                                  _transactions[
-                                                                          i]
-                                                                      .amountAfterFees!,
-                                                                )!)
+                                                            .amountAfterFees! >
+                                                        0)
+                                                      Text(
+                                                        (getAmount(
+                                                              _transactions[i]
+                                                                  .amountAfterFees!,
+                                                            )!)
+                                                                .toString() +
+                                                            ' ∩',
+                                                        style: _transactions[i].sender ==
+                                                                address
+                                                            ? TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 20,
+                                                                foreground:
+                                                                    Paint()
+                                                                      ..shader = ui.Gradient.linear(
+                                                                          Offset.zero,
+                                                                          const Offset(0, 60),
+                                                                          [
+                                                                            Colors.red[100]!,
+                                                                            Colors.red[900]!
+                                                                          ]))
+                                                            : TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 20,
+                                                                foreground:
+                                                                    Paint()
+                                                                      ..shader = ui.Gradient.linear(
+                                                                          Offset.zero,
+                                                                          const Offset(0, 60),
+                                                                          [
+                                                                            Colors.green[100]!,
+                                                                            Colors.green[900]!
+                                                                          ])),
+                                                      )
+                                                    else
+                                                      const SizedBox(),
+                                                    if (isToken(
+                                                        _transactions[i].data!))
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            (getAmountToken(_transactions[
+                                                                            i]
+                                                                        .data!)!)
                                                                     .toString() +
-                                                                ' ∩',
+                                                                ' ' +
+                                                                getSenderDataName(
+                                                                    _transactions[
+                                                                            i]
+                                                                        .data!),
                                                             style: _transactions[i].sender == address
                                                                 ? TextStyle(
                                                                     fontWeight:
@@ -228,128 +283,95 @@ class TransactionsDetailsWidget {
                                                                             Colors.green[100]!,
                                                                             Colors.green[900]!
                                                                           ])),
-                                                          ) else const SizedBox(),
-                                                    if (isToken(_transactions[i]
-                                                            .data!)) Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                (getAmountToken(_transactions[i]
-                                                                            .data!)!)
-                                                                        .toString() +
-                                                                    ' ' +
-                                                                    getSenderDataName(
-                                                                        _transactions[i]
-                                                                            .data!),
-                                                                style: _transactions[i].sender ==
-                                                                        address
-                                                                    ? TextStyle(
-                                                                        fontWeight: FontWeight
-                                                                            .w700,
-                                                                        fontSize:
-                                                                            20,
-                                                                        foreground: Paint()
-                                                                          ..shader = ui.Gradient.linear(
-                                                                              Offset.zero,
-                                                                              const Offset(0, 60),
-                                                                              [
-                                                                                Colors.red[100]!,
-                                                                                Colors.red[900]!
-                                                                              ]))
-                                                                    : TextStyle(
-                                                                        fontWeight: FontWeight
-                                                                            .w700,
-                                                                        fontSize:
-                                                                            20,
-                                                                        foreground: Paint()
-                                                                          ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
-                                                                            Colors.green[100]!,
-                                                                            Colors.green[900]!
-                                                                          ])),
-                                                              ),
-                                                             ],
-                                                          ) else isNFT(_transactions[i]
-                                                                .data!)
-                                                            ? Row(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: <Widget>[
-                                                                  Text(
-                                                                    getSenderDataName(
-                                                                        _transactions[i]
-                                                                            .data!),
-                                                                    style: _transactions[i].sender == address
-                                                                        ? TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w700,
-                                                                            fontSize:
-                                                                                20,
-                                                                            foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
-                                                                                Colors.red[100]!,
-                                                                                Colors.red[900]!
-                                                                              ]))
-                                                                        : TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w700,
-                                                                            fontSize:
-                                                                                20,
-                                                                            foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
-                                                                                Colors.green[100]!,
-                                                                                Colors.green[900]!
-                                                                              ])),
-                                                                  ),
-                                                                  Text(
-                                                                    (' (' + getUID(_transactions[i].data!)!)
-                                                                            .toString() +
-                                                                        ')',
-                                                                    style: _transactions[i].sender == address
-                                                                        ? TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w700,
-                                                                            fontSize:
-                                                                                13,
-                                                                            foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
-                                                                                Colors.red[100]!,
-                                                                                Colors.red[900]!
-                                                                              ]))
-                                                                        : TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w700,
-                                                                            fontSize:
-                                                                                13,
-                                                                            foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
-                                                                                Colors.green[100]!,
-                                                                                Colors.green[900]!
-                                                                              ])),
-                                                                  ),
-                                                                 
-                                                                ],
-                                                              )
-                                                            : const SizedBox(),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    else
+                                                      isNFT(_transactions[i]
+                                                              .data!)
+                                                          ? Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  getSenderDataName(
+                                                                      _transactions[
+                                                                              i]
+                                                                          .data!),
+                                                                  style: _transactions[i].sender ==
+                                                                          address
+                                                                      ? TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w700,
+                                                                          fontSize:
+                                                                              20,
+                                                                          foreground: Paint()
+                                                                            ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
+                                                                              Colors.red[100]!,
+                                                                              Colors.red[900]!
+                                                                            ]))
+                                                                      : TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w700,
+                                                                          fontSize:
+                                                                              20,
+                                                                          foreground: Paint()
+                                                                            ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
+                                                                              Colors.green[100]!,
+                                                                              Colors.green[900]!
+                                                                            ])),
+                                                                ),
+                                                                Text(
+                                                                  (' (' + getUID(_transactions[i].data!)!)
+                                                                          .toString() +
+                                                                      ')',
+                                                                  style: _transactions[i].sender ==
+                                                                          address
+                                                                      ? TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w700,
+                                                                          fontSize:
+                                                                              13,
+                                                                          foreground: Paint()
+                                                                            ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
+                                                                              Colors.red[100]!,
+                                                                              Colors.red[900]!
+                                                                            ]))
+                                                                      : TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w700,
+                                                                          fontSize:
+                                                                              13,
+                                                                          foreground: Paint()
+                                                                            ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
+                                                                              Colors.green[100]!,
+                                                                              Colors.green[900]!
+                                                                            ])),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : const SizedBox(),
                                                     Row(
                                                       children: <Widget>[
                                                         if (_transactions[i]
-                                                                    .sender! ==
-                                                                address) Text('To: ',
-                                                                style: TextStyle(
-                                                                    color: ColorTheme.of(
-                                                                            context)!
-                                                                        .secondaryColor,
-                                                                    fontSize:
-                                                                        15)) else Text('From: ',
-                                                                style: TextStyle(
-                                                                    color: ColorTheme.of(
-                                                                            context)!
-                                                                        .secondaryColor,
-                                                                    fontSize:
-                                                                        15)),
+                                                                .sender! ==
+                                                            address)
+                                                          Text('To: ',
+                                                              style: TextStyle(
+                                                                  color: ColorTheme.of(
+                                                                          context)!
+                                                                      .secondaryColor,
+                                                                  fontSize: 15))
+                                                        else
+                                                          Text('From: ',
+                                                              style: TextStyle(
+                                                                  color: ColorTheme.of(
+                                                                          context)!
+                                                                      .secondaryColor,
+                                                                  fontSize:
+                                                                      15)),
                                                         Text(
                                                           _contactsList!.any(
                                                                   (Contact

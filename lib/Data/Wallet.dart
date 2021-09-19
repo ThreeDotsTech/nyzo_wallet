@@ -35,7 +35,7 @@ import 'Transaction.dart';
 import 'TransactionMessage.dart';
 
 const FlutterSecureStorage _storage = FlutterSecureStorage();
-final StringEncryption crypto = StringEncryption();
+final crypto = new PlatformStringCryptor();
 final Random r = Random.secure();
 const int CycleTransactionSignature47 = 47;
 const int CycleTransactionSignatureResponse48 = 48;
@@ -441,7 +441,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   bool specifiedTransactionIsValid() {
     return walletPrivateSeed.length == 64 &&
         recipientIdentifier.length == 64 &&
-        micronyzosToSend > 0 &&
         micronyzosToSend <= balanceMicronyzos;
   }
 

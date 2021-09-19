@@ -94,7 +94,7 @@ dependencies:
   sprintf: ^6.0.0
 
   # Cross-platform string encryption using common best-practices.
-  string_encryption: ^2.0.5
+  string_encryption: ^2.0.3
 
   # A beautiful, clean and simple bottom navigation bar with smooth animation on click. This package is high customizable, read more bellow for more details
   titled_navigation_bar: ^5.0.0-nullsafety.0
