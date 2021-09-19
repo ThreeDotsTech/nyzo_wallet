@@ -125,118 +125,219 @@ class TransactionsAllWidget {
                                         )
                                       ],
                                       child: ListTile(
-                                        leading: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
-                                            border: Border.all(
-                                              width: 1.0,
-                                              color: const Color(0xFF555555),
-                                            ),
-                                          ),
-                                          child: _transactions[i].sender! !=
-                                                  address
-                                              ? const Icon(
-                                                  Icons.add,
-                                                  color: Color(0xFF555555),
-                                                )
-                                              : const Icon(
-                                                  Icons.remove,
-                                                  color: Color(0xFF555555),
-                                                ),
-                                        ),
                                         title: InkWell(
-                                          onTap: () {
-                                            Clipboard.setData(ClipboardData(
-                                                text: NyzoStringEncoder.encode(
-                                                    NyzoStringPublicIdentifier(
-                                                        Uint8List.fromList(utf8
-                                                            .encode(_transactions[
-                                                                    i]
-                                                                .sender!))))));
-                                            final snackbar = SnackBar(
-                                                content: Text(AppLocalizations
-                                                        .of(context)!
-                                                    .translate('String25')));
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snackbar);
-                                          },
-                                          child: Text(
-                                            _contactsList!
-                                                    .any((Contact contact) {
-                                              return contact.address ==
-                                                  NyzoStringEncoder.encode(
+                                            onTap: () {
+                                              Clipboard.setData(ClipboardData(
+                                                  text: NyzoStringEncoder.encode(
                                                       NyzoStringPublicIdentifier(
                                                           Uint8List.fromList(
                                                               utf8.encode(
                                                                   _transactions[
                                                                           i]
-                                                                      .sender!))));
-                                            })
-                                                ? DateFormat.yMEd(
-                                                            AppLocalizations.of(context)!
-                                                                .locale
-                                                                .languageCode)
-                                                        .add_Hm()
-                                                        .format(DateTime.fromMillisecondsSinceEpoch(
-                                                                _transactions[i]
-                                                                    .timestamp!)
-                                                            .toLocal())
-                                                        .toString() +
-                                                    '\n' +
-                                                    _contactsList.firstWhere(
-                                                        (Contact contact) {
-                                                      return contact.address ==
-                                                          NyzoStringEncoder.encode(
-                                                              NyzoStringPublicIdentifier(
-                                                                  Uint8List.fromList(
-                                                                      utf8.encode(
-                                                                          _transactions[i]
-                                                                              .sender!))));
-                                                    }).name
-                                                : DateFormat.yMEd(
-                                                            AppLocalizations.of(context)!
-                                                                .locale
-                                                                .languageCode)
-                                                        .add_Hm()
-                                                        .format(DateTime.fromMillisecondsSinceEpoch(_transactions[i].timestamp!).toLocal())
-                                                        .toString() +
-                                                    '\n' +
-                                                    getIdFromAddress(_transactions[i].sender!),
-                                            style: TextStyle(
-                                                color: ColorTheme.of(context)!
-                                                    .secondaryColor,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15),
-                                          ),
-                                        ),
-                                        trailing: Text(
-                                          (getAmount(
+                                                                      .sender!))))));
+                                              final snackbar = SnackBar(
+                                                  content: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .translate('String25')));
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackbar);
+                                            },
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
                                                       _transactions[i]
-                                                          .amountAfterFees!,
-                                                      _transactions[i].data!)!)
-                                                  .toString() +
-                                              ' ∩',
-                                          style: TextStyle(
-                                              color: ColorTheme.of(context)!
-                                                  .secondaryColor,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 20),
-                                        ),
-                                        isThreeLine: true,
+                                                                  .sender! !=
+                                                              address
+                                                          ? const Icon(
+                                                              Icons
+                                                                  .add_circle_outline,
+                                                              color: Color(
+                                                                  0xFF555555),
+                                                              size: 20,
+                                                            )
+                                                          : const Icon(
+                                                              Icons
+                                                                  .remove_circle_outline,
+                                                              color: Color(
+                                                                  0xFF555555),
+                                                              size: 20,
+                                                            ),
+                                                      Text(
+                                                          typeTx(
+                                                              _transactions[i]
+                                                                  .data!, context),
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                              color: ColorTheme.of(
+                                                                      context)!
+                                                                  .secondaryColor,
+                                                              fontSize: 8)),
+                                                    ]),
+                                                const SizedBox(
+                                                  width: 40,
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      DateFormat.yMEd(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .locale
+                                                                  .languageCode)
+                                                          .add_Hm()
+                                                          .format(DateTime.fromMillisecondsSinceEpoch(
+                                                                  _transactions[
+                                                                          i]
+                                                                      .timestamp!)
+                                                              .toLocal())
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color: ColorTheme.of(
+                                                                  context)!
+                                                              .secondaryColor,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 13),
+                                                    ),
+                                                    isToken(_transactions[i]
+                                                            .data!)
+                                                        ? Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                (getAmount(
+                                                                            _transactions[i]
+                                                                                .amountAfterFees!,
+                                                                            _transactions[i]
+                                                                                .data!)!)
+                                                                        .toString() +
+                                                                    ' ' +
+                                                                    getSenderDataName(
+                                                                        _transactions[i]
+                                                                            .data!),
+                                                                style: TextStyle(
+                                                                    color: ColorTheme.of(
+                                                                            context)!
+                                                                        .secondaryColor,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    fontSize:
+                                                                        20),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              ColorTheme.of(
+                                                                          context)!
+                                                                      .lightTheme!
+                                                                  ? Image.asset(
+                                                                      'images/nytro-logo-black.png',
+                                                                      color: ColorTheme.of(
+                                                                              context)!
+                                                                          .secondaryColor,
+                                                                      height:
+                                                                          13,
+                                                                    )
+                                                                  : Image.asset(
+                                                                      'images/nytro-logo-white.png',
+                                                                      color: ColorTheme.of(
+                                                                              context)!
+                                                                          .secondaryColor,
+                                                                      height:
+                                                                          13,
+                                                                    ),
+                                                            ],
+                                                          )
+                                                        : Text(
+                                                            (getAmount(
+                                                                        _transactions[i]
+                                                                            .amountAfterFees!,
+                                                                        _transactions[i]
+                                                                            .data!)!)
+                                                                    .toString() +
+                                                                ' ∩',
+                                                            style: TextStyle(
+                                                                color: ColorTheme.of(
+                                                                        context)!
+                                                                    .secondaryColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 20),
+                                                          ),
+                                                    Text(
+                                                      _contactsList!.any(
+                                                              (Contact
+                                                                  contact) {
+                                                        return contact
+                                                                .address ==
+                                                            NyzoStringEncoder.encode(
+                                                                NyzoStringPublicIdentifier(
+                                                                    Uint8List.fromList(
+                                                                        utf8.encode(
+                                                                            _transactions[i].sender!))));
+                                                      })
+                                                          ? _contactsList
+                                                              .firstWhere(
+                                                                  (Contact
+                                                                      contact) {
+                                                              return contact
+                                                                      .address ==
+                                                                  NyzoStringEncoder.encode(
+                                                                      NyzoStringPublicIdentifier(
+                                                                          Uint8List.fromList(
+                                                                              utf8.encode(_transactions[i].sender!))));
+                                                            }).name
+                                                          : getIdFromAddress(
+                                                              _transactions[i]
+                                                                  .sender!),
+                                                      style: TextStyle(
+                                                          color: ColorTheme.of(
+                                                                  context)!
+                                                              .secondaryColor,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 15),
+                                                    ),
+                                                    Text(
+                                                      isToken(_transactions[i]
+                                                              .data!)
+                                                          ? getSenderDataComment(
+                                                              _transactions[i]
+                                                                  .data!)
+                                                          : _transactions[i]
+                                                              .data!,
+                                                      style: TextStyle(
+                                                          color: ColorTheme.of(
+                                                                  context)!
+                                                              .secondaryColor,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 13),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            )),
                                         dense: true,
-                                        subtitle: Text(
-                                          getSenderDataName(
-                                                  _transactions[i].data!) +
-                                              '\n' +
-                                              getSenderDataComment(
-                                                  _transactions[i].data!),
-                                          style: TextStyle(
-                                              color: ColorTheme.of(context)!
-                                                  .secondaryColor,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 13),
-                                        ),
+                                        subtitle: Divider(),
                                       ),
                                     ),
                                     Divider(
@@ -291,10 +392,56 @@ class TransactionsAllWidget {
     return _id.substring(0, 6) + '...' + _id.substring(_id.length - 10);
   }
 
+  static bool isToken(String senderData) {
+    List<String> infos = senderData.split(':');
+    if (infos.length > 0 && infos[0].length == 2 && infos[0].startsWith('T')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static String typeTx(String senderData, BuildContext context) {
+    List<String> infos = senderData.split(':');
+    if (infos.length > 0) {
+      switch (infos[0]) {
+        case 'TT':
+          return AppLocalizations.of(context)!.translate('String111');
+        case 'TI':
+          return AppLocalizations.of(context)!.translate('String112');
+        case 'TM':
+          return AppLocalizations.of(context)!.translate('String113');
+        case 'TB':
+          return AppLocalizations.of(context)!.translate('String114');
+        case 'TO':
+          return AppLocalizations.of(context)!.translate('String115');
+        case 'NT':
+          return AppLocalizations.of(context)!.translate('String111');
+        case 'NI':
+          return AppLocalizations.of(context)!.translate('String112');
+        case 'NM':
+          return AppLocalizations.of(context)!.translate('String113');
+        case 'NB':
+          return AppLocalizations.of(context)!.translate('String114');
+        case 'NO':
+          return AppLocalizations.of(context)!.translate('String116');
+        case 'NA':
+          return AppLocalizations.of(context)!.translate('String117');
+        case 'ND':
+          return AppLocalizations.of(context)!.translate('String118');
+        default:
+          return AppLocalizations.of(context)!.translate('String111');
+      }
+    } else {
+      return AppLocalizations.of(context)!.translate('String25');
+      'Transfer';
+    }
+  }
+
   static String getSenderDataName(String senderData) {
     List<String> infos = senderData.split(':');
     if (infos.length > 1) {
-      return 'Token: ' + infos[1];
+      return infos[1];
     } else {
       return senderData;
     }
@@ -303,7 +450,11 @@ class TransactionsAllWidget {
   static String getSenderDataComment(String senderData) {
     List<String> infos = senderData.split(':');
     if (infos.length > 3) {
-      return infos[3];
+      if (infos[3] != '-1') {
+        return infos[3];
+      } else {
+        return '';
+      }
     } else {
       return '';
     }

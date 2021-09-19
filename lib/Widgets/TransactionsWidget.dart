@@ -81,6 +81,9 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
         walletWindowState.myTokensList = _myTokensList;
       });
     });
+    getTransactionsSinceList(_address).then((_transactionsSinceResponse) {
+      transactionsSinceResponse = _transactionsSinceResponse;
+    });
     transactions.then((transactionsList) {
       setState(() {
         _transactions = transactionsList;

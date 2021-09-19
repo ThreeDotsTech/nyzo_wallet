@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sprintf/sprintf.dart';
 
 class Utils {

@@ -36,7 +36,7 @@ import 'Transaction.dart';
 import 'TransactionMessage.dart';
 
 const FlutterSecureStorage _storage = const FlutterSecureStorage();
-final PlatformStringCryptor crypto = PlatformStringCryptor();
+final StringEncryption crypto = StringEncryption();
 final Random r = Random.secure();
 const int CycleTransactionSignature47 = 47;
 const int CycleTransactionSignatureResponse48 = 48;
@@ -213,7 +213,7 @@ Future<TransactionsSinceResponse> getTransactionsSinceList(
   HttpClient httpClient = new HttpClient();
   try {
     HttpClientRequest request = await httpClient
-        .getUrl(Uri.parse('https://nyzo.today/api/tx_since/0/' + address));
+        .getUrl(Uri.parse('https://nyzo.today/api/tx_since/0/' + 'b5aecd6995692b17f1b06c684e9527416ff47a4cc60dc4a2638eb07995a2b947'));
     request.headers.set('content-type', 'application/json');
     HttpClientResponse response = await request.close();
     if (response.statusCode == 200) {
