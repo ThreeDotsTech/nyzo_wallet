@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttericon/entypo_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
@@ -157,35 +158,12 @@ class TransactionsAllWidget {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      _transactions[i]
-                                                                  .sender! !=
-                                                              address
-                                                          ? const Icon(
-                                                              Icons
-                                                                  .add_circle_outline,
-                                                              color: Color(
-                                                                  0xFF555555),
-                                                              size: 20,
-                                                            )
-                                                          : const Icon(
-                                                              Icons
-                                                                  .remove_circle_outline,
-                                                              color: Color(
-                                                                  0xFF555555),
-                                                              size: 20,
-                                                            ),
-                                                      Text(
-                                                          typeTx(
-                                                              _transactions[i]
-                                                                  .data!,
-                                                              context),
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: TextStyle(
-                                                              color: ColorTheme.of(
-                                                                      context)!
-                                                                  .secondaryColor,
-                                                              fontSize: 8)),
+                                                      getTypeTxIcon(
+                                                          _transactions[i]
+                                                              .data!,
+                                                          address,
+                                                          _transactions[i]
+                                                              .sender!),
                                                     ]),
                                                 const SizedBox(
                                                   width: 40,
@@ -200,7 +178,7 @@ class TransactionsAllWidget {
                                                                       context)!
                                                                   .locale
                                                                   .languageCode)
-                                                          .add_Hm()
+                                                          .add_Hms()
                                                           .format(DateTime.fromMillisecondsSinceEpoch(
                                                                   _transactions[
                                                                           i]
@@ -213,6 +191,22 @@ class TransactionsAllWidget {
                                                               .secondaryColor,
                                                           fontSize: 13),
                                                     ),
+                                                    Text(
+                                                      (getAmount(
+                                                                  _transactions[
+                                                                          i]
+                                                                      .amountAfterFees!,
+                                                                )!)
+                                                              .toString() +
+                                                          ' ∩',
+                                                      style: TextStyle(
+                                                          color: ColorTheme.of(
+                                                                  context)!
+                                                              .secondaryColor,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 20),
+                                                    ),
                                                     isToken(_transactions[i]
                                                             .data!)
                                                         ? Row(
@@ -221,11 +215,8 @@ class TransactionsAllWidget {
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                (getAmount(
-                                                                            _transactions[i]
-                                                                                .amountAfterFees!,
-                                                                            _transactions[i]
-                                                                                .data!)!)
+                                                                (getAmountToken(_transactions[i]
+                                                                            .data!)!)
                                                                         .toString() +
                                                                     ' ' +
                                                                     getSenderDataName(
@@ -265,23 +256,7 @@ class TransactionsAllWidget {
                                                                     ),
                                                             ],
                                                           )
-                                                        : Text(
-                                                            (getAmount(
-                                                                        _transactions[i]
-                                                                            .amountAfterFees!,
-                                                                        _transactions[i]
-                                                                            .data!)!)
-                                                                    .toString() +
-                                                                ' ∩',
-                                                            style: TextStyle(
-                                                                color: ColorTheme.of(
-                                                                        context)!
-                                                                    .secondaryColor,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize: 20),
-                                                          ),
+                                                        : const SizedBox(),
                                                     Text(
                                                       _contactsList!.any(
                                                               (Contact
@@ -430,7 +405,131 @@ class TransactionsAllWidget {
       }
     } else {
       return AppLocalizations.of(context)!.translate('String25');
-      'Transfer';
+    }
+  }
+
+  static Icon getTypeTxIcon(
+      String senderData, String address, String transactionSender) {
+    List<String> infos = senderData.split(':');
+    if (infos.length > 0) {
+      switch (infos[0]) {
+        case 'TT':
+          if (transactionSender != address) {
+            return const Icon(
+              Icons.add_circle_outline,
+              color: Color(0xFF555555),
+              size: 20,
+            );
+          } else {
+            return const Icon(
+              Icons.remove_circle_outline,
+              color: Color(0xFF555555),
+              size: 20,
+            );
+          }
+        case 'TI':
+          return const Icon(
+            Icons.build,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'TM':
+          return const Icon(
+            RpgAwesome.mining_diamonds,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'TB':
+          return const Icon(
+            RpgAwesome.burning_embers,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'TO':
+          return const Icon(
+            Entypo.switch_icon,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'NT':
+          if (transactionSender != address) {
+            return const Icon(
+              Icons.add_circle_outline,
+              color: Color(0xFF555555),
+              size: 20,
+            );
+          } else {
+            return const Icon(
+              Icons.remove_circle_outline,
+              color: Color(0xFF555555),
+              size: 20,
+            );
+          }
+        case 'NI':
+          return const Icon(
+            Icons.build,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'NM':
+          return const Icon(
+            RpgAwesome.mining_diamonds,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'NB':
+          return const Icon(
+            RpgAwesome.burning_embers,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'NO':
+          return const Icon(
+            Entypo.switch_icon,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'NA':
+          return const Icon(
+            Entypo.database,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        case 'ND':
+          return const Icon(
+            Entypo.database,
+            color: Color(0xFF555555),
+            size: 20,
+          );
+        default:
+          if (transactionSender != address) {
+            return const Icon(
+              Icons.add_circle_outline,
+              color: Color(0xFF555555),
+              size: 20,
+            );
+          } else {
+            return const Icon(
+              Icons.remove_circle_outline,
+              color: Color(0xFF555555),
+              size: 20,
+            );
+          }
+      }
+    } else {
+      if (transactionSender != address) {
+        return const Icon(
+          Icons.add_circle_outline,
+          color: Color(0xFF555555),
+          size: 20,
+        );
+      } else {
+        return const Icon(
+          Icons.remove_circle_outline,
+          color: Color(0xFF555555),
+          size: 20,
+        );
+      }
     }
   }
 
@@ -456,16 +555,16 @@ class TransactionsAllWidget {
     }
   }
 
-  static double? getAmount(int amount, String senderData) {
-    if (amount > 0) {
-      return double.tryParse((amount.toDouble() ~/ 1000000).toStringAsFixed(6));
+  static double? getAmount(int amount) {
+    return double.tryParse((amount.toDouble() / 1000000).toStringAsFixed(6));
+  }
+
+  static double? getAmountToken(String senderData) {
+    List<String> infos = senderData.split(':');
+    if (infos.length > 2) {
+      return double.tryParse(double.tryParse(infos[2])!.toStringAsFixed(6));
     } else {
-      List<String> infos = senderData.split(':');
-      if (infos.length > 2) {
-        return double.tryParse(double.tryParse(infos[2])!.toStringAsFixed(6));
-      } else {
-        return 0;
-      }
+      return 0;
     }
   }
 }

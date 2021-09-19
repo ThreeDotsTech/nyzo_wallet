@@ -36,7 +36,7 @@ class NyzoUrl {
         Utils.senderDataForDisplay(_nyzoStringPrefilledData.getSenderData()!);
     _nyzoUrl.amount = _nyzoStringPrefilledData.getAmount() == null
         ? '0'
-        : (_nyzoStringPrefilledData.getAmount()! ~/ 1000000).toString();
+        : (_nyzoStringPrefilledData.getAmount()! / 1000000).toString();
     return _nyzoUrl;
   }
 }
