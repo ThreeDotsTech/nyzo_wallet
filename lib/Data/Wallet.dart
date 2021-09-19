@@ -219,7 +219,8 @@ Future<TransactionsSinceResponse> getTransactionsSinceList(
     if (response.statusCode == 200) {
       String reply = await response.transform(utf8.decoder).join();
       transactionsSinceResponse = transactionsSinceResponseFromJson(reply);
-      transactionsSinceResponse.txs = transactionsSinceResponse.txs!.reversed.toList();
+      transactionsSinceResponse.txs =
+          transactionsSinceResponse.txs!.reversed.toList();
     }
   } catch (e) {}
   return transactionsSinceResponse;
