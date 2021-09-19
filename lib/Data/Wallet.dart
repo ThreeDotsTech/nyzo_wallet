@@ -213,7 +213,7 @@ Future<TransactionsSinceResponse> getTransactionsSinceList(
   HttpClient httpClient = new HttpClient();
   try {
     HttpClientRequest request = await httpClient
-        .getUrl(Uri.parse('https://nyzo.today/api/tx_since/0/' + 'b5aecd6995692b17f1b06c684e9527416ff47a4cc60dc4a2638eb07995a2b947'));
+        .getUrl(Uri.parse('https://nyzo.today/api/tx_since/0/' + address));
     request.headers.set('content-type', 'application/json');
     HttpClientResponse response = await request.close();
     if (response.statusCode == 200) {

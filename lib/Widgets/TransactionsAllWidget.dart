@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -176,7 +177,8 @@ class TransactionsAllWidget {
                                                       Text(
                                                           typeTx(
                                                               _transactions[i]
-                                                                  .data!, context),
+                                                                  .data!,
+                                                              context),
                                                           textAlign:
                                                               TextAlign.right,
                                                           style: TextStyle(
@@ -209,8 +211,6 @@ class TransactionsAllWidget {
                                                           color: ColorTheme.of(
                                                                   context)!
                                                               .secondaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w700,
                                                           fontSize: 13),
                                                     ),
                                                     isToken(_transactions[i]
@@ -312,8 +312,6 @@ class TransactionsAllWidget {
                                                           color: ColorTheme.of(
                                                                   context)!
                                                               .secondaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w700,
                                                           fontSize: 15),
                                                     ),
                                                     Text(
@@ -328,9 +326,7 @@ class TransactionsAllWidget {
                                                           color: ColorTheme.of(
                                                                   context)!
                                                               .secondaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 13),
+                                                          fontSize: 11),
                                                     )
                                                   ],
                                                 ),
