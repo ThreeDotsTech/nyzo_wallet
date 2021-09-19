@@ -6,15 +6,12 @@ import 'dart:ui' as ui;
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttericon/entypo_icons.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:shimmer/shimmer.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
@@ -23,8 +20,9 @@ import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+import 'package:shimmer/shimmer.dart';
 
-class TransactionsAllWidget {
+class TransactionsDetailsWidget {
   static Widget buildTransactionsDisplay(
       BuildContext context,
       String address,
@@ -34,7 +32,7 @@ class TransactionsAllWidget {
       Function refresh) {
     final SlidableController slidableController = SlidableController();
     return Column(
-      children: [
+      children: <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 5, 0, 5),
           child: Text(
@@ -59,7 +57,6 @@ class TransactionsAllWidget {
                                 'images/noTransactions.png',
                                 color: ColorTheme.of(context)!.secondaryColor,
                                 height: walletWindowState.screenHeight! / 5,
-                                //width: walletWindowState.screenHeight / 5 * 0.9,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
@@ -96,7 +93,7 @@ class TransactionsAllWidget {
                       child: ListView.builder(
                           padding: const EdgeInsets.all(0.0),
                           itemCount: _transactions.length,
-                          itemBuilder: (context, i) => Padding(
+                          itemBuilder: (BuildContext context, int i) => Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 5),
                                 child: Column(
@@ -138,7 +135,7 @@ class TransactionsAllWidget {
                                                                   _transactions[
                                                                           i]
                                                                       .sender!))))));
-                                              final snackbar = SnackBar(
+                                              final SnackBar snackbar = SnackBar(
                                                   content: Text(AppLocalizations
                                                           .of(context)!
                                                       .translate('String25')));
@@ -150,7 +147,7 @@ class TransactionsAllWidget {
                                                   CrossAxisAlignment.center,
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
-                                              children: [
+                                              children: <Widget>[
                                                 Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -158,7 +155,7 @@ class TransactionsAllWidget {
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
-                                                    children: [
+                                                    children: <Widget>[
                                                       getTypeTxIcon(
                                                           _transactions[i]
                                                               .data!,
@@ -172,7 +169,7 @@ class TransactionsAllWidget {
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
-                                                  children: [
+                                                  children: <Widget>[
                                                     Text(
                                                       DateFormat.yMEd(
                                                               AppLocalizations.of(
@@ -192,10 +189,9 @@ class TransactionsAllWidget {
                                                               .secondaryColor,
                                                           fontSize: 13),
                                                     ),
-                                                    _transactions[i]
+                                                    if (_transactions[i]
                                                                 .amountAfterFees! >
-                                                            0
-                                                        ? Text(
+                                                            0) Text(
                                                             (getAmount(
                                                                   _transactions[
                                                                           i]
@@ -213,7 +209,7 @@ class TransactionsAllWidget {
                                                                     foreground: Paint()
                                                                       ..shader = ui.Gradient.linear(
                                                                           Offset.zero,
-                                                                          Offset(0, 60),
+                                                                          const Offset(0, 60),
                                                                           [
                                                                             Colors.red[100]!,
                                                                             Colors.red[900]!
@@ -227,20 +223,18 @@ class TransactionsAllWidget {
                                                                     foreground: Paint()
                                                                       ..shader = ui.Gradient.linear(
                                                                           Offset.zero,
-                                                                          Offset(0, 60),
+                                                                          const Offset(0, 60),
                                                                           [
                                                                             Colors.green[100]!,
                                                                             Colors.green[900]!
                                                                           ])),
-                                                          )
-                                                        : const SizedBox(),
-                                                    isToken(_transactions[i]
-                                                            .data!)
-                                                        ? Row(
+                                                          ) else const SizedBox(),
+                                                    if (isToken(_transactions[i]
+                                                            .data!)) Row(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
                                                                     .start,
-                                                            children: [
+                                                            children: <Widget>[
                                                               Text(
                                                                 (getAmountToken(_transactions[i]
                                                                             .data!)!)
@@ -259,7 +253,7 @@ class TransactionsAllWidget {
                                                                         foreground: Paint()
                                                                           ..shader = ui.Gradient.linear(
                                                                               Offset.zero,
-                                                                              Offset(0, 60),
+                                                                              const Offset(0, 60),
                                                                               [
                                                                                 Colors.red[100]!,
                                                                                 Colors.red[900]!
@@ -270,7 +264,7 @@ class TransactionsAllWidget {
                                                                         fontSize:
                                                                             20,
                                                                         foreground: Paint()
-                                                                          ..shader = ui.Gradient.linear(Offset.zero, Offset(0, 60), [
+                                                                          ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
                                                                             Colors.green[100]!,
                                                                             Colors.green[900]!
                                                                           ])),
@@ -278,18 +272,16 @@ class TransactionsAllWidget {
                                                               const SizedBox(
                                                                 width: 5,
                                                               ),
-                                                              ColorTheme.of(
+                                                              if (ColorTheme.of(
                                                                           context)!
-                                                                      .lightTheme!
-                                                                  ? Image.asset(
+                                                                      .lightTheme!) Image.asset(
                                                                       'images/nytro-logo-black.png',
                                                                       color: ColorTheme.of(
                                                                               context)!
                                                                           .secondaryColor,
                                                                       height:
                                                                           13,
-                                                                    )
-                                                                  : Image.asset(
+                                                                    ) else Image.asset(
                                                                       'images/nytro-logo-white.png',
                                                                       color: ColorTheme.of(
                                                                               context)!
@@ -298,14 +290,13 @@ class TransactionsAllWidget {
                                                                           13,
                                                                     ),
                                                             ],
-                                                          )
-                                                        : isNFT(_transactions[i]
+                                                          ) else isNFT(_transactions[i]
                                                                 .data!)
                                                             ? Row(
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
                                                                         .start,
-                                                                children: [
+                                                                children: <Widget>[
                                                                   Text(
                                                                     getSenderDataName(
                                                                         _transactions[i]
@@ -317,7 +308,7 @@ class TransactionsAllWidget {
                                                                             fontSize:
                                                                                 20,
                                                                             foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, Offset(0, 60), [
+                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
                                                                                 Colors.red[100]!,
                                                                                 Colors.red[900]!
                                                                               ]))
@@ -327,7 +318,7 @@ class TransactionsAllWidget {
                                                                             fontSize:
                                                                                 20,
                                                                             foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, Offset(0, 60), [
+                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
                                                                                 Colors.green[100]!,
                                                                                 Colors.green[900]!
                                                                               ])),
@@ -343,7 +334,7 @@ class TransactionsAllWidget {
                                                                             fontSize:
                                                                                 13,
                                                                             foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, Offset(0, 60), [
+                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
                                                                                 Colors.red[100]!,
                                                                                 Colors.red[900]!
                                                                               ]))
@@ -353,7 +344,7 @@ class TransactionsAllWidget {
                                                                             fontSize:
                                                                                 13,
                                                                             foreground: Paint()
-                                                                              ..shader = ui.Gradient.linear(Offset.zero, Offset(0, 60), [
+                                                                              ..shader = ui.Gradient.linear(Offset.zero, const Offset(0, 60), [
                                                                                 Colors.green[100]!,
                                                                                 Colors.green[900]!
                                                                               ])),
@@ -361,18 +352,16 @@ class TransactionsAllWidget {
                                                                   const SizedBox(
                                                                     width: 5,
                                                                   ),
-                                                                  ColorTheme.of(
+                                                                  if (ColorTheme.of(
                                                                               context)!
-                                                                          .lightTheme!
-                                                                      ? Image
+                                                                          .lightTheme!) Image
                                                                           .asset(
                                                                           'images/nytro-logo-black.png',
                                                                           color:
                                                                               ColorTheme.of(context)!.secondaryColor,
                                                                           height:
                                                                               13,
-                                                                        )
-                                                                      : Image
+                                                                        ) else Image
                                                                           .asset(
                                                                           'images/nytro-logo-white.png',
                                                                           color:
@@ -384,18 +373,16 @@ class TransactionsAllWidget {
                                                               )
                                                             : const SizedBox(),
                                                     Row(
-                                                      children: [
-                                                        _transactions[i]
+                                                      children: <Widget>[
+                                                        if (_transactions[i]
                                                                     .sender! ==
-                                                                address
-                                                            ? Text('To: ',
+                                                                address) Text('To: ',
                                                                 style: TextStyle(
                                                                     color: ColorTheme.of(
                                                                             context)!
                                                                         .secondaryColor,
                                                                     fontSize:
-                                                                        15))
-                                                            : Text('From: ',
+                                                                        15)) else Text('From: ',
                                                                 style: TextStyle(
                                                                     color: ColorTheme.of(
                                                                             context)!
@@ -458,7 +445,7 @@ class TransactionsAllWidget {
                                               ],
                                             )),
                                         dense: true,
-                                        subtitle: Divider(),
+                                        subtitle: const Divider(),
                                       ),
                                     ),
                                     Divider(
@@ -477,7 +464,7 @@ class TransactionsAllWidget {
               : ListView.builder(
                   padding: const EdgeInsets.all(0.0),
                   itemCount: 8,
-                  itemBuilder: (context, i) => Card(
+                  itemBuilder: (BuildContext context, int i) => Card(
                       color: ColorTheme.of(context)!.baseColor,
                       child: SizedBox(
                         width: 200.0,
@@ -508,14 +495,14 @@ class TransactionsAllWidget {
   }
 
   static String getIdFromAddress(String address) {
-    String _id = NyzoStringEncoder.encode(
+    final String _id = NyzoStringEncoder.encode(
         NyzoStringPublicIdentifier(Uint8List.fromList(utf8.encode(address))));
     return _id.substring(0, 6) + '...' + _id.substring(_id.length - 10);
   }
 
   static bool isToken(String senderData) {
-    List<String> infos = senderData.split(':');
-    if (infos.length > 0 &&
+    final List<String> infos = senderData.split(':');
+    if (infos.isNotEmpty &&
         infos[0].length == 2 &&
         (infos[0].startsWith('T'))) {
       return true;
@@ -525,8 +512,8 @@ class TransactionsAllWidget {
   }
 
   static bool isNFT(String senderData) {
-    List<String> infos = senderData.split(':');
-    if (infos.length > 0 &&
+    final List<String> infos = senderData.split(':');
+    if (infos.isNotEmpty &&
         infos[0].length == 2 &&
         (infos[0].startsWith('N'))) {
       return true;
@@ -536,8 +523,8 @@ class TransactionsAllWidget {
   }
 
   static String typeTx(String senderData, BuildContext context) {
-    List<String> infos = senderData.split(':');
-    if (infos.length > 0) {
+    final List<String> infos = senderData.split(':');
+    if (infos.isNotEmpty) {
       switch (infos[0]) {
         case 'TT':
           return AppLocalizations.of(context)!.translate('String111');
@@ -573,8 +560,8 @@ class TransactionsAllWidget {
 
   static Icon getTypeTxIcon(
       String senderData, String address, String transactionSender) {
-    List<String> infos = senderData.split(':');
-    if (infos.length > 0) {
+    final List<String> infos = senderData.split(':');
+    if (infos.isNotEmpty) {
       switch (infos[0]) {
         case 'TT':
           if (transactionSender != address) {
@@ -697,7 +684,7 @@ class TransactionsAllWidget {
   }
 
   static String getSenderDataName(String senderData) {
-    List<String> infos = senderData.split(':');
+    final List<String> infos = senderData.split(':');
     if (infos.length > 1) {
       return infos[1];
     } else {
@@ -706,7 +693,7 @@ class TransactionsAllWidget {
   }
 
   static String getSenderDataComment(String senderData) {
-    List<String> infos = senderData.split(':');
+    final List<String> infos = senderData.split(':');
     if (infos.length > 1) {
       int commentIndex = 3;
       if (infos[0].startsWith('N')) {
@@ -731,7 +718,7 @@ class TransactionsAllWidget {
   }
 
   static double? getAmountToken(String senderData) {
-    List<String> infos = senderData.split(':');
+    final List<String> infos = senderData.split(':');
     if (infos.length > 2) {
       return double.tryParse(double.tryParse(infos[2])!.toStringAsFixed(6));
     } else {
@@ -740,7 +727,7 @@ class TransactionsAllWidget {
   }
 
   static String? getUID(String senderData) {
-    List<String> infos = senderData.split(':');
+    final List<String> infos = senderData.split(':');
     if (infos.length > 2) {
       return infos[2];
     } else {

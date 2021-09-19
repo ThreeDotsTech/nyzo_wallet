@@ -19,7 +19,7 @@ import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/SheetUtil.dart';
-import 'package:nyzo_wallet/Widgets/TransactionsAllWidget.dart';
+import 'package:nyzo_wallet/Widgets/TransactionsDetailsWidget.dart';
 
 class TransactionsWidget extends StatefulWidget {
   final List<Transaction>? _transactions;
@@ -43,7 +43,7 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
   @override
   void initState() {
     walletWindowState = context.findAncestorStateOfType<WalletWindowState>()!;
-    getAddress().then((address) {
+    getAddress().then((String address) {
       _address = address;
       getTransactions(_address).then((List<Transaction> transactions) {
         setState(() {
@@ -56,7 +56,7 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
           tokensTransactionsList = _tokensTransactionsList;
         });
       });
-      getTransactionsSinceList(address).then((_transactionsSinceResponse) {
+      getTransactionsSinceList(address).then((TransactionsSinceResponse _transactionsSinceResponse) {
         transactionsSinceResponse = _transactionsSinceResponse;
       });
     });
@@ -69,7 +69,7 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
   Future<void> refresh() async {
     final WalletWindowState? walletWindowState =
         context.findAncestorStateOfType<WalletWindowState>();
-    final Future transactions = getTransactions(_address);
+    final Future<List<Transaction>> transactions = getTransactions(_address);
     getBalance(_address).then((double _balance) {
       walletWindowState!.setState(() {
         walletWindowState.balance = _balance.floor();
@@ -81,16 +81,14 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
         walletWindowState.myTokensList = _myTokensList;
       });
     });
-    getTransactionsSinceList(_address).then((_transactionsSinceResponse) {
+    getTransactionsSinceList(_address).then((TransactionsSinceResponse _transactionsSinceResponse) {
       transactionsSinceResponse = _transactionsSinceResponse;
     });
-    transactions.then((transactionsList) {
+    transactions.then((List<Transaction> transactionsList) {
       setState(() {
         _transactions = transactionsList;
       });
-      //getBalance(_address).then((int balance){});
     });
-    return transactions;
   }
 
   @override
@@ -127,7 +125,7 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                     Text(
                       AppLocalizations.of(context)!.translate('String50'),
                       style: const TextStyle(
-                          color: const Color(0xFF555555), fontSize: 15),
+                          color: Color(0xFF555555), fontSize: 15),
                     ),
                     RichText(
                       text: TextSpan(
@@ -151,17 +149,16 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                     ),
                   ],
                 ),
-                walletWindowState!.myTokensList.length > 0
-                    ? Column(
+                if (walletWindowState!.myTokensList.isNotEmpty) Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
-                              boxShadow: [BoxShadow(color: Colors.transparent)],
+                              boxShadow: const [BoxShadow(color: Colors.transparent)],
                             ),
                             height: 35,
-                            margin: EdgeInsetsDirectional.only(
+                            margin: const EdgeInsetsDirectional.only(
                                 start: 7, top: 0.0, end: 7.0),
                             child: TextButton(
                               style: TextButton.styleFrom(
@@ -186,23 +183,20 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                           Text(
                             AppLocalizations.of(context)!
                                 .translate('String102'),
-                            style: TextStyle(
-                                color: const Color(0xFF555555),
+                            style: const TextStyle(
+                                color: Color(0xFF555555),
                                 letterSpacing: 0,
                                 fontSize: 15),
                           ),
                         ],
-                      )
-                    : const SizedBox(),
+                      ) else const SizedBox(),
               ],
             ),
           ),
           const Divider(
-            color: const Color(0xFF555555),
+            color: Color(0xFF555555),
           ),
-          transactionsSinceResponse == null
-              ? const SizedBox()
-              : TransactionsAllWidget.buildTransactionsDisplay(
+          if (transactionsSinceResponse == null) const SizedBox() else TransactionsDetailsWidget.buildTransactionsDisplay(
                   context,
                   _address,
                   walletWindowState!,

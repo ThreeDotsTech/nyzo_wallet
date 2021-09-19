@@ -6,20 +6,16 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart' as material;
-
 // Package imports:
 import 'package:cryptography/cryptography.dart';
 import 'package:cryptography/helpers.dart';
+// Flutter imports:
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hex/hex.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:string_encryption/string_encryption.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
@@ -31,11 +27,14 @@ import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/WatchedAddress.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:string_encryption/string_encryption.dart';
+
 import 'NyzoMessage.dart';
 import 'Transaction.dart';
 import 'TransactionMessage.dart';
 
-const FlutterSecureStorage _storage = const FlutterSecureStorage();
+const FlutterSecureStorage _storage = FlutterSecureStorage();
 final StringEncryption crypto = StringEncryption();
 final Random r = Random.secure();
 const int CycleTransactionSignature47 = 47;
@@ -54,7 +53,7 @@ Future<bool> checkWallet() async {
 }
 
 Future createNewWallet(String password) async {
-  final prefs = await SharedPreferences
+  final SharedPreferences prefs = await SharedPreferences
       .getInstance(); //Create a Shared Preferences instance to save balance
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
@@ -95,7 +94,7 @@ Future createNewWallet(String password) async {
 Future<bool> importWallet(String nyzoString, String password) async {
   Uint8List hexStringAsUint8Array(String identifier) {
     identifier = identifier.split('-').join('');
-    final array = Uint8List((identifier.length / 2).floor());
+    final Uint8List array = Uint8List((identifier.length / 2).floor());
     for (var i = 0; i < array.length; i++) {
       array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
     }
@@ -105,7 +104,7 @@ Future<bool> importWallet(String nyzoString, String password) async {
   final String privateKeyAsString =
       HEX.encode(NyzoStringEncoder.decode(nyzoString).getBytes());
 
-  final prefs = await SharedPreferences
+  final SharedPreferences prefs = await SharedPreferences
       .getInstance(); //Create a Shared Preferences instance to save balance and pubKey
   setNightModeValue(true);
   setWatchSentinels(false);
@@ -138,25 +137,25 @@ Future<bool> importWallet(String nyzoString, String password) async {
   return true;
 }
 
-Future getAddress() async {
-  final _prefs = await SharedPreferences.getInstance();
-  final _address = _prefs.getString('pubKey') ?? '';
+Future<String> getAddress() async {
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
+  final String _address = _prefs.getString('pubKey') ?? '';
   return _address;
 }
 
 Future<double> getSavedBalance() async {
-  final _prefs = await SharedPreferences.getInstance();
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
   final double? _address = _prefs.getDouble('balance')!;
   return _address!;
 }
 
-void setSavedBalance(double balance) async {
-  final _prefs = await SharedPreferences.getInstance();
+Future<void> setSavedBalance(double balance) async {
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
   _prefs.setDouble('balance', balance);
 }
 
 Future<double> getBalance(String address) async {
-  final _prefs = await SharedPreferences.getInstance();
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
   double _balance = _prefs.getDouble('balance') ?? 0.0;
   final String url = 'https://nyzo.co/walletRefresh?id=' + address;
   try {
@@ -181,21 +180,21 @@ Future<double> getBalance(String address) async {
 }
 
 Future<List<Token>> getTokensBalance(String address) async {
-  List<Token> tokensList = List<Token>.empty(growable: true);
+  final List<Token> tokensList = List<Token>.empty(growable: true);
 
-  HttpClient httpClient = new HttpClient();
+  final HttpClient httpClient = HttpClient();
   try {
-    HttpClientRequest request = await httpClient
+    final HttpClientRequest request = await httpClient
         .getUrl(Uri.parse('https://tokens.nyzo.today/api/balances/' + address));
     request.headers.set('content-type', 'application/json');
-    HttpClientResponse response = await request.close();
+    final HttpClientResponse response = await request.close();
     if (response.statusCode == 200) {
-      String reply = await response.transform(utf8.decoder).join();
-      TokensBalancesResponse tokensBalanceGetResponse =
+      final String reply = await response.transform(utf8.decoder).join();
+      final TokensBalancesResponse tokensBalanceGetResponse =
           tokensBalancesResponseFromJson(reply);
 
       for (int i = 0; i < tokensBalanceGetResponse.tokensList!.length; i++) {
-        Token token = Token(
+        final Token token = Token(
             name: tokensBalanceGetResponse.tokensList![i].name,
             amount: tokensBalanceGetResponse.tokensList![i].amount,
             comment: tokensBalanceGetResponse.tokensList![i].comment);
@@ -209,15 +208,15 @@ Future<List<Token>> getTokensBalance(String address) async {
 Future<TransactionsSinceResponse> getTransactionsSinceList(
     String address) async {
   TransactionsSinceResponse transactionsSinceResponse =
-      new TransactionsSinceResponse();
-  HttpClient httpClient = new HttpClient();
+      TransactionsSinceResponse();
+  final HttpClient httpClient = HttpClient();
   try {
-    HttpClientRequest request = await httpClient
+    final HttpClientRequest request = await httpClient
         .getUrl(Uri.parse('https://nyzo.today/api/tx_since/0/' + address));
     request.headers.set('content-type', 'application/json');
-    HttpClientResponse response = await request.close();
+    final HttpClientResponse response = await request.close();
     if (response.statusCode == 200) {
-      String reply = await response.transform(utf8.decoder).join();
+      final String reply = await response.transform(utf8.decoder).join();
       transactionsSinceResponse = transactionsSinceResponseFromJson(reply);
       transactionsSinceResponse.txs =
           transactionsSinceResponse.txs!.reversed.toList();
@@ -231,14 +230,14 @@ Future<List<TokensTransactionsResponse>> getTokensTransactionsList(
   List<TokensTransactionsResponse> transactionsList =
       List<TokensTransactionsResponse>.empty(growable: true);
 
-  HttpClient httpClient = new HttpClient();
+  final HttpClient httpClient = HttpClient();
   try {
-    HttpClientRequest request = await httpClient.getUrl(
+    final HttpClientRequest request = await httpClient.getUrl(
         Uri.parse('https://tokens.nyzo.today/api/transactions/' + address));
     request.headers.set('content-type', 'application/json');
-    HttpClientResponse response = await request.close();
+    final HttpClientResponse response = await request.close();
     if (response.statusCode == 200) {
-      String reply = await response.transform(utf8.decoder).join();
+      final String reply = await response.transform(utf8.decoder).join();
       transactionsList = tokensTransactionsResponseFromJson(reply);
     }
   } catch (e) {}
@@ -258,8 +257,8 @@ Future<String> getPrivateKey(String password) async {
 Future<List<Transaction>> getTransactions(String address) async {
   final List<Transaction> transactions =
       List<Transaction>.empty(growable: true);
-  final _prefs = await SharedPreferences.getInstance();
-  final _address = _prefs.getString('pubKey') ?? '';
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
+  final String _address = _prefs.getString('pubKey') ?? '';
   final String url = 'https://nyzo.co/walletRefresh?id=' + _address;
   try {
     final http.Response response = await http.get(Uri.parse(url), headers: {
@@ -348,8 +347,8 @@ Uint8List byteArrayForEncodedString(String encodedString) {
   return array;
 }
 
-encodedStringForByteArray(array) {
-  final characterLookup = ('0123456789' +
+String encodedStringForByteArray(array) {
+  final List<String> characterLookup = ('0123456789' +
           'abcdefghijkmnopqrstuvwxyz' +
           'ABCDEFGHIJKLMNPQRSTUVWXYZ' +
           '-.~_')
