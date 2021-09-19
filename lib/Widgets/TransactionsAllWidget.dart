@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -191,22 +192,47 @@ class TransactionsAllWidget {
                                                               .secondaryColor,
                                                           fontSize: 13),
                                                     ),
-                                                    Text(
-                                                      (getAmount(
+                                                    _transactions[i]
+                                                                .amountAfterFees! >
+                                                            0
+                                                        ? Text(
+                                                            (getAmount(
                                                                   _transactions[
                                                                           i]
                                                                       .amountAfterFees!,
                                                                 )!)
-                                                              .toString() +
-                                                          ' ∩',
-                                                      style: TextStyle(
-                                                          color: ColorTheme.of(
-                                                                  context)!
-                                                              .secondaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 20),
-                                                    ),
+                                                                    .toString() +
+                                                                ' ∩',
+                                                            style: _transactions[i].sender == address
+                                                                ? TextStyle(
+                                                                    fontWeight: FontWeight
+                                                                        .w700,
+                                                                    fontSize:
+                                                                        20,
+                                                                    foreground: Paint()
+                                                                      ..shader = ui.Gradient.linear(
+                                                                          Offset.zero,
+                                                                          Offset(0, 60),
+                                                                          [
+                                                                            Colors.red[100]!,
+                                                                            Colors.red[900]!
+                                                                          ]))
+                                                                : TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    fontSize:
+                                                                        20,
+                                                                    foreground: Paint()
+                                                                      ..shader = ui.Gradient.linear(
+                                                                          Offset.zero,
+                                                                          Offset(0, 60),
+                                                                          [
+                                                                            Colors.green[100]!,
+                                                                            Colors.green[900]!
+                                                                          ])),
+                                                          )
+                                                        : const SizedBox(),
                                                     isToken(_transactions[i]
                                                             .data!)
                                                         ? Row(
@@ -222,15 +248,34 @@ class TransactionsAllWidget {
                                                                     getSenderDataName(
                                                                         _transactions[i]
                                                                             .data!),
-                                                                style: TextStyle(
-                                                                    color: ColorTheme.of(
-                                                                            context)!
-                                                                        .secondaryColor,
+                                                                style: _transactions[i].sender == address
+                                                                ? TextStyle(
+                                                                    fontWeight: FontWeight
+                                                                        .w700,
+                                                                    fontSize:
+                                                                        20,
+                                                                    foreground: Paint()
+                                                                      ..shader = ui.Gradient.linear(
+                                                                          Offset.zero,
+                                                                          Offset(0, 60),
+                                                                          [
+                                                                            Colors.red[100]!,
+                                                                            Colors.red[900]!
+                                                                          ]))
+                                                                : TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w700,
                                                                     fontSize:
-                                                                        20),
+                                                                        20,
+                                                                    foreground: Paint()
+                                                                      ..shader = ui.Gradient.linear(
+                                                                          Offset.zero,
+                                                                          Offset(0, 60),
+                                                                          [
+                                                                            Colors.green[100]!,
+                                                                            Colors.green[900]!
+                                                                          ])),
                                                               ),
                                                               const SizedBox(
                                                                 width: 5,
@@ -257,37 +302,58 @@ class TransactionsAllWidget {
                                                             ],
                                                           )
                                                         : const SizedBox(),
-                                                    Text(
-                                                      _contactsList!.any(
-                                                              (Contact
-                                                                  contact) {
-                                                        return contact
-                                                                .address ==
-                                                            NyzoStringEncoder.encode(
-                                                                NyzoStringPublicIdentifier(
-                                                                    Uint8List.fromList(
-                                                                        utf8.encode(
-                                                                            _transactions[i].sender!))));
-                                                      })
-                                                          ? _contactsList
-                                                              .firstWhere(
+                                                    Row(
+                                                      children: [
+                                                        _transactions[i]
+                                                                    .sender! ==
+                                                                address
+                                                            ? Text('To: ',
+                                                                style: TextStyle(
+                                                                    color: ColorTheme.of(
+                                                                            context)!
+                                                                        .secondaryColor,
+                                                                    fontSize:
+                                                                        15))
+                                                            : Text(
+                                                                'From: ',
+                                                                style: TextStyle(
+                                                                    color: ColorTheme.of(
+                                                                            context)!
+                                                                        .secondaryColor,
+                                                                    fontSize:
+                                                                        15)),
+                                                        Text(
+                                                          _contactsList!.any(
                                                                   (Contact
                                                                       contact) {
-                                                              return contact
-                                                                      .address ==
-                                                                  NyzoStringEncoder.encode(
-                                                                      NyzoStringPublicIdentifier(
-                                                                          Uint8List.fromList(
-                                                                              utf8.encode(_transactions[i].sender!))));
-                                                            }).name
-                                                          : getIdFromAddress(
-                                                              _transactions[i]
-                                                                  .sender!),
-                                                      style: TextStyle(
-                                                          color: ColorTheme.of(
-                                                                  context)!
-                                                              .secondaryColor,
-                                                          fontSize: 15),
+                                                            return contact
+                                                                    .address ==
+                                                                NyzoStringEncoder.encode(
+                                                                    NyzoStringPublicIdentifier(
+                                                                        Uint8List.fromList(
+                                                                            utf8.encode(_transactions[i].sender!))));
+                                                          })
+                                                              ? _contactsList
+                                                                  .firstWhere(
+                                                                      (Contact
+                                                                          contact) {
+                                                                  return contact
+                                                                          .address ==
+                                                                      NyzoStringEncoder
+                                                                          .encode(
+                                                                              NyzoStringPublicIdentifier(Uint8List.fromList(utf8.encode(_transactions[i].sender!))));
+                                                                }).name
+                                                              : getIdFromAddress(
+                                                                  _transactions[
+                                                                          i]
+                                                                      .sender!),
+                                                          style: TextStyle(
+                                                              color: ColorTheme.of(
+                                                                      context)!
+                                                                  .secondaryColor,
+                                                              fontSize: 15),
+                                                        ),
+                                                      ],
                                                     ),
                                                     Text(
                                                       isToken(_transactions[i]
@@ -414,7 +480,8 @@ class TransactionsAllWidget {
     if (infos.length > 0) {
       switch (infos[0]) {
         case 'TT':
-          if (transactionSender != address) {
+          if (transactionSender !=
+              address) {
             return const Icon(
               Icons.add_circle_outline,
               color: Color(0xFF555555),
@@ -502,7 +569,8 @@ class TransactionsAllWidget {
             size: 20,
           );
         default:
-          if (transactionSender != address) {
+          if (transactionSender !=
+              address) {
             return const Icon(
               Icons.add_circle_outline,
               color: Color(0xFF555555),
@@ -517,7 +585,8 @@ class TransactionsAllWidget {
           }
       }
     } else {
-      if (transactionSender != address) {
+      if (transactionSender !=
+          address) {
         return const Icon(
           Icons.add_circle_outline,
           color: Color(0xFF555555),
