@@ -56,7 +56,8 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
           tokensTransactionsList = _tokensTransactionsList;
         });
       });
-      getTransactionsSinceList(address).then((TransactionsSinceResponse _transactionsSinceResponse) {
+      getTransactionsSinceList(address)
+          .then((TransactionsSinceResponse _transactionsSinceResponse) {
         transactionsSinceResponse = _transactionsSinceResponse;
       });
     });
@@ -81,7 +82,8 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
         walletWindowState.myTokensList = _myTokensList;
       });
     });
-    getTransactionsSinceList(_address).then((TransactionsSinceResponse _transactionsSinceResponse) {
+    getTransactionsSinceList(_address)
+        .then((TransactionsSinceResponse _transactionsSinceResponse) {
       transactionsSinceResponse = _transactionsSinceResponse;
     });
     transactions.then((List<Transaction> transactionsList) {
@@ -149,60 +151,72 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                     ),
                   ],
                 ),
-                if (walletWindowState!.myTokensList.isNotEmpty) Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              boxShadow: const [BoxShadow(color: Colors.transparent)],
-                            ),
-                            height: 35,
-                            margin: const EdgeInsetsDirectional.only(
-                                start: 7, top: 0.0, end: 7.0),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor:
-                                    ColorTheme.of(context)!.secondaryColor,
-                                elevation: 0.0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0)),
-                              ),
-                              child: Icon(Icons.scatter_plot_rounded,
-                                  color: ColorTheme.of(context)!.baseColor,
-                                  size: 20),
-                              onPressed: () {
-                                Sheets.showAppHeightEightSheet(
-                                    color: ColorTheme.of(context)!.depthColor,
-                                    context: context,
-                                    widget: MyTokensListWindow(
-                                        walletWindowState!.myTokensList));
-                              },
-                            ),
+                if (walletWindowState!.myTokensList.isNotEmpty)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.transparent)
+                          ],
+                        ),
+                        height: 35,
+                        margin: const EdgeInsetsDirectional.only(
+                            start: 7, top: 0.0, end: 7.0),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor:
+                                ColorTheme.of(context)!.secondaryColor,
+                            elevation: 0.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
                           ),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .translate('String102'),
-                            style: const TextStyle(
-                                color: Color(0xFF555555),
-                                letterSpacing: 0,
-                                fontSize: 15),
-                          ),
-                        ],
-                      ) else const SizedBox(),
+                          child: 
+                          ColorTheme.of(context)!.lightTheme! ?
+                          
+                          
+                          Image.asset(
+                            'images/nytro-logo-black.png',
+                            height: 13,
+                          ) :
+                          
+                           
+                          Image.asset(
+                            'images/nytro-logo-white.png',
+                            height: 13,
+                          ) 
+                          ,
+                          onPressed: () {
+                            Sheets.showAppHeightEightSheet(
+                                color: ColorTheme.of(context)!.depthColor,
+                                context: context,
+                                widget: MyTokensListWindow(
+                                    walletWindowState!.myTokensList));
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  const SizedBox(),
               ],
             ),
           ),
           const Divider(
             color: Color(0xFF555555),
           ),
-          if (transactionsSinceResponse == null) const SizedBox() else TransactionsDetailsWidget.buildTransactionsDisplay(
-                  context,
-                  _address,
-                  walletWindowState!,
-                  transactionsSinceResponse!.txs,
-                  _contactsList,
-                  refresh),
+          if (transactionsSinceResponse == null)
+            const SizedBox()
+          else
+            TransactionsDetailsWidget.buildTransactionsDisplay(
+                context,
+                _address,
+                walletWindowState!,
+                transactionsSinceResponse!.txs,
+                _contactsList,
+                refresh),
         ],
       ),
     );

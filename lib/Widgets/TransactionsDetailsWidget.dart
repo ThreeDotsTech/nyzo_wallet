@@ -269,27 +269,7 @@ class TransactionsDetailsWidget {
                                                                             Colors.green[900]!
                                                                           ])),
                                                               ),
-                                                              const SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              if (ColorTheme.of(
-                                                                          context)!
-                                                                      .lightTheme!) Image.asset(
-                                                                      'images/nytro-logo-black.png',
-                                                                      color: ColorTheme.of(
-                                                                              context)!
-                                                                          .secondaryColor,
-                                                                      height:
-                                                                          13,
-                                                                    ) else Image.asset(
-                                                                      'images/nytro-logo-white.png',
-                                                                      color: ColorTheme.of(
-                                                                              context)!
-                                                                          .secondaryColor,
-                                                                      height:
-                                                                          13,
-                                                                    ),
-                                                            ],
+                                                             ],
                                                           ) else isNFT(_transactions[i]
                                                                 .data!)
                                                             ? Row(
@@ -349,26 +329,7 @@ class TransactionsDetailsWidget {
                                                                                 Colors.green[900]!
                                                                               ])),
                                                                   ),
-                                                                  const SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  if (ColorTheme.of(
-                                                                              context)!
-                                                                          .lightTheme!) Image
-                                                                          .asset(
-                                                                          'images/nytro-logo-black.png',
-                                                                          color:
-                                                                              ColorTheme.of(context)!.secondaryColor,
-                                                                          height:
-                                                                              13,
-                                                                        ) else Image
-                                                                          .asset(
-                                                                          'images/nytro-logo-white.png',
-                                                                          color:
-                                                                              ColorTheme.of(context)!.secondaryColor,
-                                                                          height:
-                                                                              13,
-                                                                        ),
+                                                                 
                                                                 ],
                                                               )
                                                             : const SizedBox(),
