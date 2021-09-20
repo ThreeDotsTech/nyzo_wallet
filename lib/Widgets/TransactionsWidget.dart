@@ -82,6 +82,11 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
         walletWindowState.myTokensList = _myTokensList;
       });
     });
+    getNFTBalance(_address).then((List<Token> _myNFTsList) {
+      walletWindowState!.setState(() {
+        walletWindowState.myNFTsList = _myNFTsList;
+      });
+    });
     getTransactionsSinceList(_address)
         .then((TransactionsSinceResponse _transactionsSinceResponse) {
       transactionsSinceResponse = _transactionsSinceResponse;
@@ -187,7 +192,8 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                                 color: ColorTheme.of(context)!.depthColor,
                                 context: context,
                                 widget: MyTokensListWindow(
-                                    walletWindowState!.myTokensList));
+                                    walletWindowState!.myTokensList,
+                                    walletWindowState!.myNFTsList));
                           },
                         ),
                       ),

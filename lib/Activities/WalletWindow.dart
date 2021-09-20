@@ -50,6 +50,7 @@ class WalletWindowState extends State<WalletWindow>
   double? screenHeight;
   int balance = 0;
   List<Token> myTokensList = List<Token>.empty(growable: true);
+  List<Token> myNFTsList = List<Token>.empty(growable: true);
   String _address = '';
   static List<Transaction>? transactions;
   static List<Contact>? contactsList = List<Contact>.empty(growable: true);
@@ -132,6 +133,11 @@ class WalletWindowState extends State<WalletWindow>
         getTokensBalance(_address).then((List<Token> _myTokensList) {
           setState(() {
             myTokensList = _myTokensList;
+          });
+        });
+        getNFTBalance(_address).then((List<Token> _myNFTsList) {
+          setState(() {
+            myNFTsList = _myNFTsList;
           });
         });
       });

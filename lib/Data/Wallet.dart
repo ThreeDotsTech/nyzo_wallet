@@ -6,20 +6,25 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+// Flutter imports:
+import 'package:flutter/material.dart' as material;
+
 // Package imports:
 import 'package:cryptography/cryptography.dart';
 import 'package:cryptography/helpers.dart';
-// Flutter imports:
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hex/hex.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:string_encryption/string_encryption.dart';
+
 // Project imports:
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/CycleTransactionSignature.dart';
+import 'package:nyzo_wallet/Data/NFTAddressInstances.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/TokensBalancesResponse.dart';
@@ -27,9 +32,6 @@ import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/WatchedAddress.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:string_encryption/string_encryption.dart';
-
 import 'NyzoMessage.dart';
 import 'Transaction.dart';
 import 'TransactionMessage.dart';
@@ -195,7 +197,9 @@ Future<List<Token>> getTokensBalance(String address) async {
 
       for (int i = 0; i < tokensBalanceGetResponse.tokensList!.length; i++) {
         final Token token = Token(
+            isNFT: false,
             name: tokensBalanceGetResponse.tokensList![i].name,
+            uid: '',
             amount: tokensBalanceGetResponse.tokensList![i].amount,
             comment: tokensBalanceGetResponse.tokensList![i].comment);
         tokensList.add(token);
@@ -203,6 +207,34 @@ Future<List<Token>> getTokensBalance(String address) async {
     }
   } catch (e) {}
   return tokensList;
+}
+
+Future<List<Token>> getNFTBalance(String address) async {
+  final List<Token> nftsList = List<Token>.empty(growable: true);
+
+  final HttpClient httpClient = HttpClient();
+  try {
+    final HttpClientRequest request = await httpClient.getUrl(Uri.parse(
+        'https://tokens.nyzo.today/api/nft_address_instances/' + address));
+    request.headers.set('content-type', 'application/json');
+    final HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      final String reply = await response.transform(utf8.decoder).join();
+      final List<NftAddressInstancesResponse> nftAddressInstancesListResponse =
+          nftAddressInstancesResponseFromJson(reply);
+
+      for (int i = 0; i < nftAddressInstancesListResponse.length; i++) {
+        final Token nft = Token(
+            isNFT: true,
+            name: nftAddressInstancesListResponse[i].nftClass,
+            uid: nftAddressInstancesListResponse[i].nftId,
+            amount: 0,
+            comment: '');
+        nftsList.add(nft);
+      }
+    }
+  } catch (e) {}
+  return nftsList;
 }
 
 Future<TransactionsSinceResponse> getTransactionsSinceList(

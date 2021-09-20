@@ -8,9 +8,10 @@ import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class MyTokensListWindow extends StatefulWidget {
-  const MyTokensListWindow(this.tokensList) : super();
+  const MyTokensListWindow(this.tokensList, this.nftsList) : super();
 
   final List<Token> tokensList;
+  final List<Token> nftsList;
 
   @override
   _MyTokensListWindowStateState createState() =>
@@ -27,6 +28,9 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
 
     setState(() {
       _myTokenList.addAll(widget.tokensList);
+      _myTokenList.addAll(widget.nftsList);
+      _myTokenList.sort(
+          (a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()));
       _myTokenList.removeWhere((Token element) => element.name == '');
       _myTokenListForDisplay = _myTokenList;
     });
@@ -123,7 +127,9 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
                                     _myTokenListForDisplay =
                                         _myTokenList.where((Token token) {
                                       final String tokenId =
-                                          token.name!.toLowerCase();
+                                          token.name!.toLowerCase() +
+                                              ' ' +
+                                              token.uid!.toLowerCase();
                                       return tokenId.contains(text);
                                     }).toList();
                                   });
@@ -197,7 +203,11 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
                           Row(
                             children: <Widget>[
                               Text(
-                                token.name! + ' : ' + token.amount.toString(),
+                                token.isNFT
+                                    ? token.name! + ' : ' + token.uid!
+                                    : token.name! +
+                                        ' : ' +
+                                        token.amount.toString(),
                                 style: TextStyle(
                                     color:
                                         ColorTheme.of(context)!.secondaryColor,

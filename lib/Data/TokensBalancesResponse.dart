@@ -20,7 +20,9 @@ class TokensBalancesResponse {
     final List<Token>? _tokensList = List<Token>.empty(growable: true);
     json.forEach((String key, value) {
       _tokensList!.add(Token(
+          isNFT: false,
           name: key,
+          uid: '',
           amount:
               value['amount'] == null ? null : double.tryParse(value['amount']),
           comment: ''));

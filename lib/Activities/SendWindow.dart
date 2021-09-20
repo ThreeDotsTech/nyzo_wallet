@@ -51,7 +51,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   WalletWindowState? walletWindowState;
   bool _isLoading = false;
   bool isTokenToSendSwitched = false;
-  String _selectedTokenName = "";
+  String _selectedTokenName = '';
+  bool _selectedIsNFT = false;
   List<Token> myTokensList = List<Token>.empty(growable: true);
 
   @override
@@ -579,9 +580,18 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     onChanged: (value) async {
                                       myTokensList.clear();
                                       myTokensList.add(Token(
-                                          name: '', amount: 0, comment: ''));
+                                          isNFT: false,
+                                          name: '',
+                                          uid: '',
+                                          amount: 0,
+                                          comment: ''));
                                       myTokensList.addAll(
                                           await getTokensBalance(address));
+                                      myTokensList
+                                          .addAll(await getNFTBalance(address));
+                                      myTokensList.sort((a, b) => a.name!
+                                          .toLowerCase()
+                                          .compareTo(b.name!.toLowerCase()));
                                       setState(() {
                                         isTokenToSendSwitched = value;
                                         walletWindowState!
@@ -747,7 +757,11 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               items: myTokensList
                                                   .map((Token token) {
                                                 return DropdownMenuItem<String>(
-                                                    value: token.name,
+                                                    value: token.isNFT
+                                                        ? token.name! +
+                                                            ' - ' +
+                                                            token.uid!
+                                                        : token.name,
                                                     child: Container(
                                                         child: token.name == ""
                                                             ? Text(
@@ -761,34 +775,61 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                                     fontSize:
                                                                         15),
                                                               )
-                                                            : Text(
-                                                                token.name! +
-                                                                    " (" +
-                                                                    token
-                                                                        .amount!
-                                                                        .toString() +
-                                                                    " " +
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'String107') +
-                                                                    ")",
-                                                                style: const TextStyle(
-                                                                    color: Color(
-                                                                        0xFF555555),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        15),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              )));
+                                                            : token.isNFT
+                                                                ? Text(
+                                                                    token.name! +
+                                                                        " - " +
+                                                                        token
+                                                                            .uid!,
+                                                                    style: const TextStyle(
+                                                                        color: Color(
+                                                                            0xFF555555),
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        fontSize:
+                                                                            15),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  )
+                                                                : Text(
+                                                                    token.name! +
+                                                                        " (" +
+                                                                        token
+                                                                            .amount!
+                                                                            .toString() +
+                                                                        " " +
+                                                                        AppLocalizations.of(context)!
+                                                                            .translate('String107') +
+                                                                        ")",
+                                                                    style: const TextStyle(
+                                                                        color: Color(
+                                                                            0xFF555555),
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        fontSize:
+                                                                            15),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  )));
                                               }).toList(),
                                               onChanged: (String? value) {
                                                 setState(() {
+                                                  _selectedIsNFT = false;
                                                   _selectedTokenName = value!;
+                                                  myTokensList
+                                                      .forEach((element) {
+                                                    if (element.name! +
+                                                            ' - ' +
+                                                            element.uid! ==
+                                                        value) {
+                                                      _selectedIsNFT =
+                                                          element.isNFT;
+                                                    }
+                                                  });
                                                 });
                                               },
                                             ),
@@ -797,99 +838,119 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         const SizedBox(
                                           height: 50,
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                            left: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.075,
-                                            right: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.075,
-                                          ),
-                                          child: TextFormField(
-                                            keyboardType: const TextInputType
-                                                    .numberWithOptions(
-                                                signed: false, decimal: true),
-                                            focusNode: focusNodeTokenQuantity,
-                                            key: walletWindowState!
-                                                .tokenQuantityFormKey,
-                                            controller: walletWindowState!
-                                                .textControllerTokenQuantity,
-                                            maxLength: 19,
-                                            style: TextStyle(
-                                                color: ColorTheme.of(context)!
-                                                    .secondaryColor),
-                                            decoration: InputDecoration(
-                                              counterStyle: TextStyle(
-                                                  color: ColorTheme.of(context)!
-                                                      .secondaryColor),
-                                              filled: true,
-                                              fillColor: ColorTheme.of(context)!
-                                                  .depthColor,
-                                              contentPadding:
-                                                  const EdgeInsets.all(10),
-                                              floatingLabelBehavior:
-                                                  FloatingLabelBehavior.never,
-                                              labelText:
-                                                  AppLocalizations.of(context)!
-                                                      .translate('String106'),
-                                              labelStyle: const TextStyle(
-                                                  color: Color(0xFF555555),
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 15),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  borderSide: const BorderSide(
-                                                      color:
-                                                          Color(0x55666666))),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  borderSide: const BorderSide(
-                                                      color:
-                                                          Color(0x55666666))),
-                                              errorBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  borderSide: const BorderSide(
-                                                      color: Colors.red)),
-                                              focusedErrorBorder:
-                                                  OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      borderSide:
-                                                          const BorderSide(
-                                                              color:
-                                                                  Colors.red)),
-                                            ),
-                                            validator: (String? val) => walletWindowState!
-                                                        .textControllerTokenQuantity
-                                                        .text ==
-                                                    ''
-                                                ? AppLocalizations.of(context)!
-                                                    .translate('String67')
-                                                : double.tryParse(walletWindowState!
-                                                            .textControllerTokenQuantity
-                                                            .text) ==
-                                                        null
-                                                    ? AppLocalizations.of(context)!
-                                                        .translate('String89')
-                                                    : double.tryParse(walletWindowState!.textControllerTokenQuantity.text)!
-                                                                .toDouble() >=
-                                                            _getTokenQtySelected()
-                                                        ? AppLocalizations.of(
+                                        _selectedIsNFT
+                                            ? const SizedBox()
+                                            : Container(
+                                                margin: EdgeInsets.only(
+                                                  left: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.075,
+                                                  right: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.075,
+                                                ),
+                                                child: TextFormField(
+                                                  keyboardType:
+                                                      const TextInputType
+                                                              .numberWithOptions(
+                                                          signed: false,
+                                                          decimal: true),
+                                                  focusNode:
+                                                      focusNodeTokenQuantity,
+                                                  key: walletWindowState!
+                                                      .tokenQuantityFormKey,
+                                                  controller: walletWindowState!
+                                                      .textControllerTokenQuantity,
+                                                  maxLength: 19,
+                                                  style: TextStyle(
+                                                      color: ColorTheme.of(
+                                                              context)!
+                                                          .secondaryColor),
+                                                  decoration: InputDecoration(
+                                                    counterStyle: TextStyle(
+                                                        color: ColorTheme.of(
                                                                 context)!
-                                                            .translate('String108')
-                                                        : null,
-                                          ),
-                                        ),
+                                                            .secondaryColor),
+                                                    filled: true,
+                                                    fillColor:
+                                                        ColorTheme.of(context)!
+                                                            .depthColor,
+                                                    contentPadding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .never,
+                                                    labelText: AppLocalizations
+                                                            .of(context)!
+                                                        .translate('String106'),
+                                                    labelStyle: const TextStyle(
+                                                        color:
+                                                            Color(0xFF555555),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 15),
+                                                    enabledBorder: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Color(
+                                                                    0x55666666))),
+                                                    focusedBorder: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Color(
+                                                                    0x55666666))),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100),
+                                                            borderSide:
+                                                                const BorderSide(
+                                                                    color: Colors
+                                                                        .red)),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100),
+                                                            borderSide:
+                                                                const BorderSide(
+                                                                    color: Colors
+                                                                        .red)),
+                                                  ),
+                                                  validator: (String? val) => walletWindowState!
+                                                              .textControllerTokenQuantity
+                                                              .text ==
+                                                          ''
+                                                      ? AppLocalizations.of(context)!
+                                                          .translate('String67')
+                                                      : double.tryParse(walletWindowState!
+                                                                  .textControllerTokenQuantity
+                                                                  .text) ==
+                                                              null
+                                                          ? AppLocalizations.of(context)!
+                                                              .translate(
+                                                                  'String89')
+                                                          : double.tryParse(walletWindowState!.textControllerTokenQuantity.text)!
+                                                                      .toDouble() >=
+                                                                  _getTokenQtySelected()
+                                                              ? AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate('String108')
+                                                              : null,
+                                                ),
+                                              ),
                                         const SizedBox(
                                           height: 10,
                                         ),
@@ -1014,6 +1075,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                 amountForm!.validate() &&
                                                 (isTokenToSendSwitched ==
                                                         false ||
+                                                    _selectedIsNFT ||
                                                     isTokenToSendSwitched &&
                                                         tokenQuantity!
                                                             .validate())) {
@@ -1031,22 +1093,43 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                       1000000)
                                                   .toInt();
                                               String _data = '';
-                                              if (isTokenToSendSwitched ==
-                                                  true) {
-                                                _data = Token(
-                                                        name:
-                                                            _selectedTokenName,
-                                                        amount: double.tryParse(
-                                                            walletWindowState!
-                                                                .textControllerTokenQuantity
-                                                                .text),
-                                                        comment: walletWindowState!
+                                              if (_selectedTokenName
+                                                  .isNotEmpty) {
+                                                if (isTokenToSendSwitched ==
+                                                    true) {
+                                                  if (_selectedIsNFT) {
+                                                    _data = 'NT' +
+                                                        ':' +
+                                                        _selectedTokenName
+                                                            .split('-')[0]
+                                                            .trim() +
+                                                        ':' +
+                                                        _selectedTokenName
+                                                            .split('-')[1]
+                                                            .trim() +
+                                                        ':' +
+                                                        walletWindowState!
                                                             .textControllerTokenComments
-                                                            .text)
-                                                    .getSenderData();
-                                              } else {
-                                                _data = walletWindowState!
-                                                    .textControllerData.text;
+                                                            .text;
+                                                  } else {
+                                                    _data = 'TT' +
+                                                        ':' +
+                                                        _selectedTokenName +
+                                                        ':' +
+                                                        double.tryParse(
+                                                                walletWindowState!
+                                                                    .textControllerTokenQuantity
+                                                                    .text)
+                                                            .toString() +
+                                                        ':' +
+                                                        walletWindowState!
+                                                            .textControllerTokenComments
+                                                            .text;
+                                                  }
+                                                } else {
+                                                  _data = walletWindowState!
+                                                      .textControllerData.text;
+                                                }
                                               }
 
                                               send(
