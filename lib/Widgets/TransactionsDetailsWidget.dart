@@ -22,6 +22,7 @@ import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
+import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class TransactionsDetailsWidget {
@@ -114,12 +115,8 @@ class TransactionsDetailsWidget {
                                             walletWindowState
                                                     .textControllerAddress
                                                     .text =
-                                                NyzoStringEncoder.encode(
-                                                    NyzoStringPublicIdentifier(
-                                                        Uint8List.fromList(
-                                                            utf8.encode(
-                                                                _transactions[i]
-                                                                    .sender!))));
+                                                nyzoStringFromPublicIdentifier(
+                                                    _transactions[i].sender!);
                                             walletWindowState.setState(() {
                                               walletWindowState.pageIndex = 2;
                                             });
@@ -358,45 +355,30 @@ class TransactionsDetailsWidget {
                                                         if (_transactions[i]
                                                                 .sender! ==
                                                             address)
-                                                          Text('To: ',
+                                                          Text(
+                                                              AppLocalizations.of(context)!
+                                                                  .translate(
+                                                                      'String119'),
                                                               style: TextStyle(
                                                                   color: ColorTheme.of(
                                                                           context)!
                                                                       .secondaryColor,
                                                                   fontSize: 15))
                                                         else
-                                                          Text('From: ',
+                                                          Text(
+                                                              AppLocalizations.of(context)!
+                                                                  .translate(
+                                                                      'String120'),
                                                               style: TextStyle(
                                                                   color: ColorTheme.of(
                                                                           context)!
                                                                       .secondaryColor,
-                                                                  fontSize:
-                                                                      15)),
+                                                                  fontSize: 15)),
                                                         Text(
-                                                          _contactsList!.any(
-                                                                  (Contact
-                                                                      contact) {
-                                                            return contact
-                                                                    .address ==
-                                                                NyzoStringEncoder.encode(
-                                                                    NyzoStringPublicIdentifier(
-                                                                        Uint8List.fromList(
-                                                                            utf8.encode(_transactions[i].sender!))));
-                                                          })
-                                                              ? _contactsList
-                                                                  .firstWhere(
-                                                                      (Contact
-                                                                          contact) {
-                                                                  return contact
-                                                                          .address ==
-                                                                      NyzoStringEncoder
-                                                                          .encode(
-                                                                              NyzoStringPublicIdentifier(Uint8List.fromList(utf8.encode(_transactions[i].sender!))));
-                                                                }).name
-                                                              : getIdFromAddress(
-                                                                  _transactions[
-                                                                          i]
-                                                                      .sender!),
+                                                          getIdFromAddress(
+                                                              _transactions[i]
+                                                                  .sender!,
+                                                              _contactsList!),
                                                           style: TextStyle(
                                                               color: ColorTheme.of(
                                                                       context)!
@@ -405,24 +387,54 @@ class TransactionsDetailsWidget {
                                                         ),
                                                       ],
                                                     ),
+                                                    isToken(_transactions[i].data!) ||
+                                                            isNFT(
+                                                                _transactions[i]
+                                                                    .data!)
+                                                        ? getSenderDataComment(
+                                                                    _transactions[i]
+                                                                        .data!)
+                                                                .isEmpty
+                                                            ? const SizedBox()
+                                                            : Text(getSenderDataComment(_transactions[i].data!),
+                                                                style: TextStyle(
+                                                                    color: ColorTheme.of(context)!
+                                                                        .secondaryColor,
+                                                                    fontSize:
+                                                                        11))
+                                                        : _transactions[i]
+                                                                .data!
+                                                                .isEmpty
+                                                            ? const SizedBox()
+                                                            : Text(
+                                                                _transactions[i]
+                                                                    .data!,
+                                                                style: TextStyle(
+                                                                    color: ColorTheme.of(context)!
+                                                                        .secondaryColor,
+                                                                    fontSize: 11)),
                                                     Text(
-                                                      isToken(_transactions[i]
-                                                                  .data!) ||
-                                                              isNFT(
-                                                                  _transactions[
-                                                                          i]
-                                                                      .data!)
-                                                          ? getSenderDataComment(
-                                                              _transactions[i]
-                                                                  .data!)
-                                                          : _transactions[i]
-                                                              .data!,
+                                                      AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'String121') +
+                                                          _transactions[i]
+                                                              .type
+                                                              .toString() +
+                                                          ' - ' +
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'String122') +
+                                                          _transactions[i]
+                                                              .height
+                                                              .toString(),
                                                       style: TextStyle(
                                                           color: ColorTheme.of(
                                                                   context)!
                                                               .secondaryColor,
                                                           fontSize: 11),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               ],
@@ -477,9 +489,13 @@ class TransactionsDetailsWidget {
     );
   }
 
-  static String getIdFromAddress(String address) {
-    final String _id = NyzoStringEncoder.encode(
-        NyzoStringPublicIdentifier(Uint8List.fromList(utf8.encode(address))));
+  static String getIdFromAddress(String address, List<Contact> contactList) {
+    final String _id = nyzoStringFromPublicIdentifier(address);
+    final int index =
+        contactList.indexWhere((element) => element.address == _id);
+    if (index >= 0) {
+      return contactList[index].name;
+    }
     return _id.substring(0, 6) + '...' + _id.substring(_id.length - 10);
   }
 
