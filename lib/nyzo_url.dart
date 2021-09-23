@@ -30,6 +30,7 @@ class NyzoUrl {
 
     final NyzoStringPrefilledData _nyzoStringPrefilledData =
         NyzoStringEncoder.decode(link) as NyzoStringPrefilledData;
+    print(_nyzoStringPrefilledData.getReceiverIdentifier());
     _nyzoUrl.address = NyzoStringEncoder.encode(NyzoStringPublicIdentifier(
         _nyzoStringPrefilledData.getReceiverIdentifier()!));
     _nyzoUrl.data =

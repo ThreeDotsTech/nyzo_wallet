@@ -1130,8 +1130,10 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                   _data = walletWindowState!
                                                       .textControllerData.text;
                                                 }
+                                              } else {
+                                                _data = walletWindowState!
+                                                    .textControllerData.text;
                                               }
-
                                               send(
                                                       password,
                                                       address,
@@ -1192,6 +1194,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                   .textControllerTokenQuantity
                                                   .clear();
                                               _selectedTokenName = '';
+                                              isTokenToSendSwitched = false;
                                             }
                                           },
                                         ),
