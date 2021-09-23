@@ -85,10 +85,6 @@ Future createNewWallet(String password) async {
   await _storage.write(key: 'Password', value: password);
   setNightModeValue(true);
   setWatchSentinels(false);
-  addContact(
-      [],
-      Contact('id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I',
-          'Donate', 'Help us develop this wallet.'));
   prefs.setBool('nigthMode', true);
   return [HEX.encode(privKey), HEX.encode(pubKey.bytes)];
 }
@@ -132,10 +128,6 @@ Future<bool> importWallet(String nyzoString, String password) async {
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
   prefs.setString('pubKey', HEX.encode(pubKey.bytes));
   await _storage.write(key: 'Password', value: password);
-  addContact(
-      [],
-      Contact('id__8dGdt0FwHesHj1rMUI23LQCI.ZrFYw0g9-r980oGTYJShRdWX79I',
-          'Donate', 'Help us develop this wallet.'));
   return true;
 }
 

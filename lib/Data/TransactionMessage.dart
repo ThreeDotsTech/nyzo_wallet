@@ -73,6 +73,11 @@ class TransactionMessage {
     final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
     final Signature sm =
         await Ed25519().sign(getBytes(false), keyPair: keyPair);
+    final SimplePublicKey pubKey =
+        await keyPair.extractPublicKey() as SimplePublicKey;
+    for (int i = 0; i < 32; i++) {
+      this.senderIdentifier![i] = pubKey.bytes[i];
+    }
     signature = Uint8List.fromList(sm.bytes);
   }
 
