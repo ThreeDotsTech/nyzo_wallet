@@ -103,8 +103,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     obscureText: true,
                     controller: textController1,
                     style: TextStyle(
-                                      color: ColorTheme.of(context)!
-                                          .secondaryColor),
+                        color: ColorTheme.of(context)!.secondaryColor),
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: ColorTheme.of(context)!.depthColor,
@@ -141,8 +140,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                     controller: textController2,
                     obscureText: true,
                     style: TextStyle(
-                                      color: ColorTheme.of(context)!
-                                          .secondaryColor),
+                        color: ColorTheme.of(context)!.secondaryColor),
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: ColorTheme.of(context)!.depthColor,

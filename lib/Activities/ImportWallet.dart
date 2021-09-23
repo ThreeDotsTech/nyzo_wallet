@@ -80,9 +80,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                 obscureText: true,
                 maxLength: 56,
                 controller: privKeytextController,
-                style: TextStyle(
-                                      color: ColorTheme.of(context)!
-                                          .secondaryColor),
+                style: TextStyle(color: ColorTheme.of(context)!.secondaryColor),
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: ColorTheme.of(context)!.depthColor,
