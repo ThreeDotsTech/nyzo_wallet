@@ -429,12 +429,12 @@ encodeNyzoString(prefix, Uint8List? contentBytes) {
   return encodedStringForByteArray(expandedArray);
 }
 
-nyzoStringFromPrivateKey(byteArray) {
+nyzoStringFromPrivateKey(String byteArray) {
   final Uint8List bytes = hexStringAsUint8Array(byteArray);
   return encodeNyzoString('key_', bytes);
 }
 
-nyzoStringFromPublicIdentifier(byteArray) {
+nyzoStringFromPublicIdentifier(String byteArray) {
   final Uint8List bytes = hexStringAsUint8Array(byteArray);
   return encodeNyzoString('id__', bytes);
 }
