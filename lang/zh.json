@@ -110,5 +110,9 @@
     "String115": "Ownership change",
     "String116": "Class Ownership change",
     "String117": "Admin data",
-    "String118": "User data"
+    "String118": "User data",
+    "String119": "To: ",
+    "String120": "From: ",
+    "String121": "Type: ",
+    "String122": "Block: "
 }
