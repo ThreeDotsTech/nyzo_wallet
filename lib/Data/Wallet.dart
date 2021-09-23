@@ -37,7 +37,7 @@ import 'Transaction.dart';
 import 'TransactionMessage.dart';
 
 const FlutterSecureStorage _storage = FlutterSecureStorage();
-final crypto = new PlatformStringCryptor();
+final PlatformStringCryptor crypto = PlatformStringCryptor();
 final Random r = Random.secure();
 const int CycleTransactionSignature47 = 47;
 const int CycleTransactionSignatureResponse48 = 48;
@@ -93,7 +93,7 @@ Future<bool> importWallet(String nyzoString, String password) async {
   Uint8List hexStringAsUint8Array(String identifier) {
     identifier = identifier.split('-').join('');
     final Uint8List array = Uint8List((identifier.length / 2).floor());
-    for (var i = 0; i < array.length; i++) {
+    for (int i = 0; i < array.length; i++) {
       array[i] = HEX.decode(identifier.substring(i * 2, i * 2 + 2))[0];
     }
     return array;
@@ -618,13 +618,13 @@ Future<List<Contact>> getContacts() async {
 Future<Contact> getContact(String? address) async {
   final _prefs = await SharedPreferences.getInstance();
   final _contactListJson = _prefs.getString('contactList');
-  final bool contactFound = false;
+  const bool contactFound = false;
   if (_contactListJson != null) {
     final List<dynamic> _contactListDeserialized =
         json.decode(_contactListJson);
     final int index = _contactListDeserialized.length;
     for (var i = 0; i < index; i++) {
-      Contact _contact = Contact.fromJson(_contactListDeserialized[i]);
+      final Contact _contact = Contact.fromJson(_contactListDeserialized[i]);
       if (_contact.address.toUpperCase() == address!.toUpperCase()) {
         return _contact;
       }
@@ -763,7 +763,7 @@ Future<bool> saveWatchAddress(List<WatchedAddress> watchAddressList) async {
   return true;
 }
 
-void deleteWallet() async {
+Future<void> deleteWallet() async {
   final pref = await SharedPreferences.getInstance();
   await pref.clear();
   await _storage.deleteAll();
@@ -784,7 +784,7 @@ Future<bool> setNightModeValue(bool value) async {
   return _prefs.setBool('nigthMode', value);
 }
 
-void setWatchSentinels(bool val) async {
+Future<void> setWatchSentinels(bool val) async {
   final _prefs = await SharedPreferences.getInstance();
   _prefs.setBool('sentinel', val);
 }
