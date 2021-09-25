@@ -4,9 +4,8 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:crypto/crypto.dart';
-import 'package:cryptography/cryptography.dart';
 import 'package:hex/hex.dart';
-
+import 'package:pinenacl/ed25519.dart' as ed25519;
 // Project imports:
 import 'ByteBuffer.dart';
 
@@ -70,15 +69,13 @@ class TransactionMessage {
   }
 
   sign(Uint8List privKey) async {
-    final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
-    final Signature sm =
-        await Ed25519().sign(getBytes(false), keyPair: keyPair);
-    final SimplePublicKey pubKey =
-        await keyPair.extractPublicKey() as SimplePublicKey;
+    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
+    final ed25519.SignatureBase sm = signingKey.sign(getBytes(false)).signature;
+    final Uint8List pubBuf = signingKey.publicKey.toUint8List();
     for (int i = 0; i < 32; i++) {
-      this.senderIdentifier![i] = pubKey.bytes[i];
+      this.senderIdentifier![i] = pubBuf[i];
     }
-    signature = Uint8List.fromList(sm.bytes);
+    signature = Uint8List.fromList(sm);
   }
 
   getBytes(bool includeSignature) {

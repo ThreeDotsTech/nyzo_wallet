@@ -5,9 +5,9 @@ import 'dart:core';
 import 'dart:typed_data';
 
 // Package imports:
-import 'package:cryptography/cryptography.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
+import 'package:pinenacl/ed25519.dart' as ed25519;
 
 // Project imports:
 import 'ByteBuffer.dart';
@@ -74,39 +74,53 @@ class NyzoMessage {
       contentSize += contentBytes.lengthInBytes as int;
     }
     if (includeSignature) {
+      print('getBytes-contentSize: ' + contentSize.toString());
       byteBuffer.putInt(contentSize);
     }
     byteBuffer.putLong(this.timestamp!);
+    print('getBytes-timestamp: ' + this.timestamp.toString());
     byteBuffer.putShort(this.type!);
+    print('getBytes-type: ' + this.type.toString());
     if (contentBytes != null) {
+      print('getBytes-contentBytes: ' + contentBytes.toString());
       byteBuffer.putBytes(contentBytes);
     }
+    print('getBytes-sourceNodeIdentifier: ' +
+        this.sourceNodeIdentifier.toString());
     byteBuffer.putBytes(this.sourceNodeIdentifier!);
     if (includeSignature) {
+      print('getBytes-sourceNodeSignature: ' +
+          this.sourceNodeSignature.toString());
       byteBuffer.putBytes(this.sourceNodeSignature!);
     }
+    print('getBytes-byteBuffer: ' + byteBuffer.toArray().toString());
     return byteBuffer.toArray();
   }
 
   Future<void> sign(Uint8List privKey) async {
-    final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(privKey);
-    final SimplePublicKey pubKey =
-        await keyPair.extractPublicKey() as SimplePublicKey;
+    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
+    final Uint8List pubBuf = signingKey.publicKey.toUint8List();
+
     for (int i = 0; i < 32; i++) {
-      this.sourceNodeIdentifier![i] = pubKey.bytes[i];
+      this.sourceNodeIdentifier![i] = pubBuf[i];
     }
-    final Signature signature =
-        await Ed25519().sign(this.getBytes(false), keyPair: keyPair);
+    final ed25519.SignatureBase sm =
+        signingKey.sign(this.getBytes(false)).signature;
+
     for (int i = 0; i < 64; i++) {
-      this.sourceNodeSignature![i] = signature.bytes[i];
+      this.sourceNodeSignature![i] = sm[i];
     }
   }
 
+  fromByteBuffer(byteBuffer) {}
+
   Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
-    final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(
-        privKey); //Creates a KeyPair from the generated Seed
-    final SimplePublicKey publicKey = await keyPair.extractPublicKey()
-        as SimplePublicKey; //Set the Public Key
+
+    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
+    final Uint8List pubBuf = signingKey.publicKey.toUint8List();
+
+    Uint8List _body = this.getBytes(true);
+    print('BODYYYY: ' + _body.toString());
     final http.Response response =
         await client.post(Uri.parse('https://nyzo.co/message'),
             headers: {
@@ -119,14 +133,20 @@ class NyzoMessage {
               'Content-Type': 'application/octet-stream',
               'Accept': '*/*',
               'Referer': 'https://nyzo.co/wallet?id=' +
-                  HEX.encode(publicKey.bytes), //change this to + pubKey
+                  HEX.encode(pubBuf), //change this to + pubKey
               'Accept-Encoding': 'gzip, deflate, br',
               'Accept-Language':
                   'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
             },
-            body: this.getBytes(true));
+            body: _body);
     final Uint8List arrayBuffer = response.bodyBytes;
+
+    if (arrayBuffer == null) {
+      return null!;
+    }
+
     final Uint8List byteArray = Uint8List.fromList(arrayBuffer);
+    print('send-byteArray: ' + byteArray.toString());
     final NyzoMessage response2 = NyzoMessage();
 
     response2.timestamp = intValueFromArray(byteArray, 4, 8);

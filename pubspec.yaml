@@ -23,7 +23,10 @@ dependencies:
 
   # Cryptographic algorithms for encryption, digital signatures, key agreement, authentication, and hashing. AES, Chacha20, ED25519, X25519, and more. Web Crypto support
   cryptography: ^2.0.2
-  
+
+  # The Dart implementation of the PyNaCl APIs with the TweetNaCl cryptographic library
+  pinenacl: ^0.3.3
+
   # Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux  
   direct_select_flutter: ^1.1.1
 

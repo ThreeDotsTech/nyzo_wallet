@@ -10,7 +10,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart' as material;
 
 // Package imports:
-import 'package:cryptography/cryptography.dart';
+import 'package:pinenacl/ed25519.dart' as ed25519;
 import 'package:cryptography/helpers.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hex/hex.dart';
@@ -60,14 +60,11 @@ Future createNewWallet(String password) async {
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
   final Uint8List privKey = Uint8List(32);
-  KeyPair keyPair;
-  SimplePublicKey pubKey;
+
   //Generates a 32 bytes array to use as SEED (Crypto Secure)
   fillBytesWithSecureRandom(privKey);
-  //Creates a KeyPair from the generated Seed
-  keyPair = await Ed25519().newKeyPairFromSeed(privKey);
-  //Set the Public Key
-  pubKey = await keyPair.extractPublicKey() as SimplePublicKey;
+  final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
+  final Uint8List pubBuf = signingKey.publicKey.toUint8List();
 
   /*here we Store our keys in the device, Secure_storage encrypts and decrypts the content when reading and saving 
   so we dont need to take care of security, anyhow, Private key is encrypted again using user's password
@@ -81,12 +78,12 @@ Future createNewWallet(String password) async {
   await _storage.write(key: 'salt', value: salt);
   await _storage.write(key: 'privKey', value: encryptedPrivKey);
   // We take the values starting from index 1 to get rid of the two leading '0's (pubKey)
-  prefs.setString('pubKey', HEX.encode(pubKey.bytes));
+  prefs.setString('pubKey', HEX.encode(pubBuf));
   await _storage.write(key: 'Password', value: password);
   setNightModeValue(true);
   setWatchSentinels(false);
   prefs.setBool('nigthMode', true);
-  return [HEX.encode(privKey), HEX.encode(pubKey.bytes)];
+  return [HEX.encode(privKey), HEX.encode(pubBuf)];
 }
 
 Future<bool> importWallet(String nyzoString, String password) async {
@@ -109,10 +106,8 @@ Future<bool> importWallet(String nyzoString, String password) async {
   prefs.setDouble('balance', 0.0);
   prefs.setBool('sentinel', false);
   final Uint8List privateKey = hexStringAsUint8Array(privateKeyAsString);
-  final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(
-      privateKey); //Creates a KeyPair from the generated Seed
-  final SimplePublicKey pubKey =
-      await keyPair.extractPublicKey() as SimplePublicKey; //Set the Public Key
+  final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privateKey);
+  final Uint8List pubBuf = signingKey.publicKey.toUint8List();
 
   /*here we Store our keys in the device, Secure_storage encrypts and decrypts the content when reading and saving 
   so we dont need to take care of security, anyhow, Private key is encrypted again using user's password
@@ -126,7 +121,7 @@ Future<bool> importWallet(String nyzoString, String password) async {
   await _storage.write(key: 'salt', value: salt);
   await _storage.write(key: 'privKey', value: encryptedPrivKey);
   // We take the values starting from index 1 to get  rid of the two leading '0's (pubKey)
-  prefs.setString('pubKey', HEX.encode(pubKey.bytes));
+  prefs.setString('pubKey', HEX.encode(pubBuf));
   await _storage.write(key: 'Password', value: password);
   return true;
 }
@@ -451,16 +446,26 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     int balance, String data) async {
   final String account =
       HEX.encode(NyzoStringEncoder.decode(nyzoStringPiblicId).getBytes());
+  print('send-account: ' + account);
   final http.Client client = http.Client();
   final String? encryptedprivKey = await _storage.read(key: 'privKey');
+  print('send-encryptedprivKey: ' + encryptedprivKey!);
   final String? salt = await _storage.read(key: 'salt');
+  print('send-salt: ' + salt!);
   final String? key = await crypto.generateKeyFromPassword(password, salt!);
+  print('send-key: ' + key!);
   final String? privKey = await crypto.decrypt(encryptedprivKey!, key!);
+  print('send-privKey: ' + privKey!);
   final String walletPrivateSeed = await getPrivateKey(password);
+  print('send-walletPrivateSeed: ' + walletPrivateSeed!);
   final String recipientIdentifier = account;
+  print('send-recipientIdentifier: ' + recipientIdentifier!);
   final int balanceMicronyzos = balance;
+  print('send-balance: ' + balance.toString()!);
   final int micronyzosToSend = amount;
+  print('send-micronyzosToSend: ' + micronyzosToSend.toString()!);
   final String senderData = data;
+  print('send-data: ' + data.toString()!);
 
   bool specifiedTransactionIsValid() {
     return walletPrivateSeed.length == 64 &&
@@ -479,6 +484,7 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   }
 
   Future<NyzoMessage> fetchPreviousHash(String senderPrivateSeed) async {
+    print('fetchPreviousHash-senderPrivateSeed: ' + senderPrivateSeed);
     final NyzoMessage message = NyzoMessage();
     message.setType(NyzoMessage.PreviousHashRequest7);
     await message.sign(hexStringAsUint8Array(senderPrivateSeed));
@@ -504,6 +510,8 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     transaction.setPreviousBlockHash(previousBlockHash);
     transaction.setSenderData(senderData);
     await transaction.sign(hexStringAsUint8Array(senderPrivateSeed));
+    print('submitTransaction-transaction.signature: ' +
+        HEX.encode(transaction.signature!));
     final NyzoMessage message = NyzoMessage();
     message.setType(NyzoMessage.Transaction5);
     message.setContent(transaction);
@@ -529,6 +537,8 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
             recipientIdentifier,
             micronyzosToSend,
             utf8.encode(senderData));
+        print(
+            'submitTransaction-result2: ' + result2.content.message.toString());
         if (result2.content == null) {
           return 'There was a problem communicating with the server. To protect yourself ' +
               'against possible coin theft, please wait to resubmit this transaction. Refer ' +
@@ -549,10 +559,11 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   return 'Something went wrong';
 }
 
-Future<Uint8List?> signBytes(List<int> bytes, Uint8List key) async {
-  final KeyPair keyPair = await Ed25519().newKeyPairFromSeed(key);
-  final Signature sm = await Ed25519().sign(bytes, keyPair: keyPair);
-  return Uint8List.fromList(sm.bytes);
+Uint8List? signBytes(List<int> bytes, Uint8List key) {
+  final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: key);
+  final ed25519.SignatureBase sm =
+      signingKey.sign(Uint8List.fromList(bytes)).signature;
+  return Uint8List.fromList(sm);
 }
 
 sendMessage(NyzoMessage message) async {
@@ -573,18 +584,16 @@ Future<dynamic> signTransaction(String? initiatorSignature,
     {String? password, String? walletPrivateSeed}) async {
   walletPrivateSeed ??= await _getPrivKey(password!);
 
-  final KeyPair? keyPair = walletPrivateSeed.length == 64
-      ? await Ed25519()
-          .newKeyPairFromSeed(hexStringAsUint8Array(walletPrivateSeed))
-      : null;
-  if (keyPair == null) {
+  final ed25519.SigningKey signingKey = walletPrivateSeed.length == 64
+      ? ed25519.SigningKey(seed: hexStringAsUint8Array(walletPrivateSeed))
+      : null!;
+  if (signingKey == null) {
   } else {
     final signature = CycleTransactionSignature();
     signature
         .setTransactionInitiator(hexStringAsUint8Array(initiatorIdentifier!));
-    signature.setIdentifier(await keyPair.extractPublicKey());
-    signature.setSignature(await signBytes(
-        hexStringAsUint8Array(transactionBytes!),
+    signature.setIdentifier(signingKey.publicKey.toUint8List());
+    signature.setSignature(signBytes(hexStringAsUint8Array(transactionBytes!),
         hexStringAsUint8Array(walletPrivateSeed)));
 
     final message = NyzoMessage();
