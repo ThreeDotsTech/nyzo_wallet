@@ -430,7 +430,7 @@ class WalletWindowState extends State<WalletWindow>
         textControllerAddress.text = nyzoUrl.address!;
       }
       FocusScope.of(context).requestFocus(FocusNode());
-      pageIndex = 3;
+      pageIndex = 2;
     });
   }
 }
