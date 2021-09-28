@@ -10,13 +10,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart' as material;
 
 // Package imports:
-import 'package:pinenacl/ed25519.dart' as ed25519;
 import 'package:cryptography/helpers.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hex/hex.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:pinenacl/ed25519.dart' as ed25519;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_encryption/string_encryption.dart';
 
@@ -330,9 +330,7 @@ Future<List<Transaction>> getTransactions(String address) async {
     }
 
     return transactions;
-  } catch (e) {
-    //print(e.toString());
-  }
+  } catch (e) {}
   return transactions;
 }
 
@@ -446,26 +444,16 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     int balance, String data) async {
   final String account =
       HEX.encode(NyzoStringEncoder.decode(nyzoStringPiblicId).getBytes());
-  print('send-account: ' + account);
   final http.Client client = http.Client();
   final String? encryptedprivKey = await _storage.read(key: 'privKey');
-  print('send-encryptedprivKey: ' + encryptedprivKey!);
   final String? salt = await _storage.read(key: 'salt');
-  print('send-salt: ' + salt!);
   final String? key = await crypto.generateKeyFromPassword(password, salt!);
-  print('send-key: ' + key!);
   final String? privKey = await crypto.decrypt(encryptedprivKey!, key!);
-  print('send-privKey: ' + privKey!);
   final String walletPrivateSeed = await getPrivateKey(password);
-  print('send-walletPrivateSeed: ' + walletPrivateSeed!);
   final String recipientIdentifier = account;
-  print('send-recipientIdentifier: ' + recipientIdentifier!);
   final int balanceMicronyzos = balance;
-  print('send-balance: ' + balance.toString()!);
   final int micronyzosToSend = amount;
-  print('send-micronyzosToSend: ' + micronyzosToSend.toString()!);
   final String senderData = data;
-  print('send-data: ' + data.toString()!);
 
   bool specifiedTransactionIsValid() {
     return walletPrivateSeed.length == 64 &&
@@ -484,7 +472,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
   }
 
   Future<NyzoMessage> fetchPreviousHash(String senderPrivateSeed) async {
-    print('fetchPreviousHash-senderPrivateSeed: ' + senderPrivateSeed);
     final NyzoMessage message = NyzoMessage();
     message.setType(NyzoMessage.PreviousHashRequest7);
     await message.sign(hexStringAsUint8Array(senderPrivateSeed));
@@ -510,8 +497,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     transaction.setPreviousBlockHash(previousBlockHash);
     transaction.setSenderData(senderData);
     await transaction.sign(hexStringAsUint8Array(senderPrivateSeed));
-    print('submitTransaction-transaction.signature: ' +
-        HEX.encode(transaction.signature!));
     final NyzoMessage message = NyzoMessage();
     message.setType(NyzoMessage.Transaction5);
     message.setContent(transaction);
@@ -607,15 +592,15 @@ Future<dynamic> signTransaction(String? initiatorSignature,
 }
 
 Future<List<Contact>> getContacts() async {
-  final _prefs = await SharedPreferences.getInstance();
-  final _contactListJson = _prefs.getString('contactList');
+  final SharedPreferences _prefs = await SharedPreferences.getInstance();
+  final String? _contactListJson = _prefs.getString('contactList');
 
   if (_contactListJson != null) {
     final List<Contact> _contactList = [];
     final List<dynamic> _contactListDeserialized =
         json.decode(_contactListJson);
     final int index = _contactListDeserialized.length;
-    for (var i = 0; i < index; i++) {
+    for (int i = 0; i < index; i++) {
       _contactList.add(Contact.fromJson(_contactListDeserialized[i]));
     }
     return _contactList;

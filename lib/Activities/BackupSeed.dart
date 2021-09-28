@@ -77,7 +77,7 @@ class _BackUpSeedState extends State<BackUpSeed> {
                               borderRadius: BorderRadius.circular(100.0))),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: _privKey));
-                        final snackBar = SnackBar(
+                        final SnackBar snackBar = SnackBar(
                             content: Text(AppLocalizations.of(context)!
                                 .translate('String5')));
 

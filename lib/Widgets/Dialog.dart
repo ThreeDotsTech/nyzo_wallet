@@ -123,10 +123,7 @@ class AddContactDialog {
                     addressController.text = NyzoStringEncoder.encode(
                         NyzoStringPublicIdentifier(
                             pre.getReceiverIdentifier()!));
-                    print(NyzoStringEncoder.encode(NyzoStringPublicIdentifier(
-                        pre.getReceiverIdentifier()!)));
                     dataController.text = utf8.decode(pre.getSenderData()!);
-                    print(utf8.decode(pre.getSenderData()!));
                     //});
                   }
                 } catch (e) {

@@ -30,7 +30,7 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
       _myTokenList.addAll(widget.tokensList);
       _myTokenList.addAll(widget.nftsList);
       _myTokenList.sort(
-          (a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()));
+          (Token a, Token b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()));
       _myTokenList.removeWhere((Token element) => element.name == '');
       _myTokenListForDisplay = _myTokenList;
     });

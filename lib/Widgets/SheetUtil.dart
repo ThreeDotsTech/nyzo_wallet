@@ -28,7 +28,7 @@ class Sheets {
     if (bgColor == null) {
       bgColor = ColorTheme.of(context!)!.baseColor;
     }
-    var route = _AppHeightNineModalRoute<T>(
+    final _AppHeightNineModalRoute<T> route = _AppHeightNineModalRoute<T>(
         builder: (BuildContext context) {
           return widget!;
         },
@@ -171,7 +171,7 @@ class _AppHeightNineModalRoute<T> extends PopupRoute<T> {
         parent: _animationController!,
         curve: Curves.easeOut,
         reverseCurve: Curves.linear)
-      ..addStatusListener((animationStatus) {
+      ..addStatusListener((AnimationStatus animationStatus) {
         if (animationStatus == AnimationStatus.completed) {
           appSheetAnimation!.curve = Curves.linear;
         }
@@ -196,12 +196,12 @@ class _AppHeightNineModalRoute<T> extends PopupRoute<T> {
           data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
           child: AnimatedBuilder(
             animation: appSheetAnimation!,
-            builder: (context, child) => CustomSingleChildLayout(
+            builder: (BuildContext context, Widget? child) => CustomSingleChildLayout(
               delegate: _AppHeightNineSheetLayout(appSheetAnimation!.value),
               child: BottomSheet(
                 animationController: _animationController,
                 onClosing: () => Navigator.pop(context),
-                builder: (context) => Container(
+                builder: (BuildContext context) => Container(
                   decoration: BoxDecoration(
                     color: this.color,
                     borderRadius: BorderRadius.only(
@@ -309,7 +309,7 @@ class _AppHeightEightModalRoute<T> extends PopupRoute<T> {
         parent: _animationController!,
         curve: Curves.easeOut,
         reverseCurve: Curves.linear)
-      ..addStatusListener((animationStatus) {
+      ..addStatusListener((AnimationStatus animationStatus) {
         if (animationStatus == AnimationStatus.completed) {
           appSheetAnimation!.curve = Curves.linear;
         }
@@ -327,12 +327,12 @@ class _AppHeightEightModalRoute<T> extends PopupRoute<T> {
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: AnimatedBuilder(
           animation: appSheetAnimation!,
-          builder: (context, child) => CustomSingleChildLayout(
+          builder: (BuildContext context, Widget? child) => CustomSingleChildLayout(
             delegate: _AppHeightEightSheetLayout(appSheetAnimation!.value),
             child: BottomSheet(
               animationController: _animationController,
               onClosing: () => Navigator.pop(context),
-              builder: (context) => Container(
+              builder: (BuildContext context) => Container(
                 decoration: BoxDecoration(
                   color: this.color,
                   borderRadius: BorderRadius.only(

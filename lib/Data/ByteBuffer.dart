@@ -14,7 +14,7 @@ class ByteBuffer {
   }
 
   putBytes(List<int> bytes) {
-    for (var i = 0; i < bytes.length; i++) {
+    for (int i = 0; i < bytes.length; i++) {
       array![index!] = bytes[i];
       index = index! + 1;
     }
@@ -27,7 +27,7 @@ class ByteBuffer {
 
   putIntegerValue(int value, int? length) {
     value = value.floor();
-    for (var i = 0; i < length!; i++) {
+    for (int i = 0; i < length!; i++) {
       array![index! + length - 1 - i] = value % 256;
       value = (value / 256).floor();
     }
@@ -46,9 +46,9 @@ class ByteBuffer {
     putIntegerValue(value, 8);
   }
 
-  Uint8List toArray() {
+  toArray() {
     final Uint8List result = Uint8List(index!);
-    for (var i = 0; i < index!; i++) {
+    for (int i = 0; i < index!; i++) {
       result[i] = array![i];
     }
 

@@ -74,26 +74,17 @@ class NyzoMessage {
       contentSize += contentBytes.lengthInBytes as int;
     }
     if (includeSignature) {
-      print('getBytes-contentSize: ' + contentSize.toString());
       byteBuffer.putInt(contentSize);
     }
     byteBuffer.putLong(this.timestamp!);
-    print('getBytes-timestamp: ' + this.timestamp.toString());
     byteBuffer.putShort(this.type!);
-    print('getBytes-type: ' + this.type.toString());
     if (contentBytes != null) {
-      print('getBytes-contentBytes: ' + contentBytes.toString());
       byteBuffer.putBytes(contentBytes);
     }
-    print('getBytes-sourceNodeIdentifier: ' +
-        this.sourceNodeIdentifier.toString());
     byteBuffer.putBytes(this.sourceNodeIdentifier!);
     if (includeSignature) {
-      print('getBytes-sourceNodeSignature: ' +
-          this.sourceNodeSignature.toString());
       byteBuffer.putBytes(this.sourceNodeSignature!);
     }
-    print('getBytes-byteBuffer: ' + byteBuffer.toArray().toString());
     return byteBuffer.toArray();
   }
 
@@ -115,12 +106,10 @@ class NyzoMessage {
   fromByteBuffer(byteBuffer) {}
 
   Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
-
     final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
     final Uint8List pubBuf = signingKey.publicKey.toUint8List();
 
-    Uint8List _body = this.getBytes(true);
-    print('BODYYYY: ' + _body.toString());
+    final Uint8List _body = this.getBytes(true);
     final http.Response response =
         await client.post(Uri.parse('https://nyzo.co/message'),
             headers: {
@@ -146,7 +135,6 @@ class NyzoMessage {
     }
 
     final Uint8List byteArray = Uint8List.fromList(arrayBuffer);
-    print('send-byteArray: ' + byteArray.toString());
     final NyzoMessage response2 = NyzoMessage();
 
     response2.timestamp = intValueFromArray(byteArray, 4, 8);

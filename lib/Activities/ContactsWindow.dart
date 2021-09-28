@@ -1,13 +1,10 @@
 // Flutter imports:
+// Package imports:
+import 'package:expandable/expandable.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// Package imports:
-import 'package:expandable/expandable.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:shimmer/shimmer.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
@@ -15,6 +12,7 @@ import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/Dialog.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ContactsWindow extends StatefulWidget {
   final List<Contact> _contacts;
@@ -66,12 +64,11 @@ class ContactsWindowState extends State<ContactsWindow> {
             child: Container(
               child: Stack(
                 children: <Widget>[
-                  contactsList != null
-                      ? contactsList!.isNotEmpty
+                  if (contactsList != null) contactsList!.isNotEmpty
                           ? ListView.builder(
                               padding: const EdgeInsets.all(0.0),
                               itemCount: contactsList?.length,
-                              itemBuilder: (context, i) => Slidable(
+                              itemBuilder: (BuildContext context, int i) => Slidable(
                                     controller: slidableController,
                                     actionPane:
                                         const SlidableDrawerActionPane(),
@@ -128,7 +125,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                                                                       text: contactsList![
                                                                               i]
                                                                           .address));
-                                                              final snackBar = SnackBar(
+                                                              final SnackBar snackBar = SnackBar(
                                                                   content: Text(AppLocalizations.of(
                                                                           context)!
                                                                       .translate(
@@ -372,11 +369,10 @@ class ContactsWindowState extends State<ContactsWindow> {
                                   ),
                                 ],
                               ),
-                            )
-                      : ListView.builder(
+                            ) else ListView.builder(
                           padding: const EdgeInsets.all(0.0),
                           itemCount: 8,
-                          itemBuilder: (context, i) => Card(
+                          itemBuilder: (BuildContext context, int i) => Card(
                                   child: SizedBox(
                                 width: 200.0,
                                 height: 60.0,

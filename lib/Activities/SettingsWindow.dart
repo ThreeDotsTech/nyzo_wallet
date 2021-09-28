@@ -81,7 +81,7 @@ class SettingsWindowState extends State<SettingsWindow> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
+                    builder: (BuildContext context) =>
                         BackUpSeed(foldingCellState!.password)),
               );
             },
@@ -153,7 +153,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()),
+                                    builder: (BuildContext context) => HomePage()),
                               );
                               ColorTheme.of(context)!.update!();
                               ColorTheme.of(context)!.updateAddressesToWatch!();
@@ -289,7 +289,7 @@ class SettingsWindowState extends State<SettingsWindow> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
+                    builder: (BuildContext context) =>
                         CycleTxScreen(foldingCellState!.password)),
               );
             },

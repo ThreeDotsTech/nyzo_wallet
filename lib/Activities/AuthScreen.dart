@@ -4,17 +4,15 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
-import 'package:uni_links/uni_links.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+import 'package:uni_links/uni_links.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -42,26 +40,26 @@ class _AuthScreenState extends State<AuthScreen> {
 
     Future<Duration?>.delayed(const Duration(seconds: 1), () async {
       try {
-        Future didAuthenticate = _localAuth.authenticate(
+        final Future<bool> didAuthenticate = _localAuth.authenticate(
           biometricOnly: true,
           stickyAuth: true,
           localizedReason: AppLocalizations.of(context)!.translate('String80'),
         );
-        didAuthenticate.then((value) {
+        didAuthenticate.then((bool value) {
           if (value) {
-            final Future salt = _storage.read(key: 'Password');
-            salt.then((value) async {
+            final Future<String?> salt = _storage.read(key: 'Password');
+            salt.then((String? value) async {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        WalletWindow(value, initialDeepLink)),
+                        WalletWindow(value!, initialDeepLink)),
               );
             });
           }
         });
         //prevent the screen from rotating
-        SystemChrome.setPreferredOrientations([
+        SystemChrome.setPreferredOrientations(<DeviceOrientation>[
           DeviceOrientation.portraitUp,
         ]);
       } on PlatformException catch (e) {
@@ -101,21 +99,21 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: InkWell(
                     onTap: () {
                       try {
-                        final Future didAuthenticate = _localAuth.authenticate(
+                        final Future<bool> didAuthenticate = _localAuth.authenticate(
                             biometricOnly: true,
                             localizedReason: AppLocalizations.of(context)!
                                 .translate('String80'),
                             stickyAuth: true);
-                        didAuthenticate.then((value) {
+                        didAuthenticate.then((bool value) {
                           if (value) {
-                            final Future salt = _storage.read(key: 'Password');
-                            salt.then((value) {
+                            final Future<String?> salt = _storage.read(key: 'Password');
+                            salt.then((String? value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         WalletWindow(
-                                          value,
+                                          value!,
                                           initialDeepLink,
                                         )),
                               );
@@ -150,17 +148,17 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       TextFormField(
                         onFieldSubmitted: (String text) {
-                          final Future salt = _storage.read(key: 'Password');
-                          salt.then((value) {
+                          final Future<String?> salt = _storage.read(key: 'Password');
+                          salt.then((String? value) {
                             if (text == value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        WalletWindow(value, initialDeepLink)),
+                                    builder: (BuildContext context) =>
+                                        WalletWindow(value!, initialDeepLink)),
                               );
                             } else {
-                              final snackBar = SnackBar(
+                              final SnackBar snackBar = SnackBar(
                                   content: Text(AppLocalizations.of(context)!
                                       .translate('String2')));
 
@@ -211,14 +209,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                   borderRadius: BorderRadius.circular(30.0))),
                           onPressed: () {
                             FocusScope.of(context).unfocus();
-                            final Future salt = _storage.read(key: 'Password');
-                            salt.then((value) {
+                            final Future<String?> salt = _storage.read(key: 'Password');
+                            salt.then((String? value) {
                               if (textController.text == value) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          WalletWindow(value, initialDeepLink)),
+                                          WalletWindow(value!, initialDeepLink)),
                                 );
                               } else {
                                 final SnackBar snackBar = SnackBar(

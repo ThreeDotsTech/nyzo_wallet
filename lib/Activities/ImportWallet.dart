@@ -16,8 +16,8 @@ class ImportWalletScreen extends StatefulWidget {
 class _ImportWalletScreenState extends State<ImportWalletScreen> {
   bool _isLoading = false;
 
-  final privKeytextController = TextEditingController();
-  final formKey = GlobalKey<FormFieldState>();
+  final TextEditingController privKeytextController = TextEditingController();
+  final GlobalKey<FormFieldState> formKey = GlobalKey<FormFieldState>();
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
+          builder: (BuildContext context) =>
               ImportWalletScreen2(privKeytextController.text)),
     );
     setState(() {
@@ -120,19 +120,17 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
               const SizedBox(
                 height: 50.0,
               ),
-              _isLoading
-                  ? const Center(
+              if (_isLoading) const Center(
                       child: CircularProgressIndicator(
                           valueColor:
-                              AlwaysStoppedAnimation(Color(0xffffffff))))
-                  : Center(
+                              AlwaysStoppedAnimation(Color(0xffffffff)))) else Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             primary: Colors.black87,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0))),
                         onPressed: () {
-                          final form = formKey.currentState;
+                          final FormFieldState? form = formKey.currentState;
                           if (form!.validate()) {
                             _performWalletCreation();
                           }

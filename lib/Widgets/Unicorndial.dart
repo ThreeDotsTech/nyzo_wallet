@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class UnicornOrientation {
-  static const HORIZONTAL = 0;
-  static const VERTICAL = 1;
+  static const int HORIZONTAL = 0;
+  static const int VERTICAL = 1;
 }
 
 class UnicornButton extends FloatingActionButton {
@@ -133,7 +133,7 @@ class _UnicornDialer extends State<UnicornDialer>
   Widget build(BuildContext context) {
     _animationController!.reverse();
 
-    final hasChildButtons =
+    final bool hasChildButtons =
         widget.childButtons != null && widget.childButtons!.isNotEmpty;
 
     if (!_parentController!.isAnimating) {
@@ -151,7 +151,7 @@ class _UnicornDialer extends State<UnicornDialer>
       }
     }
 
-    final mainFAB = AnimatedBuilder(
+    final AnimatedBuilder mainFAB = AnimatedBuilder(
         animation: _parentController!,
         builder: (BuildContext? context, Widget? child) {
           return Transform(
@@ -189,18 +189,18 @@ class _UnicornDialer extends State<UnicornDialer>
         });
 
     if (hasChildButtons) {
-      final mainFloatingButton = AnimatedBuilder(
+      final AnimatedBuilder mainFloatingButton = AnimatedBuilder(
           animation: _animationController!,
           builder: (BuildContext? context, Widget? child) {
             return Transform.rotate(
                 angle: _animationController!.value * 0.8, child: mainFAB);
           });
 
-      final childButtonsList = widget.childButtons == null ||
+      final List<Widget> childButtonsList = widget.childButtons == null ||
               widget.childButtons!.isEmpty
           ? List<Widget>.empty(growable: true)
-          : List.generate(widget.childButtons!.length, (index) {
-              var intervalValue = index == 0
+          : List.generate(widget.childButtons!.length, (int index) {
+              double intervalValue = index == 0
                   ? 0.9
                   : ((widget.childButtons!.length - index) /
                           widget.childButtons!.length) -
@@ -209,7 +209,7 @@ class _UnicornDialer extends State<UnicornDialer>
               intervalValue =
                   intervalValue < 0.0 ? (1 / index) * 0.5 : intervalValue;
 
-              final childFAB = FloatingActionButton(
+              final FloatingActionButton childFAB = FloatingActionButton(
                   onPressed: () {
                     if (widget.childButtons![index].currentButton!.onPressed !=
                         null) {
@@ -244,7 +244,7 @@ class _UnicornDialer extends State<UnicornDialer>
                 bottom: widget.orientation == UnicornOrientation.VERTICAL
                     ? ((widget.childButtons!.length - index) * 55.0) + 15
                     : 8.0,
-                child: Row(children: [
+                child: Row(children: <Widget>[
                   ScaleTransition(
                       scale: CurvedAnimation(
                         parent: _animationController!,
@@ -273,7 +273,7 @@ class _UnicornDialer extends State<UnicornDialer>
               );
             });
 
-      final unicornDialWidget = Container(
+      final Container unicornDialWidget = Container(
           margin: widget.hasNotch ? const EdgeInsets.only(bottom: 15.0) : null,
           height: double.infinity,
           child: Stack(
@@ -284,7 +284,7 @@ class _UnicornDialer extends State<UnicornDialer>
                 ..add(Positioned(
                     right: null, bottom: null, child: mainFloatingButton))));
 
-      final modal = ScaleTransition(
+      final ScaleTransition modal = ScaleTransition(
           scale: CurvedAnimation(
             parent: _animationController!,
             curve: const Interval(1.0, 1.0, curve: Curves.linear),
@@ -302,7 +302,7 @@ class _UnicornDialer extends State<UnicornDialer>
           ? Stack(
               alignment: Alignment.topCenter,
               clipBehavior: Clip.none,
-              children: [
+              children: <Widget>[
                   Positioned(right: -16.0, bottom: -16.0, child: modal),
                   unicornDialWidget
                 ])

@@ -4,12 +4,8 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:intl/intl.dart';
-import 'package:titled_navigation_bar/titled_navigation_bar.dart';
-import 'package:uni_links/uni_links.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Activities/ContactsWindow.dart';
 import 'package:nyzo_wallet/Activities/SendWindow.dart';
@@ -25,6 +21,8 @@ import 'package:nyzo_wallet/Widgets/TransactionsWidget.dart';
 import 'package:nyzo_wallet/Widgets/Unicorndial.dart';
 import 'package:nyzo_wallet/Widgets/VerifierDialog.dart';
 import 'package:nyzo_wallet/nyzo_url.dart';
+import 'package:titled_navigation_bar/titled_navigation_bar.dart';
+import 'package:uni_links/uni_links.dart';
 
 class WalletWindow extends StatefulWidget {
   const WalletWindow(this._password, this._initialDeepLink);
@@ -83,7 +81,7 @@ class WalletWindowState extends State<WalletWindow>
 
   AddVerifierDialog floatingdialog = AddVerifierDialog();
 
-  changeTheme(fn) {
+  void changeTheme(fn) {
     super.setState(fn);
   }
 
@@ -170,7 +168,7 @@ class WalletWindowState extends State<WalletWindow>
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
 
-    final childButtons = List<UnicornButton>.empty(growable: true);
+    final List<UnicornButton> childButtons = List<UnicornButton>.empty(growable: true);
 
     childButtons.add(UnicornButton(
         hasLabel: false,
@@ -253,7 +251,7 @@ class WalletWindowState extends State<WalletWindow>
             reverse: true,
             currentIndex:
                 pageIndex, // Use this to update the Bar giving a position
-            onTap: (index) {
+            onTap: (int index) {
               setState(() {
                 FocusScope.of(context).requestFocus(FocusNode());
                 pageIndex = index;

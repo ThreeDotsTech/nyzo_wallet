@@ -15,25 +15,25 @@ class CycleTransactionSignature {
     signature = Uint8List(64);
   }
 
-  setTransactionInitiator(transactionInitiator) {
-    for (var i = 0; i < 32; i++) {
+  void setTransactionInitiator(Uint8List transactionInitiator) {
+    for (int i = 0; i < 32; i++) {
       this.transactionInitiator![i] = transactionInitiator[i];
     }
   }
 
-  setIdentifier(identifier) {
-    for (var i = 0; i < 32; i++) {
+  void setIdentifier(Uint8List identifier) {
+    for (int i = 0; i < 32; i++) {
       this.identifier![i] = identifier[i];
     }
   }
 
-  setSignature(signature) {
-    for (var i = 0; i < 64; i++) {
-      this.signature![i] = signature[i];
+  void setSignature(Uint8List? signature) {
+    for (int i = 0; i < 64; i++) {
+      this.signature![i] = signature![i];
     }
   }
 
-  getBytes(includeSignature) {
+  Uint8List getBytes(bool includeSignature) {
     final ByteBuffer buffer = ByteBuffer(1000);
 
     buffer.putBytes(transactionInitiator!);

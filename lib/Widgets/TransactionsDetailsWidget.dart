@@ -492,7 +492,7 @@ class TransactionsDetailsWidget {
   static String getIdFromAddress(String address, List<Contact> contactList) {
     final String _id = nyzoStringFromPublicIdentifier(address);
     final int index =
-        contactList.indexWhere((element) => element.address == _id);
+        contactList.indexWhere((Contact element) => element.address == _id);
     if (index >= 0) {
       return contactList[index].name;
     }

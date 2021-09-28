@@ -15,9 +15,9 @@ class NewWalletScreen extends StatefulWidget {
 
 class _NewWalletScreenState extends State<NewWalletScreen> {
   bool _isLoading = false;
-  final textController1 = TextEditingController();
-  final textController2 = TextEditingController();
-  final formKey = GlobalKey<FormFieldState>();
+  final TextEditingController textController1 = TextEditingController();
+  final TextEditingController textController2 = TextEditingController();
+  final GlobalKey<FormFieldState> formKey = GlobalKey<FormFieldState>();
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => WalletWindow(
+            builder: (BuildContext context) => WalletWindow(
                   textController1.text,
                   '',
                 )),
@@ -155,7 +155,7 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                           fontWeight: FontWeight.w600,
                           fontSize: 15),
                     ),
-                    validator: (val) => val != textController1.text
+                    validator: (String? val) => val != textController1.text
                         ? AppLocalizations.of(context)!.translate('String85')
                         : val == ''
                             ? AppLocalizations.of(context)!
@@ -168,19 +168,17 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
                   const SizedBox(
                     height: 50.0,
                   ),
-                  _isLoading
-                      ? const Center(
+                  if (_isLoading) const Center(
                           child: CircularProgressIndicator(
                               valueColor:
-                                  AlwaysStoppedAnimation(Color(0xffffffff))))
-                      : Center(
+                                  AlwaysStoppedAnimation<Color?>(Color(0xffffffff)))) else Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.black87,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0))),
                             onPressed: () {
-                              final form = formKey.currentState;
+                              final FormFieldState? form = formKey.currentState;
                               if (form!.validate()) {
                                 _performWalletCreation();
                               }

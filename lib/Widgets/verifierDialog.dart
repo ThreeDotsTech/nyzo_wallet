@@ -16,8 +16,8 @@ import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 class AddVerifierDialog {
   static final TextEditingController nameController = TextEditingController();
 
-  static final nameFormKey = GlobalKey<FormFieldState>();
-  information(BuildContext context2, String title, bool isVerifier,
+  static final GlobalKey<FormFieldState> nameFormKey = GlobalKey<FormFieldState>();
+  Future information(BuildContext context2, String title, bool isVerifier,
       {VoidCallback? onClose}) {
     return showDialog(
         context: context2,
@@ -70,10 +70,6 @@ class AddVerifierDialog {
                               nameController.text = NyzoStringEncoder.encode(
                                   NyzoStringPublicIdentifier(
                                       pre.getReceiverIdentifier()!));
-                              print(NyzoStringEncoder.encode(
-                                  NyzoStringPublicIdentifier(
-                                      pre.getReceiverIdentifier()!)));
-
                               //});
                             }
                           } catch (e) {
@@ -97,7 +93,7 @@ class AddVerifierDialog {
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                         borderSide:
-                            const BorderSide(color: const Color(0x55666666))),
+                            const BorderSide(color: Color(0x55666666))),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                         borderSide: const BorderSide(color: Color(0x55666666))),
@@ -129,7 +125,7 @@ class AddVerifierDialog {
                   isVerifier
                       ? addVerifier(Verifier.fromId(
                           nameController.text,
-                        )).then((s) {
+                        )).then((bool s) {
                           onClose!();
                           Navigator.pop(context);
                           nameController.text = '';
@@ -138,7 +134,7 @@ class AddVerifierDialog {
                           HEX.encode(
                               NyzoStringEncoder.decode(nameController.text)
                                   .getBytes()),
-                        )).then((s) {
+                        )).then((bool s) {
                           onClose!();
                           Navigator.pop(context);
                           nameController.text = '';

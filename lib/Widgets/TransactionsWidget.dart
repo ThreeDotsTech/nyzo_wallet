@@ -163,7 +163,7 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
-                          boxShadow: const [
+                          boxShadow: const <BoxShadow>[
                             BoxShadow(color: Colors.transparent)
                           ],
                         ),

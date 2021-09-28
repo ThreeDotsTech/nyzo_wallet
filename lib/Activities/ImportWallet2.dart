@@ -20,10 +20,10 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
   _ImportWalletScreen2State(this._privKey);
   final String _privKey;
   bool _isLoading = false;
-  final textController1 = TextEditingController();
-  final textController2 = TextEditingController();
-  final privKeytextController = TextEditingController();
-  final formKey = GlobalKey<FormFieldState>();
+  final TextEditingController textController1 = TextEditingController();
+  final TextEditingController textController2 = TextEditingController();
+  final TextEditingController privKeytextController = TextEditingController();
+  final GlobalKey<FormFieldState> formKey = GlobalKey<FormFieldState>();
   @override
   void initState() {
     super.initState();
@@ -49,7 +49,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => WalletWindow(
+            builder: (BuildContext context) => WalletWindow(
                   textController1.text,
                   '',
                 )),
@@ -126,7 +126,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                       labelText:
                           AppLocalizations.of(context)!.translate('String81'),
                       labelStyle: const TextStyle(
-                          color: const Color(0xFF555555),
+                          color: Color(0xFF555555),
                           fontWeight: FontWeight.w600,
                           fontSize: 15),
                     ),
@@ -167,7 +167,7 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                           fontWeight: FontWeight.w600,
                           fontSize: 15),
                     ),
-                    validator: (val) => val != textController1.text
+                    validator: (String? val) => val != textController1.text
                         ? AppLocalizations.of(context)!.translate('String85')
                         : val == ''
                             ? AppLocalizations.of(context)!
@@ -180,19 +180,17 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                   const SizedBox(
                     height: 50.0,
                   ),
-                  _isLoading
-                      ? const Center(
+                  if (_isLoading) const Center(
                           child: CircularProgressIndicator(
                               valueColor:
-                                  AlwaysStoppedAnimation(Color(0xffffffff))))
-                      : Center(
+                                  AlwaysStoppedAnimation(Color(0xffffffff)))) else Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.black87,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0))),
                             onPressed: () {
-                              final form = formKey.currentState;
+                              final FormFieldState? form = formKey.currentState;
                               if (form!.validate()) {
                                 _performWalletCreation();
                               }

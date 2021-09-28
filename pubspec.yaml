@@ -24,9 +24,6 @@ dependencies:
   # Cryptographic algorithms for encryption, digital signatures, key agreement, authentication, and hashing. AES, Chacha20, ED25519, X25519, and more. Web Crypto support
   cryptography: ^2.0.2
 
-  # The Dart implementation of the PyNaCl APIs with the TweetNaCl cryptographic library
-  pinenacl: ^0.3.3
-
   # Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux  
   direct_select_flutter: ^1.1.1
 
@@ -38,9 +35,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  
-    # Flutter icons from popular web icon fonts. Customize your final icon package using fluttericon.com.
-  fluttericon: ^2.0.0
 
   # Flutter plugin picker. Include NumberPicker, DateTimePicker, ArrayPicker, and default linkage Picker. Provide flexible parameters to meet various needs.
   flutter_picker: ^2.0.2
@@ -53,6 +47,9 @@ dependencies:
 
   # A collection of loading indicators animated with flutter. Heavily inspired by @tobiasahlin's SpinKit.
   flutter_spinkit: ^5.1.0
+
+  # Flutter icons from popular web icon fonts. Customize your final icon package using fluttericon.com.
+  fluttericon: ^2.0.0
 
   # Easy hexadecimal convertion using dart:convert API.
   hex: ^0.2.0
@@ -77,6 +74,9 @@ dependencies:
 
   # Flutter plugin for querying information about the application package, such as CFBundleVersion on iOS or versionCode on Android
   package_info_plus: ^1.0.6
+
+  # The Dart implementation of the PyNaCl APIs with the TweetNaCl cryptographic library
+  pinenacl: ^0.3.3
 
   # QR.Flutter is a Flutter library for simple and fast QR code rendering via a Widget or custom painter.
   qr_flutter: ^4.0.0
@@ -164,4 +164,3 @@ flutter:
     - lang/hr.json
     - lang/ru.json
     - lang/cs.json
-    

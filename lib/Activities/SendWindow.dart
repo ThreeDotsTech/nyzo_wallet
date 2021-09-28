@@ -5,12 +5,9 @@ import 'dart:ui';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Activities/QRCamera.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
@@ -22,6 +19,7 @@ import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class SendWindow extends StatefulWidget {
   const SendWindow(
@@ -289,7 +287,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                     child: ListView(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      physics: AlwaysScrollableScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: <Widget>[
                         Container(
                           child: Column(
@@ -566,7 +564,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                               Container(
                                   child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
+                                children: <Widget>[
                                   Text(
                                     'Send a token ?',
                                     style: TextStyle(
@@ -577,7 +575,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   ),
                                   Switch(
                                     value: isTokenToSendSwitched,
-                                    onChanged: (value) async {
+                                    onChanged: (bool value) async {
                                       myTokensList.clear();
                                       myTokensList.add(Token(
                                           isNFT: false,
@@ -589,7 +587,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           await getTokensBalance(address));
                                       myTokensList
                                           .addAll(await getNFTBalance(address));
-                                      myTokensList.sort((a, b) => a.name!
+                                      myTokensList.sort((Token a, Token b) => a.name!
                                           .toLowerCase()
                                           .compareTo(b.name!.toLowerCase()));
                                       setState(() {
@@ -609,8 +607,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                   ),
                                 ],
                               )),
-                              isTokenToSendSwitched == false
-                                  ? Row(
+                              if (isTokenToSendSwitched == false) Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
@@ -628,10 +625,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           ),
                                         )
                                       ],
-                                    )
-                                  : const SizedBox(),
-                              isTokenToSendSwitched == false
-                                  ? Container(
+                                    ) else const SizedBox(),
+                              if (isTokenToSendSwitched == false) Container(
                                       margin: EdgeInsets.only(
                                         left:
                                             MediaQuery.of(context).size.width *
@@ -691,11 +686,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                       color: Colors.red)),
                                         ),
                                       ),
-                                    )
-                                  : const SizedBox(),
-                              isTokenToSendSwitched == true
-                                  ? Column(
-                                      children: [
+                                    ) else const SizedBox(),
+                              if (isTokenToSendSwitched == true) Column(
+                                      children: <Widget>[
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
@@ -763,10 +756,10 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                             token.uid!
                                                         : token.name,
                                                     child: Container(
-                                                        child: token.name == ""
-                                                            ? Text(
+                                                        child: token.name == ''
+                                                            ? const Text(
                                                                 'Select a token',
-                                                                style: const TextStyle(
+                                                                style: TextStyle(
                                                                     color: Color(
                                                                         0xFF555555),
                                                                     fontWeight:
@@ -778,7 +771,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                             : token.isNFT
                                                                 ? Text(
                                                                     token.name! +
-                                                                        " - " +
+                                                                        ' - ' +
                                                                         token
                                                                             .uid!,
                                                                     style: const TextStyle(
@@ -795,14 +788,14 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                                   )
                                                                 : Text(
                                                                     token.name! +
-                                                                        " (" +
+                                                                        ' (' +
                                                                         token
                                                                             .amount!
                                                                             .toString() +
-                                                                        " " +
+                                                                        ' ' +
                                                                         AppLocalizations.of(context)!
                                                                             .translate('String107') +
-                                                                        ")",
+                                                                        ')',
                                                                     style: const TextStyle(
                                                                         color: Color(
                                                                             0xFF555555),
@@ -820,8 +813,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                 setState(() {
                                                   _selectedIsNFT = false;
                                                   _selectedTokenName = value!;
-                                                  myTokensList
-                                                      .forEach((element) {
+                                                  for (Token element in myTokensList) {
                                                     if (element.name! +
                                                             ' - ' +
                                                             element.uid! ==
@@ -829,7 +821,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                       _selectedIsNFT =
                                                           element.isNFT;
                                                     }
-                                                  });
+                                                  }
                                                 });
                                               },
                                             ),
@@ -838,9 +830,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         const SizedBox(
                                           height: 50,
                                         ),
-                                        _selectedIsNFT
-                                            ? const SizedBox()
-                                            : Container(
+                                        if (_selectedIsNFT) const SizedBox() else Container(
                                                 margin: EdgeInsets.only(
                                                   left: MediaQuery.of(context)
                                                           .size
@@ -1026,8 +1016,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           ),
                                         ),
                                       ],
-                                    )
-                                  : const SizedBox(),
+                                    ) else const SizedBox(),
                               Row(
                                 children: <Widget>[
                                   Expanded(
@@ -1086,7 +1075,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               setState(() {
                                                 _isLoading = true;
                                               });
-                                              int _amount = (double.parse(
+                                              final int _amount = (double.parse(
                                                           walletWindowState!
                                                               .textControllerAmount
                                                               .text) *
@@ -1098,8 +1087,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                 if (isTokenToSendSwitched ==
                                                     true) {
                                                   if (_selectedIsNFT) {
-                                                    _data = 'NT' +
-                                                        ':' +
+                                                    _data = 'NT:' +
                                                         _selectedTokenName
                                                             .split('-')[0]
                                                             .trim() +
@@ -1112,8 +1100,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                             .textControllerTokenComments
                                                             .text;
                                                   } else {
-                                                    _data = 'TT' +
-                                                        ':' +
+                                                    _data = 'TT:' +
                                                         _selectedTokenName +
                                                         ':' +
                                                         double.tryParse(
@@ -1248,11 +1235,11 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
 
   double _getTokenQtySelected() {
     double? value = 0;
-    myTokensList.forEach((token) {
+    for (Token token in myTokensList) {
       if (token.name == _selectedTokenName) {
         value = token.amount;
       }
-    });
+    }
     return value!;
   }
 }

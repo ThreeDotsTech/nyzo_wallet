@@ -1,16 +1,14 @@
 // Dart imports:
 import 'dart:ui';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 // Package imports:
 import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
@@ -27,7 +25,7 @@ DirectSelectItem<CycleTransaction> getDropDownMenuItem(CycleTransaction value) {
   return DirectSelectItem<CycleTransaction>(
       itemHeight: 56,
       value: value,
-      itemBuilder: (context, value) {
+      itemBuilder: (BuildContext context, CycleTransaction value) {
         if (value.receiverNickname == null) {
           return Text(value.receiverId!.substring(0, 3) +
               '...' +
@@ -82,7 +80,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
     );
   }
 
-  _getDslDecoration() {
+  BoxDecoration _getDslDecoration() {
     return const BoxDecoration(
       border: BorderDirectional(
         bottom: BorderSide(width: 1, color: Colors.black12),
@@ -91,7 +89,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
     );
   }
 
-  _getRow(String text1, String text2) {
+  Padding _getRow(String text1, String text2) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -468,14 +466,12 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                         )
                   : Container(),
             ),
-            _loading
-                ? Positioned(
+            if (_loading) Positioned(
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          txList == null
-                              ? Text(
+                          if (txList == null) Text(
                                   'Fetching TXs',
                                   style: TextStyle(
                                       color: ColorTheme.of(context)!
@@ -483,8 +479,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: 0,
                                       fontSize: 35),
-                                )
-                              : Container(),
+                                ) else Container(),
                           ClipOval(
                             child: BackdropFilter(
                               filter:
@@ -507,8 +502,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                         ],
                       ),
                     ),
-                  )
-                : Container(),
+                  ) else Container(),
           ],
         ),
       ),

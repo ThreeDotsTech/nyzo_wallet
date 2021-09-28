@@ -71,7 +71,7 @@ class _RadialMenuState extends State<RadialMenu>
         children: <Widget>[
           AnimatedBuilder(
             animation: _animation!,
-            builder: (context, builder) {
+            builder: (BuildContext context, Widget? builder) {
               return Stack(
                 fit: StackFit.loose,
                 clipBehavior: Clip.none,
