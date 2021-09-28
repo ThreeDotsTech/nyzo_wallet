@@ -28,6 +28,7 @@ import 'package:nyzo_wallet/Data/NFTAddressInstances.dart';
 import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
 import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/TokensBalancesResponse.dart';
+import 'package:nyzo_wallet/Data/TokensListResponse.dart';
 import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Verifier.dart';
@@ -189,7 +190,9 @@ Future<List<Token>> getTokensBalance(String address) async {
             uid: '',
             amount: tokensBalanceGetResponse.tokensList![i].amount,
             comment: tokensBalanceGetResponse.tokensList![i].comment);
-        tokensList.add(token);
+        if (token.amount! > 0) {
+          tokensList.add(token);
+        }
       }
     }
   } catch (e) {}
@@ -261,6 +264,34 @@ Future<List<TokensTransactionsResponse>> getTokensTransactionsList(
     }
   } catch (e) {}
   return transactionsList;
+}
+
+Future<Map<String, TokensListResponse>> getTokensList() async {
+  Map<String, TokensListResponse>? tokensList;
+
+  final HttpClient httpClient = HttpClient();
+  try {
+    final HttpClientRequest request = await httpClient
+        .getUrl(Uri.parse('https://tokens.nyzo.today/api/tokens_list'));
+    request.headers.set('content-type', 'application/json');
+    final HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      final String reply = await response.transform(utf8.decoder).join();
+      tokensList = tokensListResponseFromJson(reply);
+    }
+  } catch (e) {}
+  return tokensList!;
+}
+
+Future<TokensListResponse> getTokenStructure(String tokenName) async {
+  Map<String, TokensListResponse>? tokensList = await getTokensList();
+  TokensListResponse tokensListResponse = TokensListResponse();
+  tokensList.forEach((key, value) {
+    if (key == tokenName) {
+      tokensListResponse = value;
+    }
+  });
+  return tokensListResponse;
 }
 
 Future<String> getPrivateKey(String password) async {
@@ -522,8 +553,6 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
             recipientIdentifier,
             micronyzosToSend,
             utf8.encode(senderData));
-        print(
-            'submitTransaction-result2: ' + result2.content.message.toString());
         if (result2.content == null) {
           return 'There was a problem communicating with the server. To protect yourself ' +
               'against possible coin theft, please wait to resubmit this transaction. Refer ' +

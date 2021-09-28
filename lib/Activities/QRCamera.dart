@@ -1,9 +1,11 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-// Project imports:
-import 'package:nyzo_wallet/Activities/WalletWindow.dart';
+
 // Package imports:
 import 'package:qr_mobile_vision/qr_camera.dart';
+
+// Project imports:
+import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 
 class QrCameraWindow extends StatefulWidget {
   const QrCameraWindow(this.walletWindowState);

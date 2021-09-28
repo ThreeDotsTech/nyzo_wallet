@@ -1,12 +1,15 @@
 // Dart imports:
 import 'dart:math' as math;
 
-// Package imports:
-import 'package:expandable/expandable.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:expandable/expandable.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
+
 // Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
@@ -14,7 +17,6 @@ import 'package:nyzo_wallet/Data/Verifier.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/VerifierDialog.dart';
-import 'package:shimmer/shimmer.dart';
 
 class VerifiersWindow extends StatefulWidget {
   @override

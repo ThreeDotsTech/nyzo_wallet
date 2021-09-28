@@ -12,7 +12,8 @@ List<NftAddressInstancesResponse> nftAddressInstancesResponseFromJson(
 
 String nftAddressInstancesResponseToJson(
         List<NftAddressInstancesResponse> data) =>
-    json.encode(List<dynamic>.from(data.map((NftAddressInstancesResponse x) => x.toJson())));
+    json.encode(List<dynamic>.from(
+        data.map((NftAddressInstancesResponse x) => x.toJson())));
 
 class NftAddressInstancesResponse {
   NftAddressInstancesResponse({

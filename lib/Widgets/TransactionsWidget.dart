@@ -96,6 +96,9 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
         _transactions = transactionsList;
       });
     });
+    getContacts().then((List<Contact> contacts) {
+      _contactsList = contacts;
+    });
   }
 
   @override

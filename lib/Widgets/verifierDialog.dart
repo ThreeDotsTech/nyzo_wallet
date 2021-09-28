@@ -16,7 +16,8 @@ import 'package:nyzo_wallet/Data/WatchedAddress.dart';
 class AddVerifierDialog {
   static final TextEditingController nameController = TextEditingController();
 
-  static final GlobalKey<FormFieldState> nameFormKey = GlobalKey<FormFieldState>();
+  static final GlobalKey<FormFieldState> nameFormKey =
+      GlobalKey<FormFieldState>();
   Future information(BuildContext context2, String title, bool isVerifier,
       {VoidCallback? onClose}) {
     return showDialog(
@@ -92,8 +93,7 @@ class AddVerifierDialog {
                         borderSide: const BorderSide(color: Colors.red)),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
-                        borderSide:
-                            const BorderSide(color: Color(0x55666666))),
+                        borderSide: const BorderSide(color: Color(0x55666666))),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100),
                         borderSide: const BorderSide(color: Color(0x55666666))),

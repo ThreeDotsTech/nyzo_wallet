@@ -1,14 +1,16 @@
 // Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 // Package imports:
 import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
-// Flutter imports:
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 // Project imports:
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
@@ -466,43 +468,46 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                         )
                   : Container(),
             ),
-            if (_loading) Positioned(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          if (txList == null) Text(
-                                  'Fetching TXs',
-                                  style: TextStyle(
-                                      color: ColorTheme.of(context)!
-                                          .secondaryColor,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0,
-                                      fontSize: 35),
-                                ) else Container(),
-                          ClipOval(
-                            child: BackdropFilter(
-                              filter:
-                                  ImageFilter.blur(sigmaX: 10.0, sigmaY: 100.0),
-                              child: Container(
-                                width: 200.0,
-                                height: 200.0,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.shade200.withOpacity(0)),
-                                child: Center(
-                                  child: SpinKitChasingDots(
-                                    color:
-                                        ColorTheme.of(context)!.secondaryColor,
-                                    size: 50.0,
-                                  ),
-                                ),
+            if (_loading)
+              Positioned(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      if (txList == null)
+                        Text(
+                          'Fetching TXs',
+                          style: TextStyle(
+                              color: ColorTheme.of(context)!.secondaryColor,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0,
+                              fontSize: 35),
+                        )
+                      else
+                        Container(),
+                      ClipOval(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 100.0),
+                          child: Container(
+                            width: 200.0,
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade200.withOpacity(0)),
+                            child: Center(
+                              child: SpinKitChasingDots(
+                                color: ColorTheme.of(context)!.secondaryColor,
+                                size: 50.0,
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ) else Container(),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Container(),
           ],
         ),
       ),

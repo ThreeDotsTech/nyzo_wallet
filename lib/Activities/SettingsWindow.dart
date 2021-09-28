@@ -153,7 +153,8 @@ class SettingsWindowState extends State<SettingsWindow> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (BuildContext context) => HomePage()),
+                                    builder: (BuildContext context) =>
+                                        HomePage()),
                               );
                               ColorTheme.of(context)!.update!();
                               ColorTheme.of(context)!.updateAddressesToWatch!();

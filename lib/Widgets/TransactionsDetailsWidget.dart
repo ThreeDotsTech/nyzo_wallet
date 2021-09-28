@@ -356,35 +356,25 @@ class TransactionsDetailsWidget {
                                                                 .sender! ==
                                                             address)
                                                           Text(
-                                                              AppLocalizations.of(context)!
-                                                                  .translate(
-                                                                      'String119'),
+                                                              AppLocalizations.of(context)!.translate('String119') +
+                                                                  getIdFromAddress(
+                                                                      _transactions[i]
+                                                                          .recipient!,
+                                                                      _contactsList!),
                                                               style: TextStyle(
-                                                                  color: ColorTheme.of(
-                                                                          context)!
+                                                                  color: ColorTheme.of(context)!
                                                                       .secondaryColor,
                                                                   fontSize: 15))
                                                         else
                                                           Text(
-                                                              AppLocalizations.of(context)!
-                                                                  .translate(
-                                                                      'String120'),
+                                                              AppLocalizations.of(context)!.translate('String120') +
+                                                                  getIdFromAddress(
+                                                                      _transactions[i]
+                                                                          .sender!,
+                                                                      _contactsList!),
                                                               style: TextStyle(
-                                                                  color: ColorTheme.of(
-                                                                          context)!
-                                                                      .secondaryColor,
+                                                                  color: ColorTheme.of(context)!.secondaryColor,
                                                                   fontSize: 15)),
-                                                        Text(
-                                                          getIdFromAddress(
-                                                              _transactions[i]
-                                                                  .sender!,
-                                                              _contactsList!),
-                                                          style: TextStyle(
-                                                              color: ColorTheme.of(
-                                                                      context)!
-                                                                  .secondaryColor,
-                                                              fontSize: 15),
-                                                        ),
                                                       ],
                                                     ),
                                                     isToken(_transactions[i].data!) ||

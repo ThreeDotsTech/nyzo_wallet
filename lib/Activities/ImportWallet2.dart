@@ -180,27 +180,29 @@ class _ImportWalletScreen2State extends State<ImportWalletScreen2> {
                   const SizedBox(
                     height: 50.0,
                   ),
-                  if (_isLoading) const Center(
-                          child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation(Color(0xffffffff)))) else Center(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.black87,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0))),
-                            onPressed: () {
-                              final FormFieldState? form = formKey.currentState;
-                              if (form!.validate()) {
-                                _performWalletCreation();
-                              }
-                            },
-                            child: Text(
-                                AppLocalizations.of(context)!
-                                    .translate('String17'),
-                                style: const TextStyle(color: Colors.white)),
-                          ),
-                        ),
+                  if (_isLoading)
+                    const Center(
+                        child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation(Color(0xffffffff))))
+                  else
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.black87,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0))),
+                        onPressed: () {
+                          final FormFieldState? form = formKey.currentState;
+                          if (form!.validate()) {
+                            _performWalletCreation();
+                          }
+                        },
+                        child: Text(
+                            AppLocalizations.of(context)!.translate('String17'),
+                            style: const TextStyle(color: Colors.white)),
+                      ),
+                    ),
                 ],
               ),
             ],
