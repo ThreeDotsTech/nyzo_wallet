@@ -571,7 +571,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    'Send a token ?',
+                                    AppLocalizations.of(context)!
+                                        .translate('String125'),
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor,
@@ -758,8 +759,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                     : token.name,
                                                 child: Container(
                                                     child: token.name == ''
-                                                        ? const Text(
-                                                            'Select a token',
+                                                        ? Text(
+                                                            AppLocalizations.of(context)!
+                                                .translate('String126'),
                                                             style: TextStyle(
                                                                 color: Color(
                                                                     0xFF555555),

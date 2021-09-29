@@ -116,5 +116,7 @@
     "String121": "Type: ",
     "String122": "Bloc: ",
     "String123": "Caractères valides : a..z, A..Z, 0..9, _",
-    "String124": "Le nb de decimales doit être inférieur à "
+    "String124": "Le nb de decimales doit être inférieur à ",
+    "String125": "Envoyer un token ?",
+    "String126": "Sélectionnez un token"
 }
