@@ -766,8 +766,8 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                     .secondaryColor,
                                                               ),
                                                             ),
-                                                          ), collapsed: const SizedBox(),
-                                               
+                                                          ),
+                                                collapsed: const SizedBox(),
                                               ),
                                             ),
                                             secondaryActions: <Widget>[

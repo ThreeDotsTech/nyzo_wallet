@@ -272,7 +272,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                               address.length ~/ 3 * 2)),
                                         ],
                                       ),
-                                      const SizedBox(width: 20,),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
                                       Icon(Icons.copy,
                                           color: ColorTheme.of(context)!
                                               .secondaryColor),
@@ -489,12 +491,18 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                             a.name!.toLowerCase().compareTo(
                                                 b.name!.toLowerCase()));
                                         setState(() {
+                                          if (value == false) {
+                                            _feesInclude = false;
+                                          }
                                           isTokenToSendSwitched = value;
+
                                           walletWindowState!
                                               .textControllerTokenComments
                                               .clear();
                                           walletWindowState!
                                               .textControllerTokenQuantity
+                                              .clear();
+                                          walletWindowState!.textControllerData
                                               .clear();
                                         });
                                       },
@@ -542,7 +550,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       const TextInputType.numberWithOptions(
                                           signed: true, decimal: true),
                                   maxLines: 1,
-                                  onChanged: (String? val) => _addFees(),
                                   scrollPadding: const EdgeInsets.all(00),
                                   validator: (String? val) =>
                                       walletWindowState!.textControllerAmount.text ==
@@ -662,7 +669,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor),
-                                    onChanged: (String? val) => _addFees,
+                                    onChanged: (String? val) => _addFees(),
                                     decoration: InputDecoration(
                                       counterStyle: TextStyle(
                                           color: ColorTheme.of(context)!
