@@ -301,122 +301,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(20, 0, 0, 10),
-                                    child: Text(
-                                      'Nyzo',
-                                      style: TextStyle(
-                                          color: ColorTheme.of(context)!
-                                              .secondaryColor,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left:
-                                      MediaQuery.of(context).size.width * 0.075,
-                                  right:
-                                      MediaQuery.of(context).size.width * 0.075,
-                                ),
-                                child: TextFormField(
-                                  maxLengthEnforcement:
-                                      MaxLengthEnforcement.none,
-                                  focusNode: focusNodeAmount,
-                                  key: walletWindowState!.amountFormKey,
-                                  controller:
-                                      walletWindowState!.textControllerAmount,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          signed: true, decimal: true),
-                                  maxLines: 1,
-                                  scrollPadding: const EdgeInsets.all(00),
-                                  validator: (String? val) =>
-                                      walletWindowState!.textControllerAmount.text ==
-                                              ''
-                                          ? AppLocalizations.of(context)!
-                                              .translate('String67')
-                                          : double.tryParse(walletWindowState!
-                                                      .textControllerAmount
-                                                      .text) ==
-                                                  null
-                                              ? AppLocalizations.of(context)!
-                                                  .translate('String89')
-                                              : double.tryParse(walletWindowState!
-                                                                  .textControllerAmount
-                                                                  .text)!
-                                                              .toInt() *
-                                                          1000000 >=
-                                                      walletWindowState!.balance
-                                                  ? AppLocalizations.of(context)!
-                                                      .translate('String90')
-                                                  : null,
-                                  style: TextStyle(
-                                      color: ColorTheme.of(context)!
-                                          .secondaryColor),
-                                  decoration: InputDecoration(
-                                    suffixIcon: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary: Colors.transparent,
-                                          elevation: 0,
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(100)))),
-                                      onPressed: () {
-                                        walletWindowState!
-                                                .textControllerAmount.text =
-                                            (walletWindowState!.balance /
-                                                    1000000)
-                                                .toString();
-                                      },
-                                      child: Text(
-                                        'MAX',
-                                        style: TextStyle(
-                                            color: ColorTheme.of(context)!
-                                                .secondaryColor),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor:
-                                        ColorTheme.of(context)!.depthColor,
-                                    focusedErrorBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        borderSide: const BorderSide(
-                                            color: Colors.red)),
-                                    errorBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        borderSide: const BorderSide(
-                                            color: Colors.red)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        borderSide: const BorderSide(
-                                            color: Color(0x55666666))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        borderSide: const BorderSide(
-                                            color: Color(0x55666666))),
-                                    contentPadding: const EdgeInsets.all(10),
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.never,
-                                    labelText: AppLocalizations.of(context)!
-                                        .translate('String91'),
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xFF555555),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         20, 10, 0, 10),
                                     child: Text(
@@ -613,7 +497,124 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                         ColorTheme.of(context)!.secondaryColor,
                                   ),
                                 ],
-                              )),
+                              ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                                    child: Text(
+                                      'Nyzo',
+                                      style: TextStyle(
+                                          color: ColorTheme.of(context)!
+                                              .secondaryColor,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 20),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left:
+                                      MediaQuery.of(context).size.width * 0.075,
+                                  right:
+                                      MediaQuery.of(context).size.width * 0.075,
+                                ),
+                                child: TextFormField(
+                                  maxLengthEnforcement:
+                                      MaxLengthEnforcement.none,
+                                  focusNode: focusNodeAmount,
+                                  key: walletWindowState!.amountFormKey,
+                                  controller:
+                                      walletWindowState!.textControllerAmount,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                  maxLines: 1,
+                                  scrollPadding: const EdgeInsets.all(00),
+                                  validator: (String? val) =>
+                                      walletWindowState!.textControllerAmount.text ==
+                                              ''
+                                          ? AppLocalizations.of(context)!
+                                              .translate('String67')
+                                          : double.tryParse(walletWindowState!
+                                                      .textControllerAmount
+                                                      .text) ==
+                                                  null
+                                              ? AppLocalizations.of(context)!
+                                                  .translate('String89')
+                                              : double.tryParse(walletWindowState!
+                                                                  .textControllerAmount
+                                                                  .text)!
+                                                              .toInt() *
+                                                          1000000 >=
+                                                      walletWindowState!.balance
+                                                  ? AppLocalizations.of(context)!
+                                                      .translate('String90')
+                                                  : null,
+                                  style: TextStyle(
+                                      color: ColorTheme.of(context)!
+                                          .secondaryColor),
+                                  decoration: InputDecoration(
+                                    suffixIcon: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.transparent,
+                                          elevation: 0,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(100)))),
+                                      onPressed: () {
+                                        walletWindowState!
+                                                .textControllerAmount.text =
+                                            (walletWindowState!.balance /
+                                                    1000000)
+                                                .toString();
+                                      },
+                                      child: Text(
+                                        'MAX',
+                                        style: TextStyle(
+                                            color: ColorTheme.of(context)!
+                                                .secondaryColor),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    fillColor:
+                                        ColorTheme.of(context)!.depthColor,
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        borderSide: const BorderSide(
+                                            color: Colors.red)),
+                                    errorBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        borderSide: const BorderSide(
+                                            color: Colors.red)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        borderSide: const BorderSide(
+                                            color: Color(0x55666666))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        borderSide: const BorderSide(
+                                            color: Color(0x55666666))),
+                                    contentPadding: const EdgeInsets.all(10),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('String91'),
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xFF555555),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                              ),
                               if (isTokenToSendSwitched == false)
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
