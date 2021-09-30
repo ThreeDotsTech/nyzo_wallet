@@ -20,7 +20,7 @@ class SettingsWindowState extends State<SettingsWindow> {
   WalletWindowState? walletWindowState;
 
   bool _switchValue = false;
-  bool _nigthMode = false;
+  bool _nightMode = false;
   String version = '';
   @override
   void initState() {
@@ -35,7 +35,7 @@ class SettingsWindowState extends State<SettingsWindow> {
     });
     getNightModeValue().then((bool? value) {
       setState(() {
-        _nigthMode = value!;
+        _nightMode = value!;
       });
     });
     super.initState();
@@ -147,7 +147,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                               Navigator.pop(context);
                               setNightModeValue(false);
                               setState(() {
-                                _nigthMode = false;
+                                _nightMode = false;
                               });
                               deleteWallet();
                               Navigator.push(
@@ -259,19 +259,19 @@ class SettingsWindowState extends State<SettingsWindow> {
                         inactiveTrackColor:
                             ColorTheme.of(context)!.transparentColor,
                         activeColor: ColorTheme.of(context)!.secondaryColor,
-                        value: _nigthMode,
+                        value: _nightMode,
                         onChanged: (bool val) {
                           final ColorTheme colorTheme = ColorTheme.of(context)!;
                           if (val) {
                             setState(() {
-                              _nigthMode = val;
+                              _nightMode = val;
                             });
                             setNightModeValue(val);
 
                             colorTheme.update!();
                           } else {
                             setState(() {
-                              _nigthMode = val;
+                              _nightMode = val;
                             });
                             setNightModeValue(val);
 

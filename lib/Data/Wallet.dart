@@ -83,7 +83,7 @@ Future createNewWallet(String password) async {
   await _storage.write(key: 'Password', value: password);
   setNightModeValue(true);
   setWatchSentinels(false);
-  prefs.setBool('nigthMode', true);
+  prefs.setBool('nightMode', true);
   return [HEX.encode(privKey), HEX.encode(pubBuf)];
 }
 
@@ -799,12 +799,12 @@ Future<bool?> watchSentinels() async {
 
 Future<bool?> getNightModeValue() async {
   final _prefs = await SharedPreferences.getInstance();
-  return _prefs.getBool('nigthMode');
+  return _prefs.getBool('nightMode');
 }
 
 Future<bool> setNightModeValue(bool value) async {
   final _prefs = await SharedPreferences.getInstance();
-  return _prefs.setBool('nigthMode', value);
+  return _prefs.setBool('nightMode', value);
 }
 
 Future<void> setWatchSentinels(bool val) async {
