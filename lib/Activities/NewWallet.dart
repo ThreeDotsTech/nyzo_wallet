@@ -60,7 +60,8 @@ class _NewWalletScreenState extends State<NewWalletScreen> {
         //resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           elevation: 0.0,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           leading: IconButton(
             color: Colors.black,
             onPressed: () {

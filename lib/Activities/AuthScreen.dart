@@ -61,6 +61,7 @@ class _AuthScreenState extends State<AuthScreen> {
           }
         });
         //prevent the screen from rotating
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
         SystemChrome.setPreferredOrientations(<DeviceOrientation>[
           DeviceOrientation.portraitUp,
         ]);

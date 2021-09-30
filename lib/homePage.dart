@@ -35,6 +35,7 @@ class _MyHomePageState extends State<HomePage> {
             });
     });
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     //prevent the screen from rotating
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

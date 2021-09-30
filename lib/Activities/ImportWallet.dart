@@ -51,6 +51,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.transparent,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           leading: IconButton(
             color: Colors.black,
             onPressed: () {

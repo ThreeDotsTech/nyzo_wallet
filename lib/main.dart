@@ -13,7 +13,10 @@ import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'Data/Wallet.dart';
 import 'homePage.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
