@@ -57,6 +57,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   List<Token> myTokensList = List<Token>.empty(growable: true);
   static final validCharacters = RegExp(r'^[a-zA-Z0-9_]+$');
   int _tokenDecimals = 0;
+  final double _feesByDefault = 0.000001;
+  bool _feesInclude = false;
 
   @override
   void dispose() {
@@ -77,7 +79,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
         contactsList = _contactList;
       });
     });
-
+    _feesInclude = false;
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
@@ -175,7 +177,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 primary: ColorTheme.of(context)!.baseColor,
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                        color: !sendRECEIVE
+                                        color: sendRECEIVE
                                             ? const Color(0xFF666666)
                                             : ColorTheme.of(context)!
                                                 .baseColor!),
@@ -229,56 +231,62 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.1,
-                            right: MediaQuery.of(context).size.width * 0.1,
-                          ),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        primary: ColorTheme.of(context)!
-                                            .secondaryColor,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30.0))),
-                                    onPressed: () {
-                                      Clipboard.setData(
-                                          ClipboardData(text: address));
-                                      final SnackBar snackBar = SnackBar(
-                                          content: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('String25')));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                    },
-                                    child: RichText(
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 3,
-                                      textAlign: TextAlign.justify,
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                            color: ColorTheme.of(context)!
-                                                .baseColor,
-                                            fontWeight: FontWeight.w500),
-                                        text: address,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              ColorTheme.of(context)!
+                                                  .baseColor!),
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              ColorTheme.of(context)!
+                                                  .secondaryColor!)),
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                        ClipboardData(text: address));
+                                    final SnackBar snackBar = SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('String25')));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(address.substring(
+                                              0, address.length ~/ 3)),
+                                          Text(address.substring(
+                                              address.length ~/ 3,
+                                              (address.length ~/ 3 * 2))),
+                                          Text(address.substring(
+                                              address.length ~/ 3 * 2)),
+                                        ],
                                       ),
-                                    ),
+                                      const SizedBox(width: 20,),
+                                      Icon(Icons.copy,
+                                          color: ColorTheme.of(context)!
+                                              .secondaryColor),
+                                    ],
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
                         Container(
-                          margin: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.22,
-                            right: MediaQuery.of(context).size.width * 0.22,
-                          ),
+                          width: MediaQuery.of(context).size.width - 50,
                           child: QrImage(
+                            size: MediaQuery.of(context).size.width,
                             foregroundColor:
                                 ColorTheme.of(context)!.secondaryColor,
                             data: address,
@@ -534,6 +542,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       const TextInputType.numberWithOptions(
                                           signed: true, decimal: true),
                                   maxLines: 1,
+                                  onChanged: (String? val) => _addFees(),
                                   scrollPadding: const EdgeInsets.all(00),
                                   validator: (String? val) =>
                                       walletWindowState!.textControllerAmount.text ==
@@ -653,6 +662,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                     style: TextStyle(
                                         color: ColorTheme.of(context)!
                                             .secondaryColor),
+                                    onChanged: (String? val) => _addFees,
                                     decoration: InputDecoration(
                                       counterStyle: TextStyle(
                                           color: ColorTheme.of(context)!
@@ -875,7 +885,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           }).toList(),
                                           onChanged: (String? value) async {
                                             _tokenDecimals = 0;
-
+                                            _addFees();
                                             setState(() {
                                               _selectedIsNFT = false;
                                               _selectedTokenName = value!;
@@ -1277,6 +1287,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                                 .textControllerTokenQuantity
                                                                 .clear();
                                                             setState(() {
+                                                              _feesInclude =
+                                                                  false;
                                                               _selectedTokenName =
                                                                   '';
                                                               myTokensList
@@ -1361,6 +1373,26 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
       return decimals[1].length;
     } else {
       return 0;
+    }
+  }
+
+  void _addFees() {
+    if (_feesInclude) {
+      return;
+    }
+    _feesInclude = true;
+    if (walletWindowState!.textControllerAmount.text.isEmpty) {
+      walletWindowState!.textControllerAmount.text = _feesByDefault.toString();
+    } else {
+      if (isTokenToSendSwitched ||
+          walletWindowState!.textControllerData.text.isNotEmpty) {
+        walletWindowState!.textControllerAmount.text =
+            (double.parse(walletWindowState!.textControllerAmount.text) +
+                    _feesByDefault)
+                .toString();
+      } else {
+        _feesInclude = false;
+      }
     }
   }
 }
