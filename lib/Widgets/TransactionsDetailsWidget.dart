@@ -113,9 +113,13 @@ class TransactionsDetailsWidget {
                                           icon: Icons.send,
                                           onTap: () {
                                             walletWindowState
-                                                    .textControllerAddress
-                                                    .text =
-                                                nyzoStringFromPublicIdentifier(
+                                                .textControllerAddress
+                                                .text = _transactions[i]
+                                                        .sender! ==
+                                                    address
+                                                ? nyzoStringFromPublicIdentifier(
+                                                    _transactions[i].recipient!)
+                                                : nyzoStringFromPublicIdentifier(
                                                     _transactions[i].sender!);
                                             walletWindowState.setState(() {
                                               walletWindowState.pageIndex = 2;
@@ -127,13 +131,15 @@ class TransactionsDetailsWidget {
                                         title: InkWell(
                                             onTap: () {
                                               Clipboard.setData(ClipboardData(
-                                                  text: NyzoStringEncoder.encode(
-                                                      NyzoStringPublicIdentifier(
-                                                          Uint8List.fromList(
-                                                              utf8.encode(
-                                                                  _transactions[
-                                                                          i]
-                                                                      .sender!))))));
+                                                  text: _transactions[i]
+                                                              .sender! ==
+                                                          address
+                                                      ? nyzoStringFromPublicIdentifier(
+                                                          _transactions[i]
+                                                              .recipient!)
+                                                      : nyzoStringFromPublicIdentifier(
+                                                          _transactions[i]
+                                                              .sender!)));
                                               final SnackBar snackbar =
                                                   SnackBar(
                                                       content: Text(
@@ -543,7 +549,7 @@ class TransactionsDetailsWidget {
           return AppLocalizations.of(context)!.translate('String111');
       }
     } else {
-      return AppLocalizations.of(context)!.translate('String25');
+      return '';
     }
   }
 
