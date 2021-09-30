@@ -451,53 +451,53 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 ),
                               ),
                               Container(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('String125'),
-                                    style: TextStyle(
-                                        color: ColorTheme.of(context)!
-                                            .secondaryColor,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15),
-                                  ),
-                                  Switch(
-                                    value: isTokenToSendSwitched,
-                                    onChanged: (bool value) async {
-                                      myTokensList.clear();
-                                      myTokensList.add(Token(
-                                          isNFT: false,
-                                          name: '',
-                                          uid: '',
-                                          amount: 0,
-                                          comment: ''));
-                                      myTokensList.addAll(
-                                          await getTokensBalance(address));
-                                      myTokensList
-                                          .addAll(await getNFTBalance(address));
-                                      myTokensList.sort((Token a, Token b) => a
-                                          .name!
-                                          .toLowerCase()
-                                          .compareTo(b.name!.toLowerCase()));
-                                      setState(() {
-                                        isTokenToSendSwitched = value;
-                                        walletWindowState!
-                                            .textControllerTokenComments
-                                            .clear();
-                                        walletWindowState!
-                                            .textControllerTokenQuantity
-                                            .clear();
-                                      });
-                                    },
-                                    inactiveTrackColor: ColorTheme.of(context)!
-                                        .transparentColor,
-                                    activeColor:
-                                        ColorTheme.of(context)!.secondaryColor,
-                                  ),
-                                ],
-                              ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('String125'),
+                                      style: TextStyle(
+                                          color: ColorTheme.of(context)!
+                                              .secondaryColor,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15),
+                                    ),
+                                    Switch(
+                                      value: isTokenToSendSwitched,
+                                      onChanged: (bool value) async {
+                                        myTokensList.clear();
+                                        myTokensList.add(Token(
+                                            isNFT: false,
+                                            name: '',
+                                            uid: '',
+                                            amount: 0,
+                                            comment: ''));
+                                        myTokensList.addAll(
+                                            await getTokensBalance(address));
+                                        myTokensList.addAll(
+                                            await getNFTBalance(address));
+                                        myTokensList.sort((Token a, Token b) =>
+                                            a.name!.toLowerCase().compareTo(
+                                                b.name!.toLowerCase()));
+                                        setState(() {
+                                          isTokenToSendSwitched = value;
+                                          walletWindowState!
+                                              .textControllerTokenComments
+                                              .clear();
+                                          walletWindowState!
+                                              .textControllerTokenQuantity
+                                              .clear();
+                                        });
+                                      },
+                                      inactiveTrackColor:
+                                          ColorTheme.of(context)!
+                                              .transparentColor,
+                                      activeColor: ColorTheme.of(context)!
+                                          .secondaryColor,
+                                    ),
+                                  ],
+                                ),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -694,6 +694,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                 )
                               else
                                 const SizedBox(),
+                              const SizedBox(
+                                height: 10,
+                              ),
                               if (isTokenToSendSwitched == true)
                                 Column(
                                   children: <Widget>[
@@ -742,7 +745,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                         ColorTheme.of(context)!
                                                             .secondaryColor!),
                                               ),
-                                              isDense: true),
+                                              isDense: false),
+                                          isDense: false,
                                           style: TextStyle(
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.w100,
@@ -753,67 +757,121 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                           items:
                                               myTokensList.map((Token token) {
                                             return DropdownMenuItem<String>(
-                                                value: token.isNFT
-                                                    ? token.name! +
-                                                        ' - ' +
-                                                        token.uid!
-                                                    : token.name,
-                                                child: Container(
-                                                    child: token.name == ''
-                                                        ? Text(
-                                                            AppLocalizations.of(context)!
-                                                .translate('String126'),
-                                                            style: TextStyle(
-                                                                color: Color(
-                                                                    0xFF555555),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize: 15),
-                                                          )
-                                                        : token.isNFT
-                                                            ? Text(
-                                                                token.name! +
-                                                                    ' - ' +
-                                                                    token.uid!,
-                                                                style: TextStyle(
-                                                                    color: ColorTheme.of(
-                                                                            context)!
-                                                                        .secondaryColor!,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        15),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              )
-                                                            : Text(
-                                                                token.name! +
-                                                                    ' (' +
-                                                                    token
-                                                                        .amount!
-                                                                        .toString() +
-                                                                    ' ' +
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'String107') +
-                                                                    ')',
-                                                                style: TextStyle(
-                                                                    color: ColorTheme.of(
-                                                                            context)!
-                                                                        .secondaryColor!,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        15),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              )));
+                                              value: token.isNFT
+                                                  ? token.name! +
+                                                      ' - ' +
+                                                      token.uid!
+                                                  : token.name,
+                                              child: token.name == ''
+                                                  ? Row(
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'String126'),
+                                                          style: TextStyle(
+                                                              color: Color(
+                                                                  0xFF555555),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 15),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : token.isNFT
+                                                      ? Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              token.name! +
+                                                                  ' - ' +
+                                                                  token.uid!,
+                                                              style: TextStyle(
+                                                                  color: ColorTheme.of(
+                                                                          context)!
+                                                                      .secondaryColor!,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 15),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'String107') +
+                                                                  '1 ' +
+                                                                  token.name!,
+                                                              style: TextStyle(
+                                                                  color: ColorTheme.of(
+                                                                          context)!
+                                                                      .secondaryColor!,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 12),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              token.name!,
+                                                              style: TextStyle(
+                                                                  color: ColorTheme.of(
+                                                                          context)!
+                                                                      .secondaryColor!,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 15),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                            Text(
+                                                              AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'String107') +
+                                                                  token.amount!
+                                                                      .toString() +
+                                                                  ' ' +
+                                                                  token.name!,
+                                                              style: TextStyle(
+                                                                  color: ColorTheme.of(
+                                                                          context)!
+                                                                      .secondaryColor!,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: 12),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ],
+                                                        ),
+                                            );
                                           }).toList(),
                                           onChanged: (String? value) async {
                                             _tokenDecimals = 0;
@@ -849,7 +907,7 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                       ),
                                     ),
                                     const SizedBox(
-                                      height: 50,
+                                      height: 30,
                                     ),
                                     if (_selectedIsNFT)
                                       const SizedBox()
@@ -1203,6 +1261,30 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                                   .translate(
                                                                       'String29')),
                                                           onPressed: () {
+                                                            walletWindowState!
+                                                                .textControllerAddress
+                                                                .clear();
+                                                            walletWindowState!
+                                                                .textControllerAmount
+                                                                .clear();
+                                                            walletWindowState!
+                                                                .textControllerData
+                                                                .clear();
+                                                            walletWindowState!
+                                                                .textControllerTokenComments
+                                                                .clear();
+                                                            walletWindowState!
+                                                                .textControllerTokenQuantity
+                                                                .clear();
+                                                            setState(() {
+                                                              _selectedTokenName =
+                                                                  '';
+                                                              myTokensList
+                                                                  .clear();
+                                                              isTokenToSendSwitched =
+                                                                  false;
+                                                            });
+
                                                             Navigator.pop(
                                                                 context);
                                                           },
@@ -1212,24 +1294,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                   },
                                                 );
                                               });
-                                              walletWindowState!
-                                                  .textControllerAddress
-                                                  .clear();
-                                              walletWindowState!
-                                                  .textControllerAmount
-                                                  .clear();
-                                              walletWindowState!
-                                                  .textControllerData
-                                                  .clear();
-                                              walletWindowState!
-                                                  .textControllerTokenComments
-                                                  .clear();
-                                              walletWindowState!
-                                                  .textControllerTokenQuantity
-                                                  .clear();
-                                              _selectedTokenName = '';
-                                              myTokensList.clear();
-                                              isTokenToSendSwitched = false;
                                             }
                                           },
                                         ),
