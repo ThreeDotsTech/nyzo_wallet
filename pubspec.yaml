@@ -3,7 +3,7 @@ description: An iOS and Android wallet for the Nyzo cryptocurrency.
 
 publish_to: 'none'
 
-version: 0.8.1+81
+version: 0.8.3+83
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
