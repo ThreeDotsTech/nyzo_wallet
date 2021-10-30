@@ -1377,13 +1377,9 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   }
 
   void _addFees() {
-    if (walletWindowState!.textControllerAmount.text.isEmpty) {
+    if (walletWindowState!.textControllerAmount.text.isEmpty ||
+        double.tryParse(walletWindowState!.textControllerAmount.text) == 0) {
       walletWindowState!.textControllerAmount.text = _feesByDefault.toString();
-    } else {
-      walletWindowState!.textControllerAmount.text =
-          (double.parse(walletWindowState!.textControllerAmount.text) +
-                  _feesByDefault)
-              .toString();
     }
   }
 }
