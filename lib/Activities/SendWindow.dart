@@ -58,7 +58,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   static final validCharacters = RegExp(r'^[a-zA-Z0-9_]+$');
   int _tokenDecimals = 0;
   final double _feesByDefault = 0.000001;
-  bool _feesInclude = false;
 
   @override
   void dispose() {
@@ -79,7 +78,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
         contactsList = _contactList;
       });
     });
-    _feesInclude = false;
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
@@ -491,9 +489,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                             a.name!.toLowerCase().compareTo(
                                                 b.name!.toLowerCase()));
                                         setState(() {
-                                          if (value == false) {
-                                            _feesInclude = false;
-                                          }
                                           isTokenToSendSwitched = value;
 
                                           walletWindowState!
@@ -1294,8 +1289,6 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                                                                 .textControllerTokenQuantity
                                                                 .clear();
                                                             setState(() {
-                                                              _feesInclude =
-                                                                  false;
                                                               _selectedTokenName =
                                                                   '';
                                                               myTokensList
@@ -1384,22 +1377,13 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
   }
 
   void _addFees() {
-    if (_feesInclude) {
-      return;
-    }
-    _feesInclude = true;
     if (walletWindowState!.textControllerAmount.text.isEmpty) {
       walletWindowState!.textControllerAmount.text = _feesByDefault.toString();
     } else {
-      if (isTokenToSendSwitched ||
-          walletWindowState!.textControllerData.text.isNotEmpty) {
-        walletWindowState!.textControllerAmount.text =
-            (double.parse(walletWindowState!.textControllerAmount.text) +
-                    _feesByDefault)
-                .toString();
-      } else {
-        _feesInclude = false;
-      }
+      walletWindowState!.textControllerAmount.text =
+          (double.parse(walletWindowState!.textControllerAmount.text) +
+                  _feesByDefault)
+              .toString();
     }
   }
 }

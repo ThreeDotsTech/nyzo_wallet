@@ -168,8 +168,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                   content: Text(AppLocalizations.of(context)!
                                       .translate('String2')));
 
-                              scaffoldMessengerKey.currentState!
-                                ..showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
                           });
                         },
@@ -231,8 +231,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                     content: Text(AppLocalizations.of(context)!
                                         .translate('String2')));
 
-                                scaffoldMessengerKey.currentState!
-                                  ..showSnackBar(snackBar);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               }
                             });
                           },

@@ -81,8 +81,8 @@ class _BackUpSeedState extends State<BackUpSeed> {
                             content: Text(AppLocalizations.of(context)!
                                 .translate('String5')));
 
-                        scaffoldMessengerKey.currentState!
-                          ..showSnackBar(snackBar);
+                        ScaffoldMessenger
+                                                                    .of(context).showSnackBar(snackBar);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
