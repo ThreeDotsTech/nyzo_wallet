@@ -1,4 +1,7 @@
+// Dart imports:
 import 'dart:core';
+
+// Project imports:
 import 'ByteBuffer.dart';
 
 class PreviousHashResponse {
@@ -12,10 +15,10 @@ class PreviousHashResponse {
   }
 
   getBytes(includeSignatureIgnored) {
-    var buffer = new ByteBuffer(1000);
+    final ByteBuffer buffer = ByteBuffer(1000);
 
-    buffer.putLong(this.height);
-    buffer.putBytes(this.hash);
+    buffer.putLong(height);
+    buffer.putBytes(hash);
 
     return buffer.toArray();
   }

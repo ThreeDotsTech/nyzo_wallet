@@ -1,12 +1,14 @@
+// Dart imports:
 import 'dart:typed_data';
 
+// Project imports:
 import 'package:nyzo_wallet/Data/NyzoType.dart';
 
 class NyzoString {
   // Common ancestor
 
-  NyzoStringType _type;
-  Uint8List _bytes;
+  NyzoStringType? _type;
+  Uint8List? _bytes;
 
   NyzoString(_type, _bytes) {
     this._type = _type;
@@ -14,11 +16,10 @@ class NyzoString {
   }
 
   NyzoStringType getType() {
-    return this._type;
+    return _type!;
   }
 
   Uint8List getBytes() {
-    return this._bytes;
+    return _bytes!;
   }
-
 }

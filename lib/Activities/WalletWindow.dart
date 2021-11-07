@@ -1,62 +1,98 @@
-import 'package:intl/intl.dart';
+// Dart imports:
+import 'dart:async';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:nyzo_wallet/Activities/SettingsWindow.dart';
-import 'package:nyzo_wallet/Activities/verifiersWindow.dart';
-import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:intl/intl.dart';
+import 'package:titled_navigation_bar/titled_navigation_bar.dart';
+import 'package:uni_links/uni_links.dart';
+
+// Project imports:
+import 'package:nyzo_wallet/Activities/ContactsWindow.dart';
+import 'package:nyzo_wallet/Activities/SendWindow.dart';
+import 'package:nyzo_wallet/Activities/SettingsWindow.dart';
+import 'package:nyzo_wallet/Activities/VerifiersWindow.dart';
+import 'package:nyzo_wallet/Data/AppLocalizations.dart';
+import 'package:nyzo_wallet/Data/Contact.dart';
+import 'package:nyzo_wallet/Data/Token.dart';
+import 'package:nyzo_wallet/Data/Transaction.dart';
+import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/TransactionsWidget.dart';
-import 'package:nyzo_wallet/Widgets/verifierDialog.dart';
-import 'package:titled_navigation_bar/titled_navigation_bar.dart';
-import 'package:nyzo_wallet/Data/Transaction.dart';
-import 'package:nyzo_wallet/Activities/SendWindow.dart';
-import 'package:nyzo_wallet/Data/Contact.dart';
-import 'package:nyzo_wallet/Activities/ContactsWindow.dart';
-import 'package:unicorndial/unicorndial.dart';
+import 'package:nyzo_wallet/Widgets/Unicorndial.dart';
+import 'package:nyzo_wallet/Widgets/VerifierDialog.dart';
+import 'package:nyzo_wallet/nyzo_url.dart';
 
 class WalletWindow extends StatefulWidget {
-  final _password;
-  WalletWindow(this._password);
+  const WalletWindow(this._password, this._initialDeepLink);
+
+  final String _password;
+  final String _initialDeepLink;
+
   @override
-  WalletWindowState createState() => WalletWindowState(_password);
+  WalletWindowState createState() =>
+      WalletWindowState(_password, _initialDeepLink);
 }
 
-class WalletWindowState extends State<WalletWindow> {
-  WalletWindowState(this.password);
-  ContactsWindow contactsWindow = ContactsWindow(_contactsList);
-  TranSactionsWidget tranSactionsWidgetInstance = TranSactionsWidget(null);
-  VerifiersWindow verifiersWindow;
-  SendWindow sendWindowInstance;
-  SettingsWindow settingsWindow = SettingsWindow();
+class WalletWindowState extends State<WalletWindow>
+    with WidgetsBindingObserver {
+  WalletWindowState(this.password, this.initialDeepLink);
+  ContactsWindow contactsWindow = ContactsWindow(contactsList!);
+  TransactionsWidget tranSactionsWidgetInstance =
+      TransactionsWidget(List<Transaction>.empty(growable: true));
+  VerifiersWindow? verifiersWindow;
+  SendWindow? sendWindowInstance;
+  SettingsWindow? settingsWindow = SettingsWindow();
   String password;
-  double screenHeight;
+  double? screenHeight;
   int balance = 0;
+  List<Token> myTokensList = List<Token>.empty(growable: true);
+  List<Token> myNFTsList = List<Token>.empty(growable: true);
   String _address = '';
-  static List<Transaction> transactions;
-  static List<Contact> _contactsList;
+  static List<Transaction>? transactions;
+  static List<Contact>? contactsList = List<Contact>.empty(growable: true);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var f = new NumberFormat("###.0#", "en_US");
+  NumberFormat f = NumberFormat('###.0#', 'en_US');
   bool _compactFormat = true;
   int pageIndex = 0;
 
   bool sentinels = false;
 
-  final textControllerAmount = new TextEditingController();
-  final textControllerAddress = new TextEditingController();
-  final textControllerData = new TextEditingController();
-  final amountFormKey = new GlobalKey<FormFieldState>();
-  final addressFormKey = new GlobalKey<FormFieldState>();
-  final dataFormKey = new GlobalKey<FormFieldState>();
+  // Initial deep link
+  String initialDeepLink = '';
+  // Deep link changes
+  StreamSubscription? _deepLinkSub;
+
+  final TextEditingController textControllerAmount = TextEditingController();
+  final TextEditingController textControllerAddress = TextEditingController();
+  final TextEditingController textControllerData = TextEditingController();
+  final TextEditingController textControllerTokenComments =
+      TextEditingController();
+  final TextEditingController textControllerTokenQuantity =
+      TextEditingController();
+  final GlobalKey<FormFieldState> amountFormKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> addressFormKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> dataFormKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> tokenCommentsFormKey =
+      GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> tokenQuantityFormKey =
+      GlobalKey<FormFieldState>();
 
   AddVerifierDialog floatingdialog = AddVerifierDialog();
 
-  changeTheme(fn) {
+  void changeTheme(fn) {
     super.setState(fn);
   }
 
   @override
   void initState() {
+    // Register Stream
+    _registerStream();
+    WidgetsBinding.instance!.addObserver(this);
+
     //The first thing we do is load the last balance saved on disk.
     getSavedBalance().then((double _balance) {
       setState(() {
@@ -66,9 +102,9 @@ class WalletWindowState extends State<WalletWindow> {
     //We initialize the verifiers Window
     verifiersWindow = VerifiersWindow();
     //This is the saved preference to know if we mus display the verifiers window or not.
-    watchSentinels().then((bool val) {
+    watchSentinels().then((bool? val) {
       setState(() {
-        sentinels = val;
+        sentinels = val!;
       });
     });
 
@@ -76,9 +112,13 @@ class WalletWindowState extends State<WalletWindow> {
       //load the wallet's address from disk
       setState(() {
         _address = address;
-        //Now that we have the address, we instantialize  the send window.
-        sendWindowInstance =
-            new SendWindow(password, nyzoStringFromPublicIdentifier(_address));
+
+        //Now that we have the address, we instantialize the send window.
+        sendWindowInstance = SendWindow(
+          password: password,
+          address: nyzoStringFromPublicIdentifier(_address),
+          selectedTokenName: '',
+        );
 
         getBalance(_address).then((_balance) {
           //get the balance value from the network
@@ -86,13 +126,23 @@ class WalletWindowState extends State<WalletWindow> {
             balance = _balance.floor();
             setSavedBalance(double.parse(balance.toString())); //set the balance
           });
-          getTransactions(_address).then((List _transactions) {
-            transactions = _transactions;
+          getTransactions(_address).then((List? _transactions) {
+            transactions = _transactions!.cast<Transaction>();
           });
         }); //set the address
+        getTokensBalance(_address).then((List<Token> _myTokensList) {
+          setState(() {
+            myTokensList = _myTokensList;
+          });
+        });
+        getNFTBalance(_address).then((List<Token> _myNFTsList) {
+          setState(() {
+            myNFTsList = _myNFTsList;
+          });
+        });
       });
       getContacts().then((contactList) {
-        _contactsList = contactList;
+        contactsList = contactList;
       });
     });
 
@@ -103,6 +153,11 @@ class WalletWindowState extends State<WalletWindow> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
+    if (initialDeepLink.isNotEmpty) {
+      handleDeepLink(initialDeepLink);
+      initialDeepLink = '';
+    }
   }
 
   changeFormat() {
@@ -115,41 +170,42 @@ class WalletWindowState extends State<WalletWindow> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
 
-    var childButtons = List<UnicornButton>();
+    final List<UnicornButton> childButtons =
+        List<UnicornButton>.empty(growable: true);
 
     childButtons.add(UnicornButton(
         hasLabel: false,
-        //labelText: 	AppLocalizations.of(context).translate("String96"),
-        labelText: "",
+        //labelText: 	AppLocalizations.of(context)!.translate("String96"),
+        labelText: '',
         currentButton: FloatingActionButton(
-          heroTag: "verifier",
+          heroTag: 'verifier',
           backgroundColor: Colors.white,
           mini: true,
           child: Container(
-              margin: EdgeInsets.all(8),
+              margin: const EdgeInsets.all(8),
               child: Image.asset(
-                "images/normal.png",
+                'images/normal.png',
                 color: Colors.black,
               )),
           onPressed: () {
             floatingdialog.information(
                 context,
-                AppLocalizations.of(context).translate("String97"),
+                AppLocalizations.of(context)!.translate('String97'),
                 true, onClose: () {
-              ColorTheme.of(context).updateVerifiers();
+              ColorTheme.of(context)!.updateVerifiers!();
             });
           },
         )));
 
     childButtons.add(UnicornButton(
         hasLabel: false,
-        //labelText: 	AppLocalizations.of(context).translate("String98"),
+        //labelText: 	AppLocalizations.of(context)!.translate("String98"),
 
         currentButton: FloatingActionButton(
-          heroTag: "address",
+          heroTag: 'address',
           backgroundColor: Colors.white,
           mini: true,
-          child: Icon(
+          child: const Icon(
             Icons.account_balance_wallet,
             color: Colors.black,
           ),
@@ -157,9 +213,9 @@ class WalletWindowState extends State<WalletWindow> {
             setState(() {
               floatingdialog.information(
                   context,
-                  AppLocalizations.of(context).translate("String97"),
+                  AppLocalizations.of(context)!.translate('String97'),
                   false, onClose: () {
-                ColorTheme.of(context).updateAddressesToWatch();
+                ColorTheme.of(context)!.updateAddressesToWatch!();
               });
             });
           },
@@ -172,85 +228,87 @@ class WalletWindowState extends State<WalletWindow> {
         floatingActionButton: sentinels
             ? pageIndex == 3
                 ? UnicornDialer(
-                    parentHeroTag: "ParenTagg",
+                    parentHeroTag: 'ParenTagg',
                     childButtons: childButtons,
                     parentButtonBackground: Colors.white,
                     backgroundColor: Colors.black12,
-                    finalButtonIcon: Icon(
+                    finalButtonIcon: const Icon(
                       Icons.close,
                       color: Colors.black,
                     ),
-                    parentButton: Container(
-                        margin: EdgeInsets.all(15),
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.black,
-                        )),
+                    parentButton: const Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
                   )
                 : null
             : null,
         //resizeToAvoidBottomInset: false,
         // resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
-        backgroundColor: ColorTheme.of(context).baseColor,
+        backgroundColor: ColorTheme.of(context)!.baseColor!,
         bottomNavigationBar: TitledBottomNavigationBar(
-            indicatorColor: ColorTheme.of(context).secondaryColor,
-            inactiveColor: ColorTheme.of(context).secondaryColor,
-            activeColor: ColorTheme.of(context).secondaryColor,
+            indicatorColor: ColorTheme.of(context)!.secondaryColor,
+            inactiveColor: ColorTheme.of(context)!.secondaryColor,
+            activeColor: ColorTheme.of(context)!.secondaryColor,
             reverse: true,
             currentIndex:
                 pageIndex, // Use this to update the Bar giving a position
-            onTap: (index) {
+            onTap: (int index) {
               setState(() {
-                FocusScope.of(context).requestFocus(new FocusNode());
+                FocusScope.of(context).requestFocus(FocusNode());
                 pageIndex = index;
               });
             },
             items: sentinels
                 ? [
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title:
-                            AppLocalizations.of(context).translate("String72"),
-                        icon: Icons.history),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String72')),
+                        icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title:
-                            AppLocalizations.of(context).translate("String8"),
-                        icon: Icons.contacts),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(
+                            AppLocalizations.of(context)!.translate('String8')),
+                        icon: const Icon(Icons.contacts)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title:
-                            AppLocalizations.of(context).translate("String21"),
-                        icon: Icons.send),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String21')),
+                        icon: const Icon(Icons.send)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title:
-                            AppLocalizations.of(context).translate("String94"),
-                        icon: Icons.remove_red_eye),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String94')),
+                        icon: const Icon(Icons.remove_red_eye)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title:
-                            AppLocalizations.of(context).translate("String30"),
-                        icon: Icons.settings),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String30')),
+                        icon: const Icon(Icons.settings)),
                   ]
                 : [
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 'History',
-                        icon: Icons.history),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String72')),
+                        icon: const Icon(Icons.history)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 'Contacts',
-                        icon: Icons.contacts),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(
+                            AppLocalizations.of(context)!.translate('String8')),
+                        icon: const Icon(Icons.contacts)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 'Transfer',
-                        icon: Icons.send),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String21')),
+                        icon: const Icon(Icons.send)),
                     TitledNavigationBarItem(
-                        backgroundColor: ColorTheme.of(context).baseColor,
-                        title: 'Settings',
-                        icon: Icons.settings),
+                        backgroundColor: ColorTheme.of(context)!.baseColor!,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('String30')),
+                        icon: const Icon(Icons.settings)),
                   ]),
         body: Column(
           children: <Widget>[
@@ -281,8 +339,12 @@ class WalletWindowState extends State<WalletWindow> {
                   Positioned(
                     child: Opacity(
                         opacity: sentinels
-                            ? pageIndex == 4 ? 1.0 : 0.0
-                            : pageIndex == 3 ? 1.0 : 0.0,
+                            ? pageIndex == 4
+                                ? 1.0
+                                : 0.0
+                            : pageIndex == 3
+                                ? 1.0
+                                : 0.0,
                         child: IgnorePointer(
                             child: settingsWindow,
                             ignoring:
@@ -291,8 +353,12 @@ class WalletWindowState extends State<WalletWindow> {
                   Positioned(
                     child: Opacity(
                         opacity: sentinels
-                            ? pageIndex == 3 ? 1.0 : 0.0
-                            : pageIndex == 4 ? 1.0 : 0.0,
+                            ? pageIndex == 3
+                                ? 1.0
+                                : 0.0
+                            : pageIndex == 4
+                                ? 1.0
+                                : 0.0,
                         child: IgnorePointer(
                             child: verifiersWindow,
                             ignoring:
@@ -305,5 +371,66 @@ class WalletWindowState extends State<WalletWindow> {
         ),
       ),
     );
+  }
+
+  // Register Stream
+  void _registerStream() {
+    // Deep link has been updated
+    _deepLinkSub = linkStream.listen((String? link) {
+      if (link != null) {
+        setState(() {
+          initialDeepLink = link;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _destroyStream();
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  void _destroyStream() {
+    if (_deepLinkSub != null) {
+      _deepLinkSub!.cancel();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Handle websocket connection when app is in background
+    // terminate it to be eco-friendly
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (initialDeepLink.isNotEmpty) {
+          handleDeepLink(initialDeepLink);
+          initialDeepLink = '';
+        }
+        super.didChangeAppLifecycleState(state);
+        break;
+      default:
+        super.didChangeAppLifecycleState(state);
+        break;
+    }
+  }
+
+  Future<void> handleDeepLink(String link) async {
+    final NyzoUrl nyzoUrl = await NyzoUrl().getInfo(Uri.decodeFull(link));
+
+    setState(() {
+      if (nyzoUrl.amount != null) {
+        textControllerAmount.text = nyzoUrl.amount!;
+      }
+      if (nyzoUrl.data != null) {
+        textControllerData.text = nyzoUrl.data!;
+      }
+      if (nyzoUrl.address != null) {
+        textControllerAddress.text = nyzoUrl.address!;
+      }
+      FocusScope.of(context).requestFocus(FocusNode());
+      pageIndex = 2;
+    });
   }
 }

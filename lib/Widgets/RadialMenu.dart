@@ -1,13 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-import 'package:vector_math/vector_math.dart' show radians;
+// Dart imports:
 import 'dart:math';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:vector_math/vector_math.dart' show radians;
+
+// Project imports:
+import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'TransactionsWidget.dart';
 
 class RadialMenu extends StatefulWidget {
-  final double width;
-  final double height;
-  RadialMenu({this.width, this.height});
+  final double? width;
+  final double? height;
+  const RadialMenu({this.width, this.height});
   @override
   _RadialMenuState createState() =>
       _RadialMenuState(width: width, height: height);
@@ -15,29 +22,29 @@ class RadialMenu extends StatefulWidget {
 
 class _RadialMenuState extends State<RadialMenu>
     with SingleTickerProviderStateMixin {
-  final width;
-  final height;
+  final double? width;
+  final double? height;
   _RadialMenuState({this.width, this.height});
   int activeWindow = 3;
-  Tween<double> _tween;
-  Animation<double> _animation;
-  AnimationController _controller;
+  Tween<double>? _tween;
+  Animation<double>? _animation;
+  AnimationController? _controller;
   double radi = 500;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
     _tween = Tween(begin: 0.0, end: 360.0);
-    _animation = _tween.animate(
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+    _animation = _tween!.animate(
+        CurvedAnimation(parent: _controller!, curve: Curves.fastOutSlowIn));
   }
 
   Widget menuButton(Icon icon, String tag, VoidCallback onPressed) {
     return Container(
-      width: width / 7,
-      height: width / 7,
+      width: width! / 7,
+      height: width! / 7,
       child: FloatingActionButton(
         child: icon,
         onPressed: onPressed,
@@ -47,11 +54,11 @@ class _RadialMenuState extends State<RadialMenu>
   }
 
   _animate(double end) {
-    this._tween.begin = this._tween.end;
-    this._controller.reset();
-    this._tween.end = end;
+    _tween!.begin = _tween!.end;
+    _controller!.reset();
+    _tween!.end = end;
 
-    this._controller.forward();
+    _controller!.forward();
   }
 
   @override
@@ -59,27 +66,27 @@ class _RadialMenuState extends State<RadialMenu>
     return Container(
       width: width,
       height: height,
-      color: Color(0XFF136207),
+      color: const Color(0xff136207),
       child: Column(
         children: <Widget>[
           AnimatedBuilder(
-            animation: _animation,
-            builder: (context, builder) {
+            animation: _animation!,
+            builder: (BuildContext context, Widget? builder) {
               return Stack(
                 fit: StackFit.loose,
-                overflow: Overflow.visible,
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   Positioned(
                       child: Transform.rotate(
-                          angle: radians(_animation.value),
+                          angle: radians(_animation!.value),
                           child: Container(
-                              color: Color(0xffa4a4a4),
+                              color: const Color(0xffa4a4a4),
                               width: 100,
                               height: 100,
                               child: Stack(
-                                overflow: Overflow.visible,
+                                clipBehavior: Clip.none,
                                 fit: StackFit.passthrough,
-                                key: Key("Spinnable"),
+                                key: const Key('Spinnable'),
                                 alignment: Alignment.center,
                                 children: <Widget>[
                                   Positioned(
@@ -92,7 +99,8 @@ class _RadialMenuState extends State<RadialMenu>
                                         child: Container(
                                           width: 10.0,
                                           height: 10.0,
-                                          child: Icon(Icons.accessibility),
+                                          child:
+                                              const Icon(Icons.accessibility),
                                         )),
                                   ),
                                   Positioned(
@@ -105,7 +113,7 @@ class _RadialMenuState extends State<RadialMenu>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        child: TranSactionsWidget([]),
+                                        child: const TransactionsWidget([]),
                                       ),
                                     ),
                                   ),
@@ -113,13 +121,13 @@ class _RadialMenuState extends State<RadialMenu>
                                     right: 0.0,
                                     left: radi * cos(radians(360 / 5 * 2)),
                                     top: 0.0,
-                                    bottom: radi * sin(radians((360 / 5 * 2))),
+                                    bottom: radi * sin(radians(360 / 5 * 2)),
                                     child: Transform.rotate(
                                       angle: radians(-360 / 5 * 2 + 90),
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        child: Icon(Icons.accessibility),
+                                        child: const Icon(Icons.accessibility),
                                       ),
                                     ),
                                   ),
@@ -133,7 +141,7 @@ class _RadialMenuState extends State<RadialMenu>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        child: Icon(Icons.accessibility),
+                                        child: const Icon(Icons.accessibility),
                                       ),
                                     ),
                                   ),
@@ -148,7 +156,7 @@ class _RadialMenuState extends State<RadialMenu>
                                       child: Container(
                                         width: 100.0,
                                         height: 100.0,
-                                        child: Icon(Icons.accessibility),
+                                        child: const Icon(Icons.accessibility),
                                       ),
                                     ),
                                   ),
@@ -162,29 +170,34 @@ class _RadialMenuState extends State<RadialMenu>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              menuButton(Icon(Icons.settings), 	AppLocalizations.of(context).translate("String30"), () {
+              menuButton(const Icon(Icons.settings),
+                  AppLocalizations.of(context)!.translate('String30'), () {
                 activeWindow = 4;
                 _animate(360 * 4 / 5 - 90);
               }),
-              menuButton(Icon(Icons.contacts), 	AppLocalizations.of(context).translate("String8"), () {
+              menuButton(const Icon(Icons.contacts),
+                  AppLocalizations.of(context)!.translate('String8'), () {
                 activeWindow = 3;
                 _animate(360 * 3 / 5 - 90);
               }),
-              menuButton(Icon(Icons.history), 	AppLocalizations.of(context).translate("String72"), () {
+              menuButton(const Icon(Icons.history),
+                  AppLocalizations.of(context)!.translate('String72'), () {
                 activeWindow = 0;
                 _animate(0.0 - 90);
               }),
-              menuButton(Icon(Icons.send), 	AppLocalizations.of(context).translate("String22"), () {
+              menuButton(const Icon(Icons.send),
+                  AppLocalizations.of(context)!.translate('String22'), () {
                 activeWindow = 1;
                 _animate(360 * 1 / 5 - 90);
               }),
-              menuButton(Icon(Icons.call_received), 	AppLocalizations.of(context).translate("String23"), () {
+              menuButton(const Icon(Icons.call_received),
+                  AppLocalizations.of(context)!.translate('String23'), () {
                 activeWindow = 2;
                 _animate(360 * 2 / 5 - 90);
               })
             ],
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 20),
           )
         ],
@@ -196,7 +209,7 @@ class _RadialMenuState extends State<RadialMenu>
 class CustomRect extends CustomClipper<Rect> {
   @override
   Rect getClip(Size size) {
-    Rect rect = Rect.fromLTRB(0.0, 0.0, size.width, size.height);
+    final Rect rect = Rect.fromLTRB(0.0, 0.0, size.width, size.height);
     return rect;
   }
 

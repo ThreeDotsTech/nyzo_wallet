@@ -1,12 +1,17 @@
+// Dart imports:
 import 'dart:core';
-import 'ByteBuffer.dart';
 import 'dart:typed_data';
+
+// Package imports:
 import 'package:html_unescape/html_unescape.dart';
 
-class TransactionResponse {
-  String message;
+// Project imports:
+import 'ByteBuffer.dart';
 
-  int transactionAccepted;
+class TransactionResponse {
+  String? message;
+
+  int? transactionAccepted;
 
   TransactionResponse(int transactionAccepted, String message) {
     this.transactionAccepted = transactionAccepted;
@@ -14,11 +19,11 @@ class TransactionResponse {
   }
 
   getBytes(includeSignatureIgnored) {
-    var buffer = new ByteBuffer(1000);
+    final buffer = ByteBuffer(1000);
 
-    buffer.putByte(this.transactionAccepted);
+    buffer.putByte(transactionAccepted!);
 
-    var messageBytes = stringAsUint8Array(this.message);
+    final messageBytes = stringAsUint8Array(message);
     buffer.putShort(messageBytes.length);
     buffer.putBytes(messageBytes);
 
@@ -27,9 +32,9 @@ class TransactionResponse {
 }
 
 Uint8List stringAsUint8Array(string) {
-  var unescape = new HtmlUnescape();
-  String encodedString = unescape.convert(Uri.encodeComponent(string));
-  Uint8List array = new Uint8List(encodedString.length);
+  final unescape = HtmlUnescape();
+  final String encodedString = unescape.convert(Uri.encodeComponent(string));
+  final Uint8List array = Uint8List(encodedString.length);
   for (int i = 0; i < encodedString.length; i++) {
     array[i] = encodedString.codeUnitAt(i);
   }

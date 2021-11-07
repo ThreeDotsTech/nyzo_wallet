@@ -1,11 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
-import 'package:flutter/services.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class BackUpSeed extends StatefulWidget {
-  BackUpSeed(this._password);
+  const BackUpSeed(this._password);
   final String _password;
   @override
   _BackUpSeedState createState() => _BackUpSeedState(_password);
@@ -14,8 +17,10 @@ class BackUpSeed extends StatefulWidget {
 class _BackUpSeedState extends State<BackUpSeed> {
   _BackUpSeedState(this._password);
   final String _password;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  String _privKey = "";
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  String _privKey = '';
   bool isBacked = false;
   @override
   void initState() {
@@ -30,60 +35,61 @@ class _BackUpSeedState extends State<BackUpSeed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorTheme.of(context).baseColor,
-        key: _scaffoldKey,
+        backgroundColor: ColorTheme.of(context)!.baseColor,
+        key: scaffoldMessengerKey,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
-        body: new Container(
-          padding: EdgeInsets.all(20.0),
+        body: Container(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              new Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: Center(
-                      child: new Text(
-                          AppLocalizations.of(context).translate("String4"),
-                          style: new TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                      child: Text(
+                          AppLocalizations.of(context)!.translate('String4'),
+                          style: TextStyle(
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
                           )))),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  AppLocalizations.of(context).translate("String100"),
-                  style: new TextStyle(
-                    color: ColorTheme.of(context).secondaryColor,
+                  AppLocalizations.of(context)!.translate('String100'),
+                  style: TextStyle(
+                    color: ColorTheme.of(context)!.secondaryColor,
                     fontSize: 15.0,
                   ),
                   textAlign: TextAlign.justify,
                 ),
               ),
-              new Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
-                    child: RaisedButton(
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(100.0)),
-                      color: ColorTheme.of(context).secondaryColor,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: ColorTheme.of(context)!.secondaryColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100.0))),
                       onPressed: () {
-                        Clipboard.setData(new ClipboardData(text: _privKey));
-                        final snackBar = SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate("String5")));
+                        Clipboard.setData(ClipboardData(text: _privKey));
+                        final SnackBar snackBar = SnackBar(
+                            content: Text(AppLocalizations.of(context)!
+                                .translate('String5')));
 
-                        _scaffoldKey.currentState..showSnackBar(snackBar);
+                        ScaffoldMessenger
+                                                                    .of(context).showSnackBar(snackBar);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           _privKey,
                           style: TextStyle(
-                              color: ColorTheme.of(context).baseColor,
+                              color: ColorTheme.of(context)!.baseColor,
                               fontSize: 15),
                         ),
                       ),
@@ -92,23 +98,24 @@ class _BackUpSeedState extends State<BackUpSeed> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 100.0),
                     child: Text(
-                      AppLocalizations.of(context).translate("String6"),
+                      AppLocalizations.of(context)!.translate('String6'),
                       style: TextStyle(
-                          color: ColorTheme.of(context).secondaryColor,
+                          color: ColorTheme.of(context)!.secondaryColor,
                           fontSize: 15),
                     ),
                   ),
-                  RaisedButton(
-                    color: ColorTheme.of(context).secondaryColor,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: ColorTheme.of(context)!.secondaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.0))),
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: new Text(
-                        AppLocalizations.of(context).translate("String7"),
-                        style:
-                            TextStyle(color: ColorTheme.of(context).baseColor)),
+                    child: Text(
+                        AppLocalizations.of(context)!.translate('String7'),
+                        style: TextStyle(
+                            color: ColorTheme.of(context)!.baseColor)),
                   ),
                 ],
               ),

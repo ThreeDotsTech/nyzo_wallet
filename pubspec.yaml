@@ -1,67 +1,114 @@
 name: nyzo_wallet
 description: An iOS and Android wallet for the Nyzo cryptocurrency.
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# Read more about versioning at semver.org.
-version: 0.7.0+12
+publish_to: 'none'
+
+version: 0.8.4+84
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+  # Flutter widget that automatically resizes text to fit perfectly within its bounds
+  auto_size_text: ^3.0.0-nullsafety.0
+
+  # Utilities for accessing binary data and bit manipulation in Dart and Flutter.
+  binary:
+    git:
+      url: https://github.com/redDwarf03/binary.dart.git
+      ref: master
+
+  # Implementations of SHA, MD5, and HMAC cryptographic functions
+  crypto: ^3.0.1
+
+  # Cryptographic algorithms for encryption, digital signatures, key agreement, authentication, and hashing. AES, Chacha20, ED25519, X25519, and more. Web Crypto support
+  cryptography: ^2.0.2
+
+  # Direct Select Widget Implementation inspired by https://dribbble.com/shots/3876250-DirectSelect-Dropdown-ux  
+  direct_select_flutter: ^1.1.1
+
+  # A Flutter widget that can be expanded or collapsed by clicking on a header or an icon.
+  expandable: ^5.0.1
+  
+  # Flutter SDK
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^0.1.2
-  flutter_statusbarcolor: ^0.2.0
-  flutter_secure_storage: ^3.2.1+1
-  shared_preferences: ^0.5.3+4
-  flutter_string_encryption: ^0.3.1
-  local_auth: any
-  intl: ^0.16.0
-  http: ^0.12.0+2
-  ed25519_hd_key: ^1.0.1
-  html: ^0.14.0+2
-  crypto: any
-  cryptography:
-    path: packages/cryptography-1.0.0
-  html_unescape: ^1.0.1+2
-  vector_math: ^2.0.8
-  titled_navigation_bar: ^3.0.1
-  shimmer: ^1.0.0
-  liquid_pull_to_refresh: ^1.1.0
-  flutter_slidable: "^0.5.3"
-  expandable:
-    path: packages/expandable-3.0.0+1
-  reorderables: ^0.2.12
-  qr_flutter:
-    git:
-      url: git://github.com/lukef/qr.flutter.git
-  qr_mobile_vision: ^0.3.1
-  unicorndial:
-    path: packages/unicorndial-1.1.5
-  flutter_picker: ^1.0.13
   flutter_localizations:
     sdk: flutter
-  auto_size_text: ^2.1.0
-  package_info: ^0.4.0+13
-  direct_select_flutter: ^1.0.5
-  flutter_spinkit: "^4.1.1"
 
+  # Flutter plugin picker. Include NumberPicker, DateTimePicker, ArrayPicker, and default linkage Picker. Provide flexible parameters to meet various needs.
+  flutter_picker: ^2.0.2
 
+  # Flutter Secure Storage provides API to store data in secure storage. Keychain is used in iOS, KeyStore based solution is used in Android.
+  flutter_secure_storage: ^4.2.1
 
+  # A Flutter implementation of slidable list item with directional slide actions that can be dismissed.
+  flutter_slidable: ^0.6.0
 
+  # A collection of loading indicators animated with flutter. Heavily inspired by @tobiasahlin's SpinKit.
+  flutter_spinkit: ^5.1.0
 
+  # Flutter icons from popular web icon fonts. Customize your final icon package using fluttericon.com.
+  fluttericon: ^2.0.0
+
+  # Easy hexadecimal convertion using dart:convert API.
+  hex: ^0.2.0
+
+  # APIs for parsing and manipulating HTML content outside the browser
+  html: ^0.15.0
+
+  # A small library for un-escaping HTML. Supports all Named Character References, Decimal Character References and Hexadecimal Character References.
+  html_unescape: ^2.0.0
+
+  # A composable, multi-platform, Future-based API for HTTP requests.
+  http: ^0.13.3
+
+  # Contains code to deal with internationalized/localized messages, date and number formatting and parsing, bi-directional text, and other internationalization issues.
+  intl: ^0.17.0
+
+  # A beautiful and custom refresh indicator with some cool animations and transitions for flutter.
+  liquid_pull_to_refresh: ^3.0.0
+
+  # Flutter plugin for Android and iOS devices to allow local authentication via fingerprint, touch ID, face ID, passcode, pin, or pattern.
+  local_auth: ^1.1.8
+
+  # Flutter plugin for querying information about the application package, such as CFBundleVersion on iOS or versionCode on Android
+  package_info_plus: ^1.0.6
+
+  # The Dart implementation of the PyNaCl APIs with the TweetNaCl cryptographic library
+  pinenacl: ^0.3.3
+
+  # QR.Flutter is a Flutter library for simple and fast QR code rendering via a Widget or custom painter.
+  qr_flutter: ^4.0.0
+
+  # Plugin for reading QR codes using Firebase's Mobile Vision API.
+  qr_mobile_vision: ^3.0.0
+
+  # Reorderable table, row, column, wrap, sliver list that allow drag and drop of their children.
+  reorderables: ^0.4.1
+
+  # Flutter plugin for reading and writing simple key-value pairs. Wraps NSUserDefaults on iOS and SharedPreferences on Android.
+  shared_preferences: ^2.0.8
+
+  # A package provides an easy way to add shimmer effect in Flutter project
+  shimmer: ^2.0.0
+
+  # Dart implementation of sprintf. Provides simple printf like formatting such as sprintf("hello %s", ["world"]);
+  sprintf: ^6.0.0
+
+  # Cross-platform string encryption using common best-practices.
+  string_encryption: ^2.0.3
+
+  # A beautiful, clean and simple bottom navigation bar with smooth animation on click. This package is high customizable, read more bellow for more details
+  titled_navigation_bar: ^5.0.0-nullsafety.0
+
+  # Flutter plugin for accepting incoming links - App/Deep Links (Android), Universal Links and Custom URL schemes (iOS)
+  uni_links: ^0.5.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-
+  # Automatically organize your dart imports
+  import_sorter: ^4.6.0
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -73,9 +120,24 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   fonts:
-    - family: WaletFont
+    - family: Montserrat
       fonts:
-        - asset: fonts/WalletFont.ttf
+        - asset: fonts/Montserrat-Black.ttf
+        - asset: fonts/Montserrat-BlackItalic.ttf
+        - asset: fonts/Montserrat-Bold.ttf
+        - asset: fonts/Montserrat-BoldItalic.ttf
+        - asset: fonts/Montserrat-ExtraBold.ttf
+        - asset: fonts/Montserrat-ExtraBoldItalic.ttf
+        - asset: fonts/Montserrat-ExtraLight.ttf
+        - asset: fonts/Montserrat-ExtraLightItalic.ttf
+        - asset: fonts/Montserrat-Italic.ttf
+        - asset: fonts/Montserrat-Light.ttf
+        - asset: fonts/Montserrat-LightItalic.ttf
+        - asset: fonts/Montserrat-Medium.ttf
+        - asset: fonts/Montserrat-MediumItalic.ttf
+        - asset: fonts/Montserrat-Regular.ttf
+        - asset: fonts/Montserrat-SemiBold.ttf
+        - asset: fonts/Montserrat-SemiBoldItalic.ttf
 
   assets:
     - images/Logo.png
@@ -88,6 +150,10 @@ flutter:
     - images/NotProducing.png
     - images/trackingProblem.png
     - images/cycle.png
+    - images/nyzo-logo-white.png
+    - images/bg-home-red-black.png
+    - images/nytro-logo-black.png
+    - images/nytro-logo-white.png
 
     - lang/en.json
     - lang/zh.json
@@ -98,4 +164,3 @@ flutter:
     - lang/hr.json
     - lang/ru.json
     - lang/cs.json
-    

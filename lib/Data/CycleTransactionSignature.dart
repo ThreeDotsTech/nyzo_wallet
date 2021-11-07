@@ -1,44 +1,47 @@
+// Dart imports:
 import 'dart:typed_data';
+
+// Project imports:
 import 'ByteBuffer.dart';
 
 class CycleTransactionSignature {
-  Uint8List transactionInitiator;
-  Uint8List identifier;
-  Uint8List signature;
+  Uint8List? transactionInitiator;
+  Uint8List? identifier;
+  Uint8List? signature;
 
   CycleTransactionSignature() {
-    this.transactionInitiator = new Uint8List(32);
-    this.identifier = new Uint8List(32);
-    this.signature = new Uint8List(64);
+    transactionInitiator = Uint8List(32);
+    identifier = Uint8List(32);
+    signature = Uint8List(64);
   }
 
-  setTransactionInitiator(transactionInitiator) {
-    for (var i = 0; i < 32; i++) {
-      this.transactionInitiator[i] = transactionInitiator[i];
+  void setTransactionInitiator(Uint8List transactionInitiator) {
+    for (int i = 0; i < 32; i++) {
+      this.transactionInitiator![i] = transactionInitiator[i];
     }
   }
 
-  setIdentifier(identifier) {
-    for (var i = 0; i < 32; i++) {
-      this.identifier[i] = identifier[i];
+  void setIdentifier(Uint8List identifier) {
+    for (int i = 0; i < 32; i++) {
+      this.identifier![i] = identifier[i];
     }
   }
 
-  setSignature(signature) {
-    for (var i = 0; i < 64; i++) {
-      this.signature[i] = signature[i];
+  void setSignature(Uint8List? signature) {
+    for (int i = 0; i < 64; i++) {
+      this.signature![i] = signature![i];
     }
   }
 
-  getBytes(includeSignature) {
-    var buffer = new ByteBuffer(1000);
+  Uint8List getBytes(bool includeSignature) {
+    final ByteBuffer buffer = ByteBuffer(1000);
 
-    buffer.putBytes(this.transactionInitiator);
-    buffer.putBytes(this.identifier);
-    buffer.putBytes(this.signature);
+    buffer.putBytes(transactionInitiator!);
+    buffer.putBytes(identifier!);
+    buffer.putBytes(signature!);
 
     if (includeSignature) {
-      buffer.putBytes(this.signature);
+      buffer.putBytes(signature!);
     }
 
     return buffer.toArray();

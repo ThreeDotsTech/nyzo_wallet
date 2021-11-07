@@ -1,16 +1,23 @@
+// Dart imports:
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Package imports:
 import 'package:direct_select_flutter/direct_select_container.dart';
 import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Data/CycleTransaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CycleTxScreen extends StatefulWidget {
-  CycleTxScreen(this.password);
+  const CycleTxScreen(this.password);
   final String password;
   @override
   _CycleTxScreenState createState() => _CycleTxScreenState(password);
@@ -20,24 +27,24 @@ DirectSelectItem<CycleTransaction> getDropDownMenuItem(CycleTransaction value) {
   return DirectSelectItem<CycleTransaction>(
       itemHeight: 56,
       value: value,
-      itemBuilder: (context, value) {
+      itemBuilder: (BuildContext context, CycleTransaction value) {
         if (value.receiverNickname == null) {
-          return Text(value.receiverId.substring(0, 3) +
-              "..." +
-              value.receiverId.substring(
-                  value.receiverId.length - 4, value.receiverId.length));
+          return Text(value.receiverId!.substring(0, 3) +
+              '...' +
+              value.receiverId!.substring(
+                  value.receiverId!.length - 4, value.receiverId!.length));
         }
-        return Text(value.receiverNickname);
+        return Text(value.receiverNickname!);
       });
 }
 
 BoxDecoration _getShadowDecoration() {
   return BoxDecoration(
     boxShadow: <BoxShadow>[
-      new BoxShadow(
+      BoxShadow(
         color: Colors.black.withOpacity(0.06),
         spreadRadius: 4,
-        offset: new Offset(0.0, 0.0),
+        offset: const Offset(0.0, 0.0),
         blurRadius: 15.0,
       ),
     ],
@@ -48,8 +55,8 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
   TextEditingController textEditingController = TextEditingController();
   _CycleTxScreenState(this._password);
   final String _password;
-  List<CycleTransaction> txList;
-  CycleTransaction currentTx;
+  List<CycleTransaction>? txList;
+  CycleTransaction? currentTx;
   bool _loading = true;
   int selectedIndex = 0;
   @override
@@ -59,8 +66,8 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
         _loading = false;
         txList = list;
         if (txList != null) {
-          if (txList.length != 0) {
-            currentTx = txList[0];
+          if (txList!.isNotEmpty) {
+            currentTx = txList![0];
           }
         }
       });
@@ -69,14 +76,14 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
   }
 
   Icon _getDropdownIcon() {
-    return Icon(
+    return const Icon(
       Icons.unfold_more,
       color: Colors.blueAccent,
     );
   }
 
-  _getDslDecoration() {
-    return BoxDecoration(
+  BoxDecoration _getDslDecoration() {
+    return const BoxDecoration(
       border: BorderDirectional(
         bottom: BorderSide(width: 1, color: Colors.black12),
         top: BorderSide(width: 1, color: Colors.black12),
@@ -84,7 +91,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
     );
   }
 
-  _getRow(String text1, String text2) {
+  Padding _getRow(String text1, String text2) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -97,14 +104,14 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
             child: Text(
               text1,
               style: TextStyle(
-                  color: ColorTheme.of(context).secondaryColor,
+                  color: ColorTheme.of(context)!.secondaryColor,
                   fontWeight: FontWeight.bold),
             ),
           ),
           Flexible(
               child: Text(
             text2,
-            style: TextStyle(color: ColorTheme.of(context).secondaryColor),
+            style: TextStyle(color: ColorTheme.of(context)!.secondaryColor),
             textAlign: TextAlign.right,
           ))
         ],
@@ -114,21 +121,21 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!ColorTheme.of(context).lightTheme) {
+    if (!ColorTheme.of(context)!.lightTheme!) {
       setState(() {
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
       });
     }
     return DirectSelectContainer(
       child: Scaffold(
-        backgroundColor: ColorTheme.of(context).baseColor,
+        backgroundColor: ColorTheme.of(context)!.baseColor,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: ColorTheme.of(context).secondaryColor,
+              color: ColorTheme.of(context)!.secondaryColor,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -140,16 +147,16 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: txList != null
-                  ? txList.length != 0
+                  ? txList!.isNotEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Center(
                               child: Text(
-                                "Cycle TX",
+                                'Cycle TX',
                                 style: TextStyle(
                                     color:
-                                        ColorTheme.of(context).secondaryColor,
+                                        ColorTheme.of(context)!.secondaryColor,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 0,
                                     fontSize: 35),
@@ -159,7 +166,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                               decoration: _getShadowDecoration(),
                               child: Card(
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 22),
+                                  padding: const EdgeInsets.only(left: 22),
                                   child: Row(
                                     children: <Widget>[
                                       Expanded(
@@ -175,7 +182,7 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                             });
                                           },
                                           defaultItemIndex: selectedIndex,
-                                          values: txList,
+                                          values: txList!,
                                           itemBuilder: (CycleTransaction tx) =>
                                               getDropDownMenuItem(tx),
                                           focusedItemDecoration:
@@ -189,100 +196,103 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                               ),
                             ),
                             Card(
-                              color: ColorTheme.of(context).dephtColor,
+                              color: ColorTheme.of(context)!.depthColor,
                               child: Container(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 child: Column(
                                   children: <Widget>[
-                                    _getRow("initiator nickname",
-                                        currentTx.initiatorNickname),
+                                    _getRow('initiator nickname',
+                                        currentTx!.initiatorNickname!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("initiator ID",
-                                        currentTx.initiatorIdAsNyzoString),
+                                    _getRow('initiator ID',
+                                        currentTx!.initiatorIdAsNyzoString!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("amount", currentTx.ammount),
+                                    _getRow('amount', currentTx!.ammount!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("receiver nickname",
-                                        currentTx.receiverNickname),
+                                    _getRow('receiver nickname',
+                                        currentTx!.receiverNickname!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("receiver ID",
-                                        currentTx.receiverIdAsNyzoString),
+                                    _getRow('receiver ID',
+                                        currentTx!.receiverIdAsNyzoString!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
-                                      height: 0,
-                                    ),
-                                    _getRow(
-                                        "sender data", currentTx.senderData),
-                                    Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
-                                      height: 0,
-                                    ),
-                                    _getRow("initiator signature",
-                                        currentTx.initiatorSignature),
-                                    Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
                                     _getRow(
-                                        "Total Votes", currentTx.totalVotes),
+                                        'sender data', currentTx!.senderData!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("Votes Against",
-                                        currentTx.votesAgainst),
+                                    _getRow('initiator signature',
+                                        currentTx!.initiatorSignature!),
                                     Divider(
-                                      color:
-                                          ColorTheme.of(context).highLigthColor,
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
                                       height: 0,
                                     ),
-                                    _getRow("Votes for Tx",
-                                        currentTx.votesForTransaction),
+                                    _getRow(
+                                        'Total Votes', currentTx!.totalVotes!),
+                                    Divider(
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
+                                      height: 0,
+                                    ),
+                                    _getRow('Votes Against',
+                                        currentTx!.votesAgainst!),
+                                    Divider(
+                                      color: ColorTheme.of(context)!
+                                          .highLigthColor,
+                                      height: 0,
+                                    ),
+                                    _getRow('Votes for Tx',
+                                        currentTx!.votesForTransaction!),
                                   ],
                                 ),
                               ),
                             ),
-                            /* Row(
+                            /*Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                RaisedButton(
-                                  color: ColorTheme.of(context).secondaryColor,
-                                  shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(30.0)),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary:
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                  ),
                                   child: Text("Sign",
                                       style: TextStyle(
-                                          color: ColorTheme.of(context)
+                                          color: ColorTheme.of(context)!
                                               .baseColor)),
                                   onPressed: () {
                                     setState(() {
                                       _loading = true;
                                     });
                                     signTransaction(
-                                      currentTx.initiatorSignature,
-                                      currentTx.initiatorId,
-                                      currentTx.bytes,
+                                      currentTx!.initiatorSignature,
+                                      currentTx!.initiatorId,
+                                      currentTx!.bytes,
                                       password: _password,
                                     ).then((var json) {
                                       setState(() {
@@ -292,16 +302,16 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               title: Text(
-                                                AppLocalizations.of(context)
+                                                AppLocalizations.of(context)!
                                                     .translate("String28"),
                                                 style: TextStyle(
                                                     color: Colors.black),
                                               ),
                                               content: Text(json["message"]),
                                               actions: <Widget>[
-                                                FlatButton(
+                                                TextButton(
                                                   child: Text(AppLocalizations
-                                                          .of(context)
+                                                          .of(context)!
                                                       .translate("String29")),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -315,14 +325,17 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                     });
                                   },
                                 ),
-                                RaisedButton(
-                                  color: ColorTheme.of(context).secondaryColor,
-                                  shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(30.0)),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary:
+                                        ColorTheme.of(context)!.secondaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                  ),
                                   child: Text("Bulk Signing",
                                       style: TextStyle(
-                                          color: ColorTheme.of(context)
+                                          color: ColorTheme.of(context)!
                                               .baseColor)),
                                   onPressed: () {
                                     showDialog(
@@ -360,8 +373,8 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                                         filled: true,
                                                         fillColor:
                                                             ColorTheme.of(
-                                                                    context)
-                                                                .dephtColor,
+                                                                    context)!
+                                                                .depthColor,
                                                         focusedErrorBorder:
                                                             OutlineInputBorder(
                                                                 borderRadius:
@@ -415,22 +428,23 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                                               ),
                                             ),
                                             actions: <Widget>[
-                                              FlatButton(
+                                              TextButton(
                                                 child: Text("Cancel"),
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
                                               ),
-                                              FlatButton(
+                                              TextButton(
                                                 child: Text("Sign"),
-                                                onPressed: () {/*
+                                                onPressed: () {
+                                                  /*
                                                   signTransactionWithKeyList(
                                                       textEditingController
                                                           .text,
-                                                      currentTx
+                                                      currentTx!
                                                           .initiatorSignature,
-                                                      currentTx.initiatorId,
-                                                      currentTx.bytes);*/
+                                                      currentTx!.initiatorId,
+                                                      currentTx!.bytes);*/
                                                 },
                                               )
                                             ],
@@ -444,9 +458,9 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                         )
                       : Center(
                           child: Text(
-                            "No TXs available",
+                            'No TXs available',
                             style: TextStyle(
-                                color: ColorTheme.of(context).secondaryColor,
+                                color: ColorTheme.of(context)!.secondaryColor,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0,
                                 fontSize: 35),
@@ -454,47 +468,46 @@ class _CycleTxScreenState extends State<CycleTxScreen> {
                         )
                   : Container(),
             ),
-            _loading
-                ? Positioned(
-                    child: new Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          txList == null
-                              ? Text(
-                                  "Fetching TXs",
-                                  style: TextStyle(
-                                      color:
-                                          ColorTheme.of(context).secondaryColor,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0,
-                                      fontSize: 35),
-                                )
-                              : Container(),
-                          new ClipOval(
-                            child: new BackdropFilter(
-                              filter: new ImageFilter.blur(
-                                  sigmaX: 10.0, sigmaY: 100.0),
-                              child: new Container(
-                                width: 200.0,
-                                height: 200.0,
-                                decoration: new BoxDecoration(
-                                    color: Colors.grey.shade200.withOpacity(0)),
-                                child: new Center(
-                                  child: SpinKitChasingDots(
-                                    color:
-                                        ColorTheme.of(context).secondaryColor,
-                                    size: 50.0,
-                                  ),
-                                ),
+            if (_loading)
+              Positioned(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      if (txList == null)
+                        Text(
+                          'Fetching TXs',
+                          style: TextStyle(
+                              color: ColorTheme.of(context)!.secondaryColor,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0,
+                              fontSize: 35),
+                        )
+                      else
+                        Container(),
+                      ClipOval(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 100.0),
+                          child: Container(
+                            width: 200.0,
+                            height: 200.0,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade200.withOpacity(0)),
+                            child: Center(
+                              child: SpinKitChasingDots(
+                                color: ColorTheme.of(context)!.secondaryColor,
+                                size: 50.0,
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  )
-                : Container(),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Container(),
           ],
         ),
       ),

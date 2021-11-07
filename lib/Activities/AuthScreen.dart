@@ -1,14 +1,19 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:local_auth/local_auth.dart';
+// Dart imports:
 import 'dart:async';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:local_auth/local_auth.dart';
+import 'package:uni_links/uni_links.dart';
+
+// Project imports:
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -17,44 +22,47 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final _storage = new FlutterSecureStorage();
-  var _localAuth = new LocalAuthentication();
-  final textController = new TextEditingController();
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final LocalAuthentication _localAuth = LocalAuthentication();
+  final TextEditingController textController = TextEditingController();
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  // Initial deep link
+  String initialDeepLink = '';
+  // Deep link changes
+  StreamSubscription? _deepLinkSub;
 
   @override
   void initState() {
+    // Register Stream
+    _registerStream();
+
     super.initState();
-    Future.delayed(Duration(seconds: 1), () async {
+
+    Future<Duration?>.delayed(const Duration(seconds: 1), () async {
       try {
-        Future didAuthenticate;
-        if (Platform.isIOS) {
-          didAuthenticate = _localAuth.authenticateWithBiometrics(
-            stickyAuth: true,
-            localizedReason: AppLocalizations.of(context).translate("String80"),
-          );
-        } else {
-          didAuthenticate = _localAuth.authenticateWithBiometrics(
-              stickyAuth: true,
-              localizedReason:
-                  AppLocalizations.of(context).translate("String80"));
-        }
-        didAuthenticate.then((value) {
+        final Future<bool> didAuthenticate = _localAuth.authenticate(
+          biometricOnly: true,
+          stickyAuth: true,
+          localizedReason: AppLocalizations.of(context)!.translate('String80'),
+        );
+        didAuthenticate.then((bool value) {
           if (value) {
-            Future salt = _storage.read(key: "Password");
-            salt.then((value) {
+            final Future<String?> salt = _storage.read(key: 'Password');
+            salt.then((String? value) async {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => WalletWindow(
-                          value,
-                        )),
+                    builder: (BuildContext context) =>
+                        WalletWindow(value!, initialDeepLink)),
               );
             });
           }
         });
         //prevent the screen from rotating
-        SystemChrome.setPreferredOrientations([
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+        SystemChrome.setPreferredOrientations(<DeviceOrientation>[
           DeviceOrientation.portraitUp,
         ]);
       } on PlatformException catch (e) {
@@ -64,42 +72,54 @@ class _AuthScreenState extends State<AuthScreen> {
         } else if (e.code == auth_error.otherOperatingSystem) {}
       }
     });
+
+    // Get initial deep link
+    getInitialLink().then((String? initialLink) {
+      if (initialLink != null) {
+        setState(() {
+          initialDeepLink = initialLink;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: new Scaffold(
-        backgroundColor: ColorTheme.of(context).baseColor,
-        key: scaffoldKey,
+      child: Scaffold(
+        backgroundColor: ColorTheme.of(context)!.baseColor,
+        key: scaffoldMessengerKey,
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
-        body: new Center(
-          child: new Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: new Column(
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 125.0, 0.0, 75.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 125.0, 0.0, 75.0),
                   child: InkWell(
                     onTap: () {
                       try {
-                        Future didAuthenticate =
-                            _localAuth.authenticateWithBiometrics(
-                                localizedReason: AppLocalizations.of(context)
-                                    .translate("String80"),
+                        final Future<bool> didAuthenticate =
+                            _localAuth.authenticate(
+                                biometricOnly: true,
+                                localizedReason: AppLocalizations.of(context)!
+                                    .translate('String80'),
                                 stickyAuth: true);
-                        didAuthenticate.then((value) {
+                        didAuthenticate.then((bool value) {
                           if (value) {
-                            Future salt = _storage.read(key: "Password");
-                            salt.then((value) {
+                            final Future<String?> salt =
+                                _storage.read(key: 'Password');
+                            salt.then((String? value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WalletWindow(
-                                          value,
+                                    builder: (BuildContext context) =>
+                                        WalletWindow(
+                                          value!,
+                                          initialDeepLink,
                                         )),
                               );
                             });
@@ -114,42 +134,42 @@ class _AuthScreenState extends State<AuthScreen> {
                     },
                     child: Icon(Icons.fingerprint,
                         size: 75.0,
-                        color: ColorTheme.of(context).secondaryColor),
+                        color: ColorTheme.of(context)!.secondaryColor),
                   ),
                 ),
-                new Expanded(
-                  child: new Column(
+                Expanded(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      new Text(
-                          AppLocalizations.of(context).translate("String1"),
+                      Text(AppLocalizations.of(context)!.translate('String1'),
                           textAlign: TextAlign.justify,
-                          style: new TextStyle(
-                            color: ColorTheme.of(context).secondaryColor,
+                          style: TextStyle(
+                            color: ColorTheme.of(context)!.secondaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 21.0,
                           )),
-                      new SizedBox(
+                      const SizedBox(
                         height: 40.0,
                       ),
-                      new TextFormField(
-                        onFieldSubmitted: (text) {
-                          Future salt = _storage.read(key: "Password");
-                          salt.then((value) {
+                      TextFormField(
+                        onFieldSubmitted: (String text) {
+                          final Future<String?> salt =
+                              _storage.read(key: 'Password');
+                          salt.then((String? value) {
                             if (text == value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WalletWindow(
-                                          value,
-                                        )),
+                                    builder: (BuildContext context) =>
+                                        WalletWindow(value!, initialDeepLink)),
                               );
                             } else {
-                              final snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)
-                                      .translate("String2")));
+                              final SnackBar snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .translate('String2')));
 
-                              scaffoldKey.currentState..showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
                           });
                         },
@@ -158,27 +178,29 @@ class _AuthScreenState extends State<AuthScreen> {
                         obscureText: true,
                         controller: textController,
                         style: TextStyle(
-                            color: ColorTheme.of(context).secondaryColor),
+                            color: ColorTheme.of(context)!.secondaryColor),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: ColorTheme.of(context).dephtColor,
+                          fillColor: ColorTheme.of(context)!.depthColor,
                           focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Colors.red)),
+                              borderSide: const BorderSide(color: Colors.red)),
                           errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Colors.red)),
+                              borderSide: const BorderSide(color: Colors.red)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Color(0x55666666))),
+                              borderSide:
+                                  const BorderSide(color: Color(0x55666666))),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
-                              borderSide: BorderSide(color: Color(0x55666666))),
-                          contentPadding: EdgeInsets.all(10),
-                          hasFloatingPlaceholder: false,
-                          labelText: AppLocalizations.of(context)
-                              .translate("String81"),
-                          labelStyle: TextStyle(
+                              borderSide:
+                                  const BorderSide(color: Color(0x55666666))),
+                          contentPadding: const EdgeInsets.all(10),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: AppLocalizations.of(context)!
+                              .translate('String81'),
+                          labelStyle: const TextStyle(
                               color: Color(0xFF555555),
                               fontWeight: FontWeight.w600,
                               fontSize: 15),
@@ -186,40 +208,43 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
-                        child: RaisedButton(
-                          color: ColorTheme.of(context).secondaryColor,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0)),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: ColorTheme.of(context)!.secondaryColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0))),
                           onPressed: () {
                             FocusScope.of(context).unfocus();
-                            Future salt = _storage.read(key: "Password");
-                            salt.then((value) {
+                            final Future<String?> salt =
+                                _storage.read(key: 'Password');
+                            salt.then((String? value) {
                               if (textController.text == value) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => WalletWindow(
-                                            value,
-                                          )),
+                                      builder: (BuildContext context) =>
+                                          WalletWindow(
+                                              value!, initialDeepLink)),
                                 );
                               } else {
-                                final snackBar = SnackBar(
-                                    content: Text(AppLocalizations.of(context)
-                                        .translate("String2")));
+                                final SnackBar snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .translate('String2')));
 
-                                scaffoldKey.currentState
-                                  ..showSnackBar(snackBar);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               }
                             });
                           },
-                          child: new Text(
-                              AppLocalizations.of(context).translate("String3"),
+                          child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('String3'),
                               style: TextStyle(
-                                  color: ColorTheme.of(context).baseColor)),
+                                  color: ColorTheme.of(context)!.baseColor)),
                         ),
                       ),
-                      new Expanded(
-                        child: new Container(),
+                      Expanded(
+                        child: Container(),
                       )
                     ],
                   ),
@@ -230,5 +255,29 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       ),
     );
+  }
+
+  // Register Stream
+  void _registerStream() {
+    // Deep link has been updated
+    _deepLinkSub = linkStream.listen((String? link) {
+      if (link != null) {
+        setState(() {
+          initialDeepLink = link;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _destroyStream();
+    super.dispose();
+  }
+
+  void _destroyStream() {
+    if (_deepLinkSub != null) {
+      _deepLinkSub!.cancel();
+    }
   }
 }

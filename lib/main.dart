@@ -1,14 +1,22 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nyzo_wallet/Data/AppLocalizations.dart';
-import 'package:nyzo_wallet/Data/Verifier.dart';
-import 'package:nyzo_wallet/Data/watchedAddress.dart';
-import 'Data/Wallet.dart';
-import 'homePage.dart';
-import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+
+// Package imports:
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(MyApp());
+// Project imports:
+import 'package:nyzo_wallet/Data/AppLocalizations.dart';
+import 'package:nyzo_wallet/Data/Verifier.dart';
+import 'package:nyzo_wallet/Data/WatchedAddress.dart';
+import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
+import 'Data/Wallet.dart';
+import 'homePage.dart';
+
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,15 +25,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool lightTheme = false;
-  Color baseColor = Color(0xFFF5F5F5);
-  Color secondaryColor = Color(0xFF121212);
-  Color dephtColor = Colors.white;
+  Color baseColor = const Color(0xFFF5F5F5);
+  Color secondaryColor = const Color(0xFF121212);
+  Color depthColor = Colors.white;
   Color extraColor = Colors.black87;
-  Color transparentColor = Colors.grey[300];
-  Color highLightColor = Colors.grey[100];
-  List<Verifier> verifiersList;
-  List<WatchedAddress> addressesToWatch;
-  List<List<String>> balanceList;
+  Color? transparentColor = Colors.grey[300];
+  Color? highLightColor = Colors.grey[100];
+  List<Verifier>? verifiersList;
+  List<WatchedAddress>? addressesToWatch;
+  List<List<String>>? balanceList;
   @override
   void initState() {
     downloadBalanceList();
@@ -35,22 +43,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   void updateTheme() {
-    getNightModeValue().then((bool value) {
+    getNightModeValue().then((bool? value) {
       setState(() {
-        value ??= false;
-        lightTheme = value;
+        lightTheme = value ?? true;
         if (!lightTheme) {
-          baseColor = Color(0xFFF5F5F5);
-          dephtColor = Colors.white;
-          secondaryColor = Color(0xFF121212);
+          baseColor = const Color(0xFFF5F5F5);
+          depthColor = Colors.white;
+          secondaryColor = const Color(0xFF121212);
           extraColor = Colors.black87;
           transparentColor = Colors.grey[300];
           highLightColor = Colors.grey[100];
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
         } else {
-          baseColor = Color(0xFF15151a);
-          secondaryColor = Color(0xFFF5F5F5);
-          dephtColor = Color(0xFF1b1c20);
+          baseColor = const Color(0xFF15151a);
+          secondaryColor = const Color(0xFFF5F5F5);
+          depthColor = const Color(0xFF1b1c20);
           extraColor = Colors.black;
           transparentColor = Colors.white30;
           highLightColor = Colors.white10;
@@ -68,9 +75,9 @@ class _MyAppState extends State<MyApp> {
       baseColor: baseColor,
       secondaryColor: secondaryColor,
       extraColor: extraColor,
-      dephtColor: dephtColor,
-      transparentColor: transparentColor,
-      highLigthColor: highLightColor,
+      depthColor: depthColor,
+      transparentColor: transparentColor!,
+      highLigthColor: highLightColor!,
       verifiersList: verifiersList,
       updateVerifiers: setVerifiers,
       addressesToWatch: addressesToWatch,
@@ -78,7 +85,7 @@ class _MyAppState extends State<MyApp> {
       balanceList: balanceList,
       updateAddressesToWatch: updateWatchAddresses,
       child: MaterialApp(
-        supportedLocales: [
+        supportedLocales: const <Locale>[
           Locale('en', 'US'),
           Locale('es', 'ES'),
           Locale('zh', 'CN'),
@@ -96,8 +103,8 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
         ],
         localeListResolutionCallback:
-            (List<Locale> locales, Iterable<Locale> supportedLocales) {
-          for (var eachLocale in locales) {
+            (List<Locale>? locales, Iterable<Locale> supportedLocales) {
+          for (var eachLocale in locales!) {
             for (var eachSupportedLocale in supportedLocales) {
               if (eachLocale.languageCode == eachSupportedLocale.languageCode) {
                 return eachSupportedLocale;
@@ -113,7 +120,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<List<Verifier>> setVerifiers() async {
+  Future<List<Verifier>?> setVerifiers() async {
     getVerifiers().then((List<Verifier> _verifiersList) {
       setState(() {
         verifiersList = _verifiersList;
@@ -126,14 +133,14 @@ class _MyAppState extends State<MyApp> {
     getWatchAddresses().then((List<WatchedAddress> _list) {
       setState(() {
         addressesToWatch = _list;
-        for (var eachAddress in addressesToWatch) {
+        for (var eachAddress in addressesToWatch!) {
           try {
             eachAddress.balance =
-                balanceList.firstWhere((List<String> address) {
+                balanceList!.firstWhere((List<String> address) {
               return address[0] == eachAddress.address;
             })[1];
           } catch (e) {
-            eachAddress.balance = "0";
+            eachAddress.balance = '0';
           }
         }
       });
@@ -148,14 +155,14 @@ class _MyAppState extends State<MyApp> {
       getWatchAddresses().then((List<WatchedAddress> _list) {
         setState(() {
           addressesToWatch = _list;
-          for (var eachAddress in addressesToWatch) {
+          for (var eachAddress in addressesToWatch!) {
             try {
               eachAddress.balance =
-                  balanceList.firstWhere((List<String> address) {
+                  balanceList!.firstWhere((List<String> address) {
                 return address[0] == eachAddress.address;
               })[1];
             } catch (e) {
-              eachAddress.balance = "0";
+              eachAddress.balance = '0';
             }
           }
         });
