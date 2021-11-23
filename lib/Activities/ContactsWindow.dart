@@ -71,6 +71,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                   if (contactsList != null)
                     contactsList!.isNotEmpty
                         ? ListView.builder(
+                            controller: ScrollController(),
                             padding: const EdgeInsets.all(0.0),
                             itemCount: contactsList?.length,
                             itemBuilder: (BuildContext context, int i) =>
@@ -366,6 +367,7 @@ class ContactsWindowState extends State<ContactsWindow> {
                   else
                     ListView.builder(
                         padding: const EdgeInsets.all(0.0),
+                        controller: ScrollController(),
                         itemCount: 8,
                         itemBuilder: (BuildContext context, int i) => Card(
                                 child: SizedBox(

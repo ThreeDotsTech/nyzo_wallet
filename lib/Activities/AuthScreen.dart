@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,7 +37,9 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     // Register Stream
-    _registerStream();
+    if (!kIsWeb) {
+      _registerStream();
+    }
 
     super.initState();
 
@@ -66,6 +69,7 @@ class _AuthScreenState extends State<AuthScreen> {
           DeviceOrientation.portraitUp,
         ]);
       } on PlatformException catch (e) {
+        print("e: " + e.toString());
         if (e.code == auth_error.notAvailable) {
         } else if (e.code == auth_error.notEnrolled) {
         } else if (e.code == auth_error.passcodeNotSet) {

@@ -148,6 +148,7 @@ class _MyTokensListWindowStateState extends State<MyTokensListWindow> {
                                 children: <Widget>[
                                   //  list
                                   ListView.builder(
+                                    controller: ScrollController(),
                                     physics:
                                         const AlwaysScrollableScrollPhysics(),
                                     padding: const EdgeInsets.only(

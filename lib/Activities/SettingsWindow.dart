@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
@@ -186,6 +187,7 @@ class SettingsWindowState extends State<SettingsWindow> {
               ),
             ),
           ),
+          kIsWeb ? const SizedBox() :
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -283,6 +285,7 @@ class SettingsWindowState extends State<SettingsWindow> {
                   )),
             ),
           ),
+          kIsWeb ? const SizedBox() :
           InkWell(
             onTap: () {
               final WalletWindowState? foldingCellState =

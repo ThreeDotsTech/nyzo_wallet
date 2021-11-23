@@ -37,7 +37,6 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
   Future<List<Verifier>> refresh() async {
     final Future<List<Verifier>> updateFuture =
         ColorTheme.of(context)!.updateVerifiers!();
-    ColorTheme.of(context)!.getBalanceList!();
     return updateFuture;
   }
 
@@ -967,6 +966,7 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                           )
                   else
                     ListView.builder(
+                        controller: ScrollController(),
                         padding: const EdgeInsets.all(0.0),
                         itemCount: 8,
                         itemBuilder: (BuildContext context, int i) => Card(

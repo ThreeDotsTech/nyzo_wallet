@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,7 +19,6 @@ import 'package:nyzo_wallet/Activities/VerifiersWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Token.dart';
-import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
 import 'package:nyzo_wallet/Widgets/TransactionsWidget.dart';
@@ -42,7 +42,7 @@ class WalletWindowState extends State<WalletWindow>
   WalletWindowState(this.password, this.initialDeepLink);
   ContactsWindow contactsWindow = ContactsWindow(contactsList!);
   TransactionsWidget tranSactionsWidgetInstance =
-      TransactionsWidget(List<Transaction>.empty(growable: true));
+      TransactionsWidget();
   VerifiersWindow? verifiersWindow;
   SendWindow? sendWindowInstance;
   SettingsWindow? settingsWindow = SettingsWindow();
@@ -52,7 +52,6 @@ class WalletWindowState extends State<WalletWindow>
   List<Token> myTokensList = List<Token>.empty(growable: true);
   List<Token> myNFTsList = List<Token>.empty(growable: true);
   String _address = '';
-  static List<Transaction>? transactions;
   static List<Contact>? contactsList = List<Contact>.empty(growable: true);
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   NumberFormat f = NumberFormat('###.0#', 'en_US');
@@ -90,7 +89,10 @@ class WalletWindowState extends State<WalletWindow>
   @override
   void initState() {
     // Register Stream
-    _registerStream();
+    if (!kIsWeb) {
+      _registerStream();
+    }
+
     WidgetsBinding.instance!.addObserver(this);
 
     //The first thing we do is load the last balance saved on disk.
@@ -125,9 +127,6 @@ class WalletWindowState extends State<WalletWindow>
           setState(() {
             balance = _balance.floor();
             setSavedBalance(double.parse(balance.toString())); //set the balance
-          });
-          getTransactions(_address).then((List? _transactions) {
-            transactions = _transactions!.cast<Transaction>();
           });
         }); //set the address
         getTokensBalance(_address).then((List<Token> _myTokensList) {

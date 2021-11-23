@@ -19,8 +19,6 @@ class ColorTheme extends InheritedWidget {
       this.verifiersList,
       this.updateVerifiers,
       this.addressesToWatch,
-      this.balanceList,
-      this.getBalanceList,
       this.updateAddressesToWatch})
       : super(child: child);
   final Widget child;
@@ -35,8 +33,6 @@ class ColorTheme extends InheritedWidget {
   final List<Verifier>? verifiersList;
   final Function? updateVerifiers;
   final List<WatchedAddress>? addressesToWatch;
-  final List<List<String>>? balanceList;
-  final Function? getBalanceList;
   final Function? updateAddressesToWatch;
 
   @override

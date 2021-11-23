@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,7 +15,6 @@ import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
 import 'package:nyzo_wallet/Data/Token.dart';
 import 'package:nyzo_wallet/Data/TokensTransactionsResponse.dart';
-import 'package:nyzo_wallet/Data/Transaction.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -22,19 +22,16 @@ import 'package:nyzo_wallet/Widgets/SheetUtil.dart';
 import 'package:nyzo_wallet/Widgets/TransactionsDetailsWidget.dart';
 
 class TransactionsWidget extends StatefulWidget {
-  final List<Transaction>? _transactions;
-  const TransactionsWidget(this._transactions);
+  const TransactionsWidget();
   @override
-  TranSactionsWidgetState createState() =>
-      TranSactionsWidgetState(_transactions!);
+  TranSactionsWidgetState createState() => TranSactionsWidgetState();
 }
 
 class TranSactionsWidgetState extends State<TransactionsWidget> {
-  List<Transaction> _transactions;
   List<TokensTransactionsResponse> tokensTransactionsList =
       List<TokensTransactionsResponse>.empty(growable: true);
   TransactionsSinceResponse? transactionsSinceResponse;
-  TranSactionsWidgetState(this._transactions);
+  TranSactionsWidgetState();
   String _address = '';
   List<Contact>? _contactsList;
   WalletWindowState? walletWindowState;
@@ -45,11 +42,6 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
     walletWindowState = context.findAncestorStateOfType<WalletWindowState>()!;
     getAddress().then((String address) {
       _address = address;
-      getTransactions(_address).then((List<Transaction> transactions) {
-        setState(() {
-          _transactions = transactions;
-        });
-      });
       getTokensTransactionsList(address)
           .then((List<TokensTransactionsResponse> _tokensTransactionsList) {
         setState(() {
@@ -58,7 +50,9 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
       });
       getTransactionsSinceList(address)
           .then((TransactionsSinceResponse _transactionsSinceResponse) {
-        transactionsSinceResponse = _transactionsSinceResponse;
+        setState(() {
+          transactionsSinceResponse = _transactionsSinceResponse;
+        });
       });
     });
     getContacts().then((List<Contact> contacts) {
@@ -70,7 +64,6 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
   Future<void> refresh() async {
     final WalletWindowState? walletWindowState =
         context.findAncestorStateOfType<WalletWindowState>();
-    final Future<List<Transaction>> transactions = getTransactions(_address);
     getBalance(_address).then((double _balance) {
       walletWindowState!.setState(() {
         walletWindowState.balance = _balance.floor();
@@ -90,11 +83,6 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
     getTransactionsSinceList(_address)
         .then((TransactionsSinceResponse _transactionsSinceResponse) {
       transactionsSinceResponse = _transactionsSinceResponse;
-    });
-    transactions.then((List<Transaction> transactionsList) {
-      setState(() {
-        _transactions = transactionsList;
-      });
     });
     getContacts().then((List<Contact> contacts) {
       _contactsList = contacts;
@@ -147,6 +135,15 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                             fontWeight: FontWeight.w600,
                             fontSize: 40),
                         children: <TextSpan>[
+                          kIsWeb ?
+                           TextSpan(
+                            text: ' nyzo(s)',
+                            style: TextStyle(
+                                color: ColorTheme.of(context)!.secondaryColor,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20),
+                          )
+                          :
                           TextSpan(
                             text: ' ∩',
                             style: TextStyle(
