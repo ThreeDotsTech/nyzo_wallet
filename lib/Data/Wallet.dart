@@ -8,6 +8,11 @@ import 'dart:typed_data';
 // Flutter imports:
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
+import 'package:nyzo_wallet/Data/ForwardTransactionResponse.dart';
+import 'package:nyzo_wallet/Data/FrozenEdgeResponse.dart';
+import 'package:nyzo_wallet/Data/NyzoStringTransaction.dart';
+import 'package:nyzo_wallet/Data/PreviousHashResponse.dart';
+import 'package:nyzo_wallet/Data/TransactionResponse.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart' as material;
 
@@ -254,12 +259,11 @@ Future<List<Token>> getNFTBalance(String address) async {
 
   try {
     final http.Response response = await http.get(
-      Uri.parse(
-          'https://tokens.nyzo.today/api/nft_address_instances/' + address),
+        Uri.parse(
+            'https://tokens.nyzo.today/api/nft_address_instances/' + address),
         headers: {
           'content-type': 'text/plain',
-        }
-    );
+        });
     if (response.statusCode == 200) {
       final String reply = response.body;
       final List<NftAddressInstancesResponse> nftAddressInstancesListResponse =
@@ -332,6 +336,22 @@ Future<Map<String, TokensListResponse>> getTokensList() async {
     }
   } catch (e) {}
   return tokensList!;
+}
+
+Future<FrozenEdgeResponse> getFrozenEdge() async {
+  FrozenEdgeResponse? frozenEdge;
+
+  try {
+    final http.Response response = await http
+        .get(Uri.parse('https://client.nyzo.co/api/frozenEdge'), headers: {
+      'content-type': 'text/plain',
+    });
+    if (response.statusCode == 200) {
+      final String reply = response.body;
+      frozenEdge = frozenEdgeResponseFromJson(reply);
+    }
+  } catch (e) {}
+  return frozenEdge!;
 }
 
 Future<TokensListResponse> getTokenStructure(String tokenName) async {
@@ -512,11 +532,15 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
 
   Future<NyzoMessage> fetchPreviousHash(String senderPrivateSeed) async {
     final NyzoMessage message = NyzoMessage();
-    message.setType(NyzoMessage.PreviousHashRequest7);
-    await message.sign(hexStringAsUint8Array(senderPrivateSeed));
-    final NyzoMessage result =
-        await message.send(hexStringAsUint8Array(privKey), client);
-    return result;
+    FrozenEdgeResponse frozenEdgeResponse = await getFrozenEdge();
+    if (frozenEdgeResponse.result!.isNotEmpty) {
+      message.timestamp =
+          frozenEdgeResponse.result![0].verificationTimestampMilliseconds;
+      var result = PreviousHashResponse(frozenEdgeResponse.result![0].height!,
+          hexStringAsUint8Array(frozenEdgeResponse.result![0].hash!));
+      message.content = result;
+    }
+    return message;
   }
 
   Future<NyzoMessage> submitTransaction(
@@ -536,13 +560,22 @@ Future<String> send(String password, String nyzoStringPiblicId, int amount,
     transaction.setPreviousBlockHash(previousBlockHash);
     transaction.setSenderData(senderData);
     await transaction.sign(hexStringAsUint8Array(senderPrivateSeed));
-    final NyzoMessage message = NyzoMessage();
-    message.setType(NyzoMessage.Transaction5);
-    message.setContent(transaction);
-    await message.sign(hexStringAsUint8Array(senderPrivateSeed));
-    final NyzoMessage? result =
-        await message.send(hexStringAsUint8Array(privKey), client);
-    return result!;
+    String nyzoStringTransaction =
+        NyzoStringEncoder.encode(NyzoStringTransaction(transaction));
+    ForwardTransactionResponse forwardTransactionResponse = await forwardTransaction(nyzoStringTransaction);
+    String message = '';
+    if(forwardTransactionResponse.errors!.isNotEmpty && forwardTransactionResponse.errors!.length > 0)
+    {
+        message = forwardTransactionResponse.errors![0];
+    }
+    else
+    {
+        message = 'Your transaction has been accepted by the system and is scheduled for incorporation into block '+forwardTransactionResponse.result![0].blockHeight.toString()+'.';
+    }
+    TransactionResponse transactionResponse = new TransactionResponse(1, message);
+    final NyzoMessage result = NyzoMessage();
+    result.content = transactionResponse;
+    return result;
   }
 
   if (specifiedTransactionIsValid()) {
@@ -599,6 +632,26 @@ sendMessage(NyzoMessage message) async {
       body: message.getBytes(true));
   final dynamic list = json.decode(response.body);
   return list;
+}
+
+Future<ForwardTransactionResponse> forwardTransaction(
+    String nyzoStringTransaction) async {
+  ForwardTransactionResponse forwardTransactionResponse =
+      new ForwardTransactionResponse();
+  try {
+    final http.Response response = await http.get(
+      Uri.parse('https://client.nyzo.co/api/forwardTransaction?transaction=' +
+          nyzoStringTransaction),
+      headers: {
+        'content-type': 'text/plain',
+      },
+    );
+    if (response.statusCode == 200) {
+      final String reply = response.body;
+      forwardTransactionResponse = forwardTransactionResponseFromJson(reply);
+    }
+  } catch (e) {}
+  return forwardTransactionResponse;
 }
 
 Future<dynamic> signTransaction(String? initiatorSignature,
