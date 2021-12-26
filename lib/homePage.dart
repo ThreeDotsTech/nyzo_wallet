@@ -102,17 +102,6 @@ class _MyHomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                    child: Text(
-                      'Warning!!!\nYou are using a beta version under development. Keep your private keys safe\nIf you find any bugs, contact redDwarf on discord channel\nThanks for helping',
-                      style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
                 ],
               )
             else

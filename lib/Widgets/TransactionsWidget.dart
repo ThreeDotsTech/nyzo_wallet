@@ -131,29 +131,30 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                             fontWeight: FontWeight.w600,
                             fontSize: 40),
                         children: <TextSpan>[
-                          kIsWeb ?
-                           TextSpan(
-                            text: ' nyzo(s)',
-                            style: TextStyle(
-                                color: ColorTheme.of(context)!.secondaryColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20),
-                          )
-                          :
-                          TextSpan(
-                            text: ' ∩',
-                            style: TextStyle(
-                                color: ColorTheme.of(context)!.secondaryColor,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20),
-                          )
+                          kIsWeb
+                              ? TextSpan(
+                                  text: ' nyzo(s)',
+                                  style: TextStyle(
+                                      color: ColorTheme.of(context)!
+                                          .secondaryColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
+                                )
+                              : TextSpan(
+                                  text: ' ∩',
+                                  style: TextStyle(
+                                      color: ColorTheme.of(context)!
+                                          .secondaryColor,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
+                                )
                         ],
                       ),
                     ),
                   ],
                 ),
                 if (walletWindowState!.myTokensList.isNotEmpty)
-                  Column(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Container(
@@ -193,6 +194,35 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
                           },
                         ),
                       ),
+                      kIsWeb
+                          ? Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: const <BoxShadow>[
+                                  BoxShadow(color: Colors.transparent)
+                                ],
+                              ),
+                              height: 35,
+                              margin: const EdgeInsetsDirectional.only(
+                                  start: 7, top: 0.0, end: 7.0),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  backgroundColor:
+                                      ColorTheme.of(context)!.secondaryColor,
+                                  elevation: 0.0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                ),
+                                child: Icon(Icons.refresh,
+                                    color: ColorTheme.of(context)!.baseColor),
+                                onPressed: () async {
+                                  await refresh();
+                                  setState(() {});
+                                },
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   )
                 else

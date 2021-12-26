@@ -1,2 +1,4 @@
 dart format lib
 flutter pub run import_sorter:main
+flutter run -d chrome
+flutter build web
