@@ -52,14 +52,8 @@ class Utils {
   }
 
   static Future<String> getVersion() async {
-    if (!kIsWeb) {
-      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      return packageInfo.version;
-    }
-    else
-    {
-      return '';
-    }
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo.version;
   }
 
   static String senderDataForDisplay(Uint8List senderData) {

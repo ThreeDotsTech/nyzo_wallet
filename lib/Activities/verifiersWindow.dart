@@ -25,7 +25,6 @@ class VerifiersWindow extends StatefulWidget {
 
 class _VerifiersWindowState extends State<VerifiersWindow> {
   WalletWindowState? walletWindowState;
-  SlidableController slidableController = SlidableController();
   AddVerifierDialog floatingdialog = AddVerifierDialog();
 
   @override
@@ -125,9 +124,31 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                 SliverList(
                                   delegate: SliverChildBuilderDelegate(
                                       (BuildContext context, int i) => Slidable(
-                                            controller: slidableController,
-                                            actionPane:
-                                                const SlidableDrawerActionPane(),
+                                            endActionPane: ActionPane(
+                                              motion: const DrawerMotion(),
+                                              children: [
+                                                SlidableAction(
+                                                  label: AppLocalizations.of(
+                                                          context)!
+                                                      .translate('String62'),
+                                                  backgroundColor:
+                                                      ColorTheme.of(context)!
+                                                          .baseColor!,
+                                                  icon: Icons.delete,
+                                                  onPressed: (context) {
+                                                    ColorTheme.of(context)!
+                                                        .verifiersList!
+                                                        .removeAt(i);
+                                                    setState(() {
+                                                      saveVerifier(
+                                                          ColorTheme.of(
+                                                                  context)!
+                                                              .verifiersList!);
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -769,26 +790,6 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                 collapsed: const SizedBox(),
                                               ),
                                             ),
-                                            secondaryActions: <Widget>[
-                                              IconSlideAction(
-                                                caption: AppLocalizations.of(
-                                                        context)!
-                                                    .translate('String62'),
-                                                color: ColorTheme.of(context)!
-                                                    .baseColor,
-                                                icon: Icons.delete,
-                                                onTap: () {
-                                                  ColorTheme.of(context)!
-                                                      .verifiersList!
-                                                      .removeAt(i);
-                                                  setState(() {
-                                                    saveVerifier(
-                                                        ColorTheme.of(context)!
-                                                            .verifiersList!);
-                                                  });
-                                                },
-                                              ),
-                                            ],
                                           ),
                                       childCount: ColorTheme.of(context)!
                                           .verifiersList!
@@ -814,9 +815,28 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                     delegate: SliverChildBuilderDelegate(
                                         (BuildContext context, int i) =>
                                             Slidable(
-                                              controller: slidableController,
-                                              actionPane:
-                                                  const SlidableDrawerActionPane(),
+                                              endActionPane: ActionPane(
+                                                motion: const DrawerMotion(),
+                                                children: [
+                                                  SlidableAction(
+                                                    label: 'Delete',
+                                                    backgroundColor:
+                                                        ColorTheme.of(context)!
+                                                            .baseColor!,
+                                                    icon: Icons.delete,
+                                                    onPressed: (context) {
+                                                      ColorTheme.of(context)!
+                                                          .addressesToWatch!
+                                                          .removeAt(i);
+                                                      setState(() {
+                                                        saveWatchAddress(ColorTheme
+                                                                .of(context)!
+                                                            .addressesToWatch!);
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
                                               child: Padding(
                                                   padding: const EdgeInsets
                                                       .symmetric(vertical: 5),
@@ -892,24 +912,6 @@ class _VerifiersWindowState extends State<VerifiersWindow> {
                                                                               Colors.transparent))),
                                                     ),
                                                   )),
-                                              secondaryActions: <Widget>[
-                                                IconSlideAction(
-                                                  caption: 'Delete',
-                                                  color: ColorTheme.of(context)!
-                                                      .baseColor,
-                                                  icon: Icons.delete,
-                                                  onTap: () {
-                                                    ColorTheme.of(context)!
-                                                        .addressesToWatch!
-                                                        .removeAt(i);
-                                                    setState(() {
-                                                      saveWatchAddress(ColorTheme
-                                                              .of(context)!
-                                                          .addressesToWatch!);
-                                                    });
-                                                  },
-                                                ),
-                                              ],
                                             ),
                                         childCount: ColorTheme.of(context)!
                                             .addressesToWatch

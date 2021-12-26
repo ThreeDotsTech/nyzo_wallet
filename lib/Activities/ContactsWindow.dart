@@ -28,7 +28,6 @@ class ContactsWindow extends StatefulWidget {
 class ContactsWindowState extends State<ContactsWindow> {
   ContactsWindowState(this.contactsList);
   List<Contact>? contactsList;
-  final SlidableController slidableController = SlidableController();
   final ExpandableController expandableController = ExpandableController();
   AddContactDialog floatingdialog = AddContactDialog();
   WalletWindowState? walletWindowState;
@@ -76,8 +75,44 @@ class ContactsWindowState extends State<ContactsWindow> {
                             itemCount: contactsList?.length,
                             itemBuilder: (BuildContext context, int i) =>
                                 Slidable(
-                                  controller: slidableController,
-                                  actionPane: const SlidableDrawerActionPane(),
+                                  startActionPane: ActionPane(
+                                    motion: const DrawerMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        label: 'Send',
+                                        backgroundColor:
+                                            ColorTheme.of(context)!.baseColor!,
+                                        icon: Icons.send,
+                                        onPressed: (context) {
+                                          walletWindowState!
+                                              .textControllerAddress
+                                              .text = contactsList![i].address;
+                                          walletWindowState!.textControllerData
+                                              .text = contactsList![i].notes;
+                                          walletWindowState!.setState(() {
+                                            walletWindowState!.pageIndex = 2;
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  endActionPane: ActionPane(
+                                    motion: const DrawerMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        label: 'Delete',
+                                        backgroundColor:
+                                            ColorTheme.of(context)!.baseColor!,
+                                        icon: Icons.delete,
+                                        onPressed: (context) {
+                                          contactsList!.removeAt(i);
+                                          setState(() {
+                                            saveContacts(contactsList!);
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   child: ExpandablePanel(
                                     header: ListTile(
                                       leading: Icon(
@@ -293,35 +328,6 @@ class ContactsWindowState extends State<ContactsWindow> {
                                     ),
                                     collapsed: const SizedBox(),
                                   ),
-                                  actions: <Widget>[
-                                    IconSlideAction(
-                                      caption: 'Send',
-                                      color: ColorTheme.of(context)!.baseColor,
-                                      icon: Icons.send,
-                                      onTap: () {
-                                        walletWindowState!.textControllerAddress
-                                            .text = contactsList![i].address;
-                                        walletWindowState!.textControllerData
-                                            .text = contactsList![i].notes;
-                                        walletWindowState!.setState(() {
-                                          walletWindowState!.pageIndex = 2;
-                                        });
-                                      },
-                                    )
-                                  ],
-                                  secondaryActions: <Widget>[
-                                    IconSlideAction(
-                                      caption: 'Delete',
-                                      color: ColorTheme.of(context)!.baseColor,
-                                      icon: Icons.delete,
-                                      onTap: () {
-                                        contactsList!.removeAt(i);
-                                        setState(() {
-                                          saveContacts(contactsList!);
-                                        });
-                                      },
-                                    ),
-                                  ],
                                 ))
                         : Center(
                             child: Column(

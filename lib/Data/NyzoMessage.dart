@@ -6,7 +6,6 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:hex/hex.dart';
-import 'package:http/http.dart' as http;
 import 'package:pinenacl/ed25519.dart' as ed25519;
 
 // Project imports:

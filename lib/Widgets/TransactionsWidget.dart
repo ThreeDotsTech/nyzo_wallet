@@ -5,9 +5,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:flutter_slidable/flutter_slidable.dart';
-
 // Project imports:
 import 'package:nyzo_wallet/Activities/MyTokensListWindow.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
@@ -35,7 +32,6 @@ class TranSactionsWidgetState extends State<TransactionsWidget> {
   String _address = '';
   List<Contact>? _contactsList;
   WalletWindowState? walletWindowState;
-  final SlidableController slidableController = SlidableController();
 
   @override
   void initState() {
