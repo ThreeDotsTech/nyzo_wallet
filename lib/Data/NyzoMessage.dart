@@ -6,7 +6,6 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:hex/hex.dart';
-import 'package:http/http.dart' as http;
 import 'package:pinenacl/ed25519.dart' as ed25519;
 
 // Project imports:
@@ -104,50 +103,6 @@ class NyzoMessage {
   }
 
   fromByteBuffer(byteBuffer) {}
-
-  Future<NyzoMessage> send(Uint8List privKey, http.Client client) async {
-    final ed25519.SigningKey signingKey = ed25519.SigningKey(seed: privKey);
-    final Uint8List pubBuf = signingKey.publicKey.toUint8List();
-
-    final Uint8List _body = this.getBytes(true);
-    final http.Response response =
-        await client.post(Uri.parse('https://nyzo.co/message'),
-            headers: {
-              'Host': 'nyzo.co',
-              'Connection': 'keep-alive',
-              'Origin': 'https://nyzo.co',
-              'User-Agent':
-                  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
-              'DNT': '1',
-              'Content-Type': 'application/octet-stream',
-              'Accept': '*/*',
-              'Referer': 'https://nyzo.co/wallet?id=' +
-                  HEX.encode(pubBuf), //change this to + pubKey
-              'Accept-Encoding': 'gzip, deflate, br',
-              'Accept-Language':
-                  'en-GB,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,es-MX;q=0.6,es;q=0.5,de-DE;q=0.4,de;q=0.3,en-US;q=0.2',
-            },
-            body: _body);
-    final Uint8List arrayBuffer = response.bodyBytes;
-
-    if (arrayBuffer == null) {
-      return null!;
-    }
-
-    final Uint8List byteArray = Uint8List.fromList(arrayBuffer);
-    final NyzoMessage response2 = NyzoMessage();
-
-    response2.timestamp = intValueFromArray(byteArray, 4, 8);
-    response2.type = intValueFromArray(byteArray, 12, 2);
-    response2.content = contentForType(response2.type, byteArray, 14);
-    final int sourceNodeIdentifierIndex =
-        14 + contentSizeForType(response2.type, byteArray, 14);
-    response2.sourceNodeIdentifier =
-        arrayFromArray(byteArray, sourceNodeIdentifierIndex, 32);
-    response2.signature =
-        arrayFromArray(byteArray, sourceNodeIdentifierIndex + 32, 64);
-    return response2;
-  }
 
   contentForType(int? messageType, Uint8List byteArray, int index) {
     var result;

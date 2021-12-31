@@ -284,9 +284,8 @@ class _SendWindowState extends State<SendWindow> with WidgetsBindingObserver {
                           ],
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width - 50,
+                          width: 100,
                           child: QrImage(
-                            size: MediaQuery.of(context).size.width,
                             foregroundColor:
                                 ColorTheme.of(context)!.secondaryColor,
                             data: address,

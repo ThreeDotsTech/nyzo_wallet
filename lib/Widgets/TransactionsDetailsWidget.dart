@@ -1,9 +1,8 @@
 // Dart imports:
-import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,8 +18,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:nyzo_wallet/Activities/WalletWindow.dart';
 import 'package:nyzo_wallet/Data/AppLocalizations.dart';
 import 'package:nyzo_wallet/Data/Contact.dart';
-import 'package:nyzo_wallet/Data/NyzoStringEncoder.dart';
-import 'package:nyzo_wallet/Data/NyzoStringPublicIdentifier.dart';
 import 'package:nyzo_wallet/Data/TransactionsSinceResponse.dart';
 import 'package:nyzo_wallet/Data/Wallet.dart';
 import 'package:nyzo_wallet/Widgets/ColorTheme.dart';
@@ -33,7 +30,6 @@ class TransactionsDetailsWidget {
       List<Tx>? _transactions,
       List<Contact>? _contactsList,
       Function refresh) {
-    final SlidableController slidableController = SlidableController();
     return Column(
       children: <Widget>[
         Padding(
@@ -94,6 +90,7 @@ class TransactionsDetailsWidget {
                       showChildOpacityTransition: false,
                       springAnimationDurationInMilliseconds: 250,
                       child: ListView.builder(
+                          controller: ScrollController(),
                           padding: const EdgeInsets.all(0.0),
                           itemCount: _transactions.length,
                           itemBuilder: (BuildContext context, int i) => Padding(
@@ -102,31 +99,33 @@ class TransactionsDetailsWidget {
                                 child: Column(
                                   children: <Widget>[
                                     Slidable(
-                                      controller: slidableController,
-                                      actionPane:
-                                          const SlidableDrawerActionPane(),
-                                      actions: <Widget>[
-                                        IconSlideAction(
-                                          caption: 'Send',
-                                          color:
-                                              ColorTheme.of(context)!.baseColor,
-                                          icon: Icons.send,
-                                          onTap: () {
-                                            walletWindowState
-                                                .textControllerAddress
-                                                .text = _transactions[i]
-                                                        .sender! ==
-                                                    address
-                                                ? nyzoStringFromPublicIdentifier(
-                                                    _transactions[i].recipient!)
-                                                : nyzoStringFromPublicIdentifier(
-                                                    _transactions[i].sender!);
-                                            walletWindowState.setState(() {
-                                              walletWindowState.pageIndex = 2;
-                                            });
-                                          },
-                                        )
-                                      ],
+                                      startActionPane: ActionPane(
+                                        motion: const DrawerMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            label: 'Send',
+                                            backgroundColor:
+                                                ColorTheme.of(context)!
+                                                    .baseColor!,
+                                            icon: Icons.send,
+                                            onPressed: (context) {
+                                              walletWindowState
+                                                  .textControllerAddress
+                                                  .text = _transactions[i]
+                                                          .sender! ==
+                                                      address
+                                                  ? nyzoStringFromPublicIdentifier(
+                                                      _transactions[i]
+                                                          .recipient!)
+                                                  : nyzoStringFromPublicIdentifier(
+                                                      _transactions[i].sender!);
+                                              walletWindowState.setState(() {
+                                                walletWindowState.pageIndex = 2;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                       child: ListTile(
                                         title: InkWell(
                                             onTap: () {
@@ -200,44 +199,79 @@ class TransactionsDetailsWidget {
                                                     if (_transactions[i]
                                                             .amountAfterFees! >
                                                         0)
-                                                      Text(
-                                                        (getAmount(
-                                                              _transactions[i]
-                                                                  .amountAfterFees!,
-                                                            )!)
-                                                                .toString() +
-                                                            ' ∩',
-                                                        style: _transactions[i].sender ==
-                                                                address
-                                                            ? TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize: 20,
-                                                                foreground:
-                                                                    Paint()
-                                                                      ..shader = ui.Gradient.linear(
-                                                                          Offset.zero,
-                                                                          const Offset(0, 60),
-                                                                          [
-                                                                            Colors.red[100]!,
-                                                                            Colors.red[900]!
-                                                                          ]))
-                                                            : TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize: 20,
-                                                                foreground:
-                                                                    Paint()
-                                                                      ..shader = ui.Gradient.linear(
-                                                                          Offset.zero,
-                                                                          const Offset(0, 60),
-                                                                          [
-                                                                            Colors.green[100]!,
-                                                                            Colors.green[900]!
-                                                                          ])),
-                                                      )
+                                                      kIsWeb
+                                                          ? Text(
+                                                              (getAmount(
+                                                                    _transactions[
+                                                                            i]
+                                                                        .amountAfterFees!,
+                                                                  )!)
+                                                                      .toString() +
+                                                                  ' nyzo(s)',
+                                                              style: _transactions[i].sender == address
+                                                                  ? TextStyle(
+                                                                      fontWeight: FontWeight
+                                                                          .w700,
+                                                                      fontSize:
+                                                                          20,
+                                                                      foreground: Paint()
+                                                                        ..shader = ui.Gradient.linear(
+                                                                            Offset.zero,
+                                                                            const Offset(0, 60),
+                                                                            [
+                                                                              Colors.red[100]!,
+                                                                              Colors.red[900]!
+                                                                            ]))
+                                                                  : TextStyle(
+                                                                      fontWeight: FontWeight
+                                                                          .w700,
+                                                                      fontSize:
+                                                                          20,
+                                                                      foreground: Paint()
+                                                                        ..shader = ui.Gradient.linear(
+                                                                            Offset.zero,
+                                                                            const Offset(0, 60),
+                                                                            [
+                                                                              Colors.green[100]!,
+                                                                              Colors.green[900]!
+                                                                            ])),
+                                                            )
+                                                          : Text(
+                                                              (getAmount(
+                                                                    _transactions[
+                                                                            i]
+                                                                        .amountAfterFees!,
+                                                                  )!)
+                                                                      .toString() +
+                                                                  ' ∩',
+                                                              style: _transactions[i].sender == address
+                                                                  ? TextStyle(
+                                                                      fontWeight: FontWeight
+                                                                          .w700,
+                                                                      fontSize:
+                                                                          20,
+                                                                      foreground: Paint()
+                                                                        ..shader = ui.Gradient.linear(
+                                                                            Offset.zero,
+                                                                            const Offset(0, 60),
+                                                                            [
+                                                                              Colors.red[100]!,
+                                                                              Colors.red[900]!
+                                                                            ]))
+                                                                  : TextStyle(
+                                                                      fontWeight: FontWeight
+                                                                          .w700,
+                                                                      fontSize:
+                                                                          20,
+                                                                      foreground: Paint()
+                                                                        ..shader = ui.Gradient.linear(
+                                                                            Offset.zero,
+                                                                            const Offset(0, 60),
+                                                                            [
+                                                                              Colors.green[100]!,
+                                                                              Colors.green[900]!
+                                                                            ])),
+                                                            )
                                                     else
                                                       const SizedBox(),
                                                     if (isToken(
@@ -453,6 +487,7 @@ class TransactionsDetailsWidget {
                       },
                     )
               : ListView.builder(
+                  controller: ScrollController(),
                   padding: const EdgeInsets.all(0.0),
                   itemCount: 8,
                   itemBuilder: (BuildContext context, int i) => Card(

@@ -33,10 +33,9 @@ class _MyAppState extends State<MyApp> {
   Color? highLightColor = Colors.grey[100];
   List<Verifier>? verifiersList;
   List<WatchedAddress>? addressesToWatch;
-  List<List<String>>? balanceList;
   @override
   void initState() {
-    downloadBalanceList();
+    updateWatchAddresses();
     updateTheme();
     setVerifiers();
     super.initState();
@@ -81,8 +80,6 @@ class _MyAppState extends State<MyApp> {
       verifiersList: verifiersList,
       updateVerifiers: setVerifiers,
       addressesToWatch: addressesToWatch,
-      getBalanceList: downloadBalanceList,
-      balanceList: balanceList,
       updateAddressesToWatch: updateWatchAddresses,
       child: MaterialApp(
         supportedLocales: const <Locale>[
@@ -135,37 +132,11 @@ class _MyAppState extends State<MyApp> {
         addressesToWatch = _list;
         for (var eachAddress in addressesToWatch!) {
           try {
-            eachAddress.balance =
-                balanceList!.firstWhere((List<String> address) {
-              return address[0] == eachAddress.address;
-            })[1];
+            eachAddress.balance = getBalance(eachAddress.address!).toString();
           } catch (e) {
             eachAddress.balance = '0';
           }
         }
-      });
-    });
-  }
-
-  void downloadBalanceList() {
-    getBalanceList().then((List<List<String>> _balanceList) {
-      setState(() {
-        balanceList = _balanceList;
-      });
-      getWatchAddresses().then((List<WatchedAddress> _list) {
-        setState(() {
-          addressesToWatch = _list;
-          for (var eachAddress in addressesToWatch!) {
-            try {
-              eachAddress.balance =
-                  balanceList!.firstWhere((List<String> address) {
-                return address[0] == eachAddress.address;
-              })[1];
-            } catch (e) {
-              eachAddress.balance = '0';
-            }
-          }
-        });
       });
     });
   }

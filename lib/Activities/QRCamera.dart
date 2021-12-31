@@ -31,8 +31,8 @@ class _QrCameraWindowState extends State<QrCameraWindow> {
         ),
       ),
       body: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.width,
           child: QrCamera(qrCodeCallback: (String? scanned) {
             widget.walletWindowState!.textControllerAddress.text = scanned!;
 
